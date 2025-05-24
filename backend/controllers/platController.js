@@ -15,6 +15,7 @@ exports.getPlatById = async (req, res) => {
 
 // POST create plat
 exports.createPlat = async (req, res) => {
+  console.log("REQ.BODY ➔", req.body);
   const newPlat = new Plat({ ...req.body, owner: req.user._id });
   const savedPlat = await newPlat.save();
   res.status(201).json(savedPlat);

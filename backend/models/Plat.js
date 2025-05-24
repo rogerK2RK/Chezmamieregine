@@ -4,7 +4,12 @@ const platSchema = new mongoose.Schema({
   name: { type: String, required: true },
   description: String,
   price: { type: Number, required: true },
-  image: String,
+  images: [
+    {
+      url: String,
+      order: Number  // pour gérer l’ordre d’affichage
+    }
+  ],
   owner: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   available: { type: Boolean, default: true }
 }, { timestamps: true });
