@@ -3,20 +3,28 @@ const Plat = require("../models/Plat");
 // GET all plats
 exports.getPlats = async (req, res) => {
   const plats = await Plat.find();
+  plats.forEach(p => p.images.sort((a, b) => a.order - b.order));  // tri par ordre
   res.json(plats);
 };
 
-// GET single plat by ID
+// GET plat by ID
 exports.getPlatById = async (req, res) => {
   const plat = await Plat.findById(req.params.id);
   if (!plat) return res.status(404).json({ message: "Plat non trouvé" });
+  plat.images.sort((a, b) => a.order - b.order);  // tri par ordre
   res.json(plat);
 };
 
 // POST create plat
 exports.createPlat = async (req, res) => {
-  console.log("REQ.BODY ➔", req.body);
-  const newPlat = new Plat({ ...req.body, owner: req.user._id });
+  const { name, description, price, images } = req.body;
+  const newPlat = new Plat({
+    name,
+    description,
+    price,
+    images,
+    owner: req.user._id
+  });
   const savedPlat = await newPlat.save();
   res.status(201).json(savedPlat);
 };

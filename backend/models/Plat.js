@@ -6,8 +6,8 @@ const platSchema = new mongoose.Schema({
   price: { type: Number, required: true },
   images: [
     {
-      url: String,
-      order: Number  // pour gérer l’ordre d’affichage
+      url:  { type: String, required: true },
+      order:  { type: Number, default: 1 }  // pour gérer l’ordre d’affichage
     }
   ],
   owner: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
