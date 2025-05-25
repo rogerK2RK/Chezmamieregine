@@ -13,10 +13,12 @@ app.use(express.json());
 const authRoutes = require("./routes/authRoutes");
 const platRoutes = require("./routes/platRoutes");
 const commandeRoutes = require("./routes/commandeRoutes");
+const adminRoutes = require("./routes/adminRoutes");
 
 app.use("/api/auth", authRoutes);
 app.use("/api/plats", platRoutes);
 app.use("/api/commandes", commandeRoutes);
+app.use("/api/admin", adminRoutes);
 
 // Test route
 app.get("/", (req, res) => res.send("Bienvenue sur l'API de Chez Mamie Régine"));

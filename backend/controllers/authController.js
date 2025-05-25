@@ -2,7 +2,7 @@ const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const generateToken = require("../utils/generateToken");
 
-// @route POST /api/auth/register
+// Public register → toujours en client
 exports.register = async (req, res) => {
   const { name, email, password } = req.body;
 
@@ -12,21 +12,63 @@ exports.register = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = await User.create({ name, email, password: hashedPassword });
+    const user = await User.create({
+      name,
+      email,
+      password: hashedPassword,
+      role: "client"  // forcé à client
+    });
 
     res.status(201).json({
       _id: user._id,
       name: user.name,
       email: user.email,
       role: user.role,
-      token: generateToken(user._id),
+      token: generateToken(user._id)
     });
   } catch (err) {
     res.status(500).json({ message: "Erreur serveur" });
   }
 };
 
-// @route POST /api/auth/login
+// Admin-only → créer un compte avec rôle spécifique
+exports.createUserByAdmin = async (req, res) => {
+  const { name, email, password, role } = req.body;
+
+  // Seuls admin et superAdmin peuvent passer ici
+  if (!["admin", "superAdmin"].includes(req.user.role)) {
+    return res.status(403).json({ message: "Accès refusé" });
+  }
+
+  if (!["admin", "owner"].includes(role)) {
+    return res.status(400).json({ message: "Rôle non autorisé" });
+  }
+
+  try {
+    const userExists = await User.findOne({ email });
+    if (userExists) return res.status(400).json({ message: "Utilisateur déjà existant" });
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const user = await User.create({
+      name,
+      email,
+      password: hashedPassword,
+      role
+    });
+
+    res.status(201).json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Erreur serveur" });
+  }
+};
+
+// Connexion utilisateur
 exports.login = async (req, res) => {
   const { email, password } = req.body;
 
@@ -42,9 +84,10 @@ exports.login = async (req, res) => {
       name: user.name,
       email: user.email,
       role: user.role,
-      token: generateToken(user._id),
+      token: generateToken(user._id)
     });
   } catch (err) {
     res.status(500).json({ message: "Erreur serveur" });
   }
 };
+
