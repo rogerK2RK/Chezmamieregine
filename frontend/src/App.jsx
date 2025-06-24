@@ -1,8 +1,13 @@
-import AppRouter from './AppRouter.jsx';
-import React from 'react';
+import Header from './components/shared/Header';
+import AppRouter from './routes/AppRouter'; // ⬅️ n’oublie pas cette ligne !
 
 function App() {
-  return <AppRouter />;
+  return (
+    <>
+      <Header />
+      <AppRouter />
+    </>
+  );
 }
 
 export default App;
