@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import './header.css'; // Assure-toi d'avoir un fichier CSS pour le style
-import logo from '../../assets/logo.svg'; // Assure-toi que le chemin est correct
+import logo from '../../../assets/logo.svg'; // Assure-toi que le chemin est correct
 
 export default function Header() {
   const navigate = useNavigate();

@@ -1,11 +1,13 @@
-import Header from './components/shared/Header';
-import AppRouter from './routes/AppRouter'; // ⬅️ n’oublie pas cette ligne !
+import Header from './components/shared/Header/Header';
+import Footer from './components/shared/Footer/Footer';
+import AppRouter from './routes/AppRouter';
 
 function App() {
   return (
     <>
       <Header />
       <AppRouter />
+      <Footer />
     </>
   );
 }
