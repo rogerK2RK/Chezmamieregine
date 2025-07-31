@@ -4,9 +4,9 @@ import './Hero.css';
 import haricot from './images/hero-haricot.png';
 import ravitoto from './images/hero-ravitoto.png';
 import tilapia from './images/hero-tilapia.png';
-import crevette from './images/hero-crevette.png';
+import ravitoto2 from './images/hero-crevette.png';
 
-const images = [haricot, ravitoto, tilapia, crevette];
+const images = [haricot, ravitoto, tilapia, ravitoto2];
 
 export default function Hero() {
   const [index, setIndex] = useState(0);
@@ -14,17 +14,9 @@ export default function Hero() {
   useEffect(() => {
     const interval = setInterval(() => {
       setIndex((prev) => (prev + 1) % images.length);
-    }, 4500);
+    }, 7000);
     return () => clearInterval(interval);
   }, []);
-
-  const prevSlide = () => {
-    setIndex((prev) => (prev - 1 + images.length) % images.length);
-  };
-
-  const nextSlide = () => {
-    setIndex((prev) => (prev + 1) % images.length);
-  };
 
   return (
     <div className="hero-carousel">
@@ -39,14 +31,13 @@ export default function Hero() {
 
       <div className="hero-content">
         <div>
-          <h1 className="title">Chez<br/>
-          Mamie Régine</h1>
-          <p className="subtitle">Les saveurs authentiques de la grande île</p>
+          <h1 className="title">Chez Mamie Régine</h1>
+          <p className="text-lg md:text-2xl">Les saveurs authentiques de la grande île</p>
         </div>
       </div>
 
-      {/* <button onClick={prevSlide} className="prev">‹</button> */}
-      {/* <button onClick={nextSlide} className="next">›</button> */}
+      {/* <button onClick={prevSlide} className="prev">‹</button>
+      <button onClick={nextSlide} className="next">›</button> */}
     </div>
   );
 }

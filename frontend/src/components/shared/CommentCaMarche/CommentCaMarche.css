@@ -1,0 +1,72 @@
+/* CommentCaMarche.css */
+
+.ccm-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 60px 20px;
+}
+
+.ccm-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  text-align: center;
+  color: #1f2937;
+  margin-bottom: 48px;
+}
+
+.ccm-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+}
+
+.ccm-step {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 20px;
+  padding: 32px 24px;
+  text-align: center;
+  transition: box-shadow 0.3s ease;
+}
+
+.ccm-step:hover {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.ccm-icon-wrapper {
+  width: 64px;
+  height: 64px;
+  background-color: #f97316;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 24px auto;
+}
+
+.ccm-icon-circle {
+  width: 32px;
+  height: 32px;
+  background-color: white;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ccm-icon {
+  color: #f97316;
+  font-size: 1.25rem;
+}
+
+.ccm-step-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 8px;
+}
+
+.ccm-step-subtitle {
+  font-size: 1.1rem;
+  color: #4b5563;
+}

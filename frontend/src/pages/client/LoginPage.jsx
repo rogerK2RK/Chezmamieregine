@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import api from '../../services/api';
+import './styles.css';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
