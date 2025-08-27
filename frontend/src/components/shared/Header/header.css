@@ -9,7 +9,7 @@
 }
 
 .header.scrolled {
-    background: linear-gradient(135deg, #fb923c, #f97316); /* ou autre couleur */
+    background: linear-gradient(135deg, #EF5007, #EF5007); /* ou autre couleur */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
@@ -31,6 +31,7 @@
     display: flex;
     gap: 2rem;
     align-items: center;
+    color: white;
 }
 
 .nav-link {
@@ -41,10 +42,10 @@
 
 .contact-btn {
     font-size: 1.2rem;
-    background-color: #f97316;
+    background-color: #EF5007;
     color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 0.25rem;
+    padding: 10px 30px;
+    border-radius: 50px;
     text-decoration: none;
     border: none;
     transition: background-color 0.3s ease, transform 0.3s ease;
@@ -52,11 +53,40 @@
 
 .contact-btn.scrolled {
     background-color: #FFF;
-    color: #f97316;
+    color: #EF5007;
 }
 
 .nav-link:hover {
-    color: #f97316;
+    color: #EF5007;
     text-underline-offset: 0.2rem;
     text-decoration: underline;
+}
+
+.glass{
+    position: relative;
+    padding: 1.25rem 3.5rem;
+    border-radius: 54px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, .20) 0%, rgba(255, 255, 255, .05) 0%);
+    border: 1px solid var(--glass-brd);
+    box-shadow: 0 10px 30px var(--glass-shadow);
+    backdrop-filter: blur(6px) saturate(100%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    outline: 1px solid rgba(255, 255, 255, .15);
+    outline-offset: 0px;
+}
+
+.glass.scrolled {
+    background: none ! important;
+    border: none;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    outline: none;
+    outline-offset: 0px;
+}
+
+.cnx-dcnx {
+    display:flex; 
+    gap: 0.4rem; 
+    align-items: center;
 }

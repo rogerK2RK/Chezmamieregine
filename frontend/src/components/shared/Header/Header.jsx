@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './header.css';
-import logo from '../../../assets/logo.svg';
+import logo from '../../../assets/Logo CMR Blc.svg';
 
 export default function Header() {
   const navigate = useNavigate();
@@ -35,21 +35,23 @@ export default function Header() {
           </Link>
         </div>
 
-        <div className="menu" id="Menu">
+        <div className={`menu glass${scrolled ? 'scrolled' : ''}`} id="Menu">
           <nav className="nav">
             <Link className='nav-link' to="/">Accueil</Link>
+            <Link className='nav-link' to="/connexion">Nos plats</Link>
             {token ? (
               <>
                 <span> Connecté : {name} ({role}) </span>
                 <button onClick={handleLogout}>Déconnexion</button>
               </>
             ) : (
-              <>
+              <div className='cnx-dcnx'>
                 <Link className='nav-link' to="/connexion">Connexion</Link>
+                /
                 <Link className='nav-link' to="/inscription">Inscription</Link>
-                <button className={`contact-btn ${scrolled ? 'scrolled' : ''}`}>Contact</button>
-              </>
+              </div>
             )}
+            <button className={`contact-btn ${scrolled ? 'scrolled' : ''}`}>Commander</button>
           </nav>
         </div>
       </div>
