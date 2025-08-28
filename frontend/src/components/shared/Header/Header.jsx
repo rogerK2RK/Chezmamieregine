@@ -35,10 +35,11 @@ export default function Header() {
           </Link>
         </div>
 
-        <div className={`menu glass${scrolled ? 'scrolled' : ''}`} id="Menu">
+        <div className={`menu ${scrolled ? 'scrolled' : ''}`} id="Menu">
           <nav className="nav">
-            <Link className='nav-link' to="/">Accueil</Link>
-            <Link className='nav-link' to="/connexion">Nos plats</Link>
+            <Link className='nav-link menu-item' to="/">Accueil</Link>
+            {/* <Link className='nav-link menu-item' to="/connexion">Nos plats</Link> */}
+            <Link className='nav-link menu-item' to="/connexion">Contact</Link>
             {token ? (
               <>
                 <span> Connecté : {name} ({role}) </span>
@@ -46,12 +47,12 @@ export default function Header() {
               </>
             ) : (
               <div className='cnx-dcnx'>
-                <Link className='nav-link' to="/connexion">Connexion</Link>
+                <Link className='nav-link menu-item' to="/connexion">Connexion</Link>
                 /
-                <Link className='nav-link' to="/inscription">Inscription</Link>
+                <Link className='nav-link menu-item' to="/inscription">Inscription</Link>
               </div>
             )}
-            <button className={`contact-btn ${scrolled ? 'scrolled' : ''}`}>Commander</button>
+            <button className={`btn-primary ${scrolled ? 'scrolled' : ''}`}>Commander</button>
           </nav>
         </div>
       </div>

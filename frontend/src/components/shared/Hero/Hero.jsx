@@ -20,20 +20,24 @@ export default function Hero() {
 
   return (
     <div className="hero-carousel">
-      {images.map((src, i) => (
-        <img
-          key={i}
-          src={src}
-          alt={`plat ${i}`}
-          className={i === index ? "active" : ""}
-        />
-      ))}
+      <div className="bkgrd-carousel">
+        {images.map((src, i) => (
+          <img
+            key={i}
+            src={src}
+            alt={`plat ${i}`}
+            className={i === index ? "active" : ""}
+          />
+        ))}
+      </div>
 
       <div className="hero-content">
-        <div>
-          <h1 className="title">Chez Mamie Régine</h1>
-          <p className="text-lg md:text-2xl">Les saveurs authentiques de la grande île</p>
-        </div>
+          <h1 className="title">Chez<br/> 
+            Mamie Régine</h1>
+          <div className="hero-content-scd">
+            <span className="text-lg">Les saveurs authentiques de la grande île</span>
+            <button className="btn-primary">Voire nos plats</button>
+          </div>
       </div>
 
       {/* <button onClick={prevSlide} className="prev">‹</button>

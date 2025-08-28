@@ -1,3 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=Playfair+Display:wght@600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=MonteCarlo&display=swap');
+
+
 * {
   font-family: 'Inter', sans-serif;
 }
@@ -5,4 +9,42 @@
 body {
   margin: 0;
   min-height: 100vh;
+}
+
+:root {
+  --font-auther-title: 'Playfair Display', serif;
+  --font-title: 'MonteCarlo';
+  --font-body: 'Montserrat', sans-serif;
+}
+
+/* Titres */
+h1 { 
+  font-family: 'MonteCarlo', cursive !important; font-weight: 400; 
+}
+
+h2 {
+  font-family: var(--font-auther-title);
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+h3 {
+  font-family: var(--font-body);
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+/* Texte */
+p, span, li {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+/* Boutons & liens */
+button, a {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
 }

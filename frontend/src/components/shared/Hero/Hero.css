@@ -87,33 +87,16 @@
 
 /* Titres */
 .hero-carousel .title {
-  font-size: 3rem;
-  font-weight: bold;
-  margin-bottom: 1rem;
+  font-size: 12rem;
+  line-height: 10rem;
+  font-weight: lighter;
+  margin-bottom: 3rem;
+  margin-top: 1rem;
 }
 
 .hero-carousel .text-lg {
-  font-size: 1.25rem;
-}
-
-.hero-carousel .md\:text-2xl {
-  font-size: 1.75rem;
-}
-
-/* Boutons de navigation */
-.hero-carousel button {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 30;
-  font-size: 2rem;
-  background: rgba(0, 0, 0, 0.4);
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  border-radius: 50%;
-  transition: background 0.9s ease;
+  font-size: 2.25rem;
+  width: 100%;
 }
 
 .hero-carousel button:hover {
@@ -132,7 +115,18 @@
 .hero-content {
   position: relative;
   z-index: 20;
-  top: 45%;
+  top: 20%;
   left: 15%;
   color: white;
+}
+
+.hero-content-scd {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+}
+
+.hero-content-scd .btn-primary {
+  width: 22%;
+  margin-top: 40px;
 }
