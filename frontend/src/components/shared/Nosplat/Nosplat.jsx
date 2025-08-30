@@ -12,7 +12,7 @@ const NosPlats = () => {
   return (
     <div className="nosplats-container">
       <div className="nosplats-wrapper">
-        <h1 className="nosplats-title">Nos Plats</h1>
+        <h2 className="nosplats-title">Nos Plats</h2>
 
         <div className="nosplats-grid">
           {[1, 2, 3].map((index) => (
