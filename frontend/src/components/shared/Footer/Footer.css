@@ -1,15 +1,71 @@
 .footer {
-    background: linear-gradient(135deg, #fb923c, #f97316);
-    padding: 15px 30px;
+    background: linear-gradient(135deg, #73230D, #73230D);
+    padding: 6rem 13rem 13rem 13rem;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     text-align: center;
     color: white;
     font-size: 1.1rem;
+    background: url(./images/Footer.png) no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: 45%;
+
 }
 
-.links {
-    margin-top: '0.5rem';
-    display: 'flex';
-    justify-content: 'center';
-    gap: '1rem';
+.footer h4 {
+    margin-bottom: 5px;
+}
+
+.footer a {
+    color: #FFF;
+    text-decoration-line: none;
+    font-weight: 400;
+}
+
+.footer-top {
+    display: flex;
+    justify-content: space-between;
+    gap: auto;
+}
+
+.footer-top--left {
+    width: 33%;
+    text-align: left;
+}
+
+.footer-top--left .logo {
+    width: 80%;
+}
+
+.blc-hours {
+    display: flex;
+    justify-content: space-between;
+}
+
+.footer-top--right {
+    display: flex;
+    text-align: left;
+    justify-content: space-around;
+    width: 67%;
+}
+
+.footer-top--right .content {
+    display: flex;
+    flex-direction: column;
+    gap: 45px;
+}
+
+.footer-btm, .footer-btm .links {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.footer-btm .links {
+    gap: 60px;
+}
+
+
+hr {
+    margin: 5em 0em ;
 }
