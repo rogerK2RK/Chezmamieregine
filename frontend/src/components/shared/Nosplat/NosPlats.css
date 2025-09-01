@@ -55,7 +55,7 @@
   flex-direction: column;
   align-items: stretch;
   justify-content: space-between;
-  -webkit-backdrop-filter: blur(15px);
+  backdrop-filter: blur(15px);
   background: rgba(230, 225, 221, 0.048);
   border: 1px solid rgba(255, 255, 255, 0.15);
   box-shadow: inset 0px 0px 2px #1b1b1b, inset 1.2px 1.3px 5px #c0b5b599, 0px -3px 19px #0c0c0c27, 0px -12px 19px #0e0e0e1e;
@@ -101,4 +101,8 @@
 /* ====== Footer ====== */
 .nosplats-footer {
   text-align: center;
+}
+
+.nosplats-footer .nosplats-button {
+  width: 10%;
 }

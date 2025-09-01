@@ -30,7 +30,7 @@ const NosPlats = () => {
                 />
               </div>
 
-              <h2 className="nosplats-name">{plat.nom}</h2>
+              <h3 className="nosplats-name">{plat.nom}</h3>
               <p className="nosplats-description">{plat.description}</p>
               <p className="nosplats-price">{plat.prix}</p>
 
