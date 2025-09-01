@@ -1,35 +1,38 @@
 import React from 'react';
 import './CommentCaMarche.css';
+import plat from './images/steak.png';
+import commande from './images/client.png';
+import livraison from './images/livraison-de-colis.png';
 
 const CommentCaMarche = () => {
   const steps = [
     {
-      title: "Trouve",
-      subtitle: "un restau dans ta ville",
-      icon: "🍽️"
+      title: "1. Choisis tes plats",
+      subtitle: "Découvre nos recettes et sélectionne ce qui te fait envie.",
+      icon: plat
     },
     {
-      title: "Choisis",
-      subtitle: "ton ou tes plat",
-      icon: "🍽️"
+      title: "2. Commande par téléphone",
+      subtitle: "Appelle-nous, choisis la date et ton mode de paiement.",
+      icon: commande
     },
     {
-      title: "Contact",
-      subtitle: "le restaurant concerné",
-      icon: "🍽️"
+      title: "3. Reçois ta commande",
+      subtitle: "Nous préparons avec soin et livrons à la date convenue.",
+      icon: livraison
     }
   ];
 
   return (
     <div className="ccm-container">
-      <h1 className="ccm-title">Comment ça marche</h1>
+      <h2 className="ccm-title">Comment ça marche</h2>
       
       <div className="ccm-grid">
         {steps.map((step, index) => (
           <div key={index} className="ccm-step">
             <div className="ccm-icon-wrapper">
               <div className="ccm-icon-circle">
-                <span className="ccm-icon">{step.icon}</span>
+                <img src={step.icon} alt={step.title} className="ccm-icon" />
               </div>
             </div>
 

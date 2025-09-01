@@ -11,6 +11,7 @@
   font-weight: bold;
   text-align: center;
   color: #1f2937;
+  margin-top: 0px;
   margin-bottom: 48px;
 }
 
@@ -45,8 +46,6 @@
 }
 
 .ccm-icon-circle {
-  width: 32px;
-  height: 32px;
   background-color: white;
   border-radius: 8px;
   display: flex;
@@ -55,8 +54,9 @@
 }
 
 .ccm-icon {
-  color: #f97316;
+  /* color: #f97316; */
   font-size: 1.25rem;
+  width: 75px;
 }
 
 .ccm-step-title {
@@ -64,6 +64,7 @@
   font-weight: bold;
   color: #1f2937;
   margin-bottom: 8px;
+  min-height: 58px;
 }
 
 .ccm-step-subtitle {
