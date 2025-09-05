@@ -51,7 +51,7 @@ button, a {
 }
 
 .header.scrolled {
-    background: linear-gradient(135deg, #EF5007, #EF5007); /* ou autre couleur */
+    background: linear-gradient(135deg, #73230D, #73230D); /* ou autre couleur */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
@@ -84,7 +84,7 @@ button, a {
 
 .btn-primary.scrolled {
     background-color: #FFF;
-    color: #EF5007;
+    color: #73230D;
 }
 
 .btn-primary {

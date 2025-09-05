@@ -3,6 +3,7 @@
 .ccm-container {
   margin: 0 0;
   padding: 6rem 13rem;
+  background-color: #FDF6EB;
 }
 
 .ccm-title {
@@ -22,9 +23,9 @@
 
 .ccm-step {
   background-color: #ffffff;
-  border: 1px solid #e5e7eb;
+  border: 1px solid #c8360631;
   border-radius: 20px;
-  padding: 32px 24px;
+  padding: 40px 60px;
   text-align: center;
   transition: box-shadow 0.3s ease;
 }
@@ -55,7 +56,7 @@
 .ccm-icon {
   /* color: #f97316; */
   font-size: 1.25rem;
-  width: 75px;
+  width: 100px;
 }
 
 .ccm-step-title {
