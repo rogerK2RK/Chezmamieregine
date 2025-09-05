@@ -118,7 +118,8 @@ button, a {
 }
 
 .btn-primary:hover {
-  background: rgba(0, 0, 0, 0.6);
+    color: #FFF;
+    background: rgba(0, 0, 0, 0.6);
 }
 
 .btn-primary:hover::before {
