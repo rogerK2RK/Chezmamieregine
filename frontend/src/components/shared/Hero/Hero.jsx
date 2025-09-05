@@ -20,7 +20,14 @@ export default function Hero() {
 
   return (
     <div className="hero-carousel">
-      <div className="bkgrd-carousel">
+      <div
+        className="bkgrd-carousel"
+        style={{
+          backgroundImage: `url(${images[index]})`,
+        }}>
+      </div>
+
+      {/* <div className="bkgrd-carousel">
         {images.map((src, i) => (
           <img
             key={i}
@@ -29,7 +36,7 @@ export default function Hero() {
             className={i === index ? "active" : ""}
           />
         ))}
-      </div>
+      </div> */}
 
       <div className="hero-content">
           <h1 className="title">Chez<br/> 

@@ -7,6 +7,18 @@
 }
 
 /* Images */
+
+.bkgrd-carousel {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed; /* effet parallax */
+  transition: background-image 1s ease-in-out;
+}
+
 .hero-carousel img {
   position: absolute;
   width: 100%;
