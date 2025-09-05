@@ -4,7 +4,7 @@
 .nosplats-container {
   --bg-img: none;
   background-color: #fffbeb;
-  padding: 6rem 13rem;
+  padding: 3rem 13rem;
   position: relative;
   overflow: hidden;
 }
@@ -39,6 +39,7 @@
   color: #ffffff;
   font-weight: bold;
   margin-bottom: 48px;
+  margin-top: 0px;
 }
 
 /* ====== Grille des cartes ====== */
