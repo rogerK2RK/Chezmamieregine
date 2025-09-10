@@ -4,6 +4,7 @@ import Apropos from '../../components/shared/About/About.jsx';
 import NosPlats from '../../components/shared/Nosplat/Nosplat.jsx';
 import CommentCaMarche from '../../components/shared/CommentCaMarche/CommentCaMarche.jsx';
 import Cta from '../../components/shared/CTA/cta.jsx';
+import ContactForm from '../../components/shared/ContactForm/ContactForm.jsx';
 
 export default function HomePage() {
   return <>
@@ -12,5 +13,6 @@ export default function HomePage() {
     <NosPlats />
     <CommentCaMarche />
     <Cta />
+    <ContactForm />
   </>;
 }

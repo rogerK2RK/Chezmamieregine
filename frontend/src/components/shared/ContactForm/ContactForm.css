@@ -1,0 +1,110 @@
+.contact-container {
+  padding: 6rem 13rem;
+  margin: auto;
+  background-color: #FDF6EB;
+}
+
+.contact-container-content {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 4rem;
+}
+
+.contact-container h2 {
+  margin-top: 0px;
+  font-size: 3rem;
+  margin-bottom: 48px;
+  color: #2c2c2c;
+}
+
+/* Bloc formulaire */
+form {
+  margin: 0px ! important;
+  max-width: none ! important;
+}
+
+.form-section {
+  flex: 1;
+}
+
+.contact-form .form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.contact-form .form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+.contact-form label {
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.contact-form input,
+.contact-form textarea {
+  padding: 0.85rem 0.9rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  font-size: 1rem;
+  background: #fff;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  outline: none;
+  /* border-color: #ff8a34; */
+  box-shadow: 0 0 0 4px rgba(255, 138, 52, 0.14);
+}
+
+/* Bloc carte */
+.map-section {
+  flex: 1;
+  display: flex;
+  align-items: stretch;
+}
+
+.map-wrapper {
+  position: relative;
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  background: #f9fafb;
+  min-height: 420px; /* assure une belle hauteur */
+}
+
+.map-frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.map-link {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: saturate(180%) blur(6px);
+  padding: 0.45rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  color: #111827;
+  text-decoration: none;
+  border: 1px solid rgba(0,0,0,0.06);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .contact-container { flex-direction: column; }
+  .contact-form .form-row { grid-template-columns: 1fr; }
+  .map-wrapper { min-height: 320px; }
+}
