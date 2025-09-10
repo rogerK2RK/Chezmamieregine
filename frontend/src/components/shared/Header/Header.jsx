@@ -52,7 +52,7 @@ export default function Header() {
                 <Link className='nav-link menu-item' to="/inscription">Inscription</Link>
               </div>
             )}
-            <button className={`btn-primary ${scrolled ? 'scrolled' : ''}`}>Commander</button>
+            <button className='btn-primary scrolled'>Commander</button>
           </nav>
         </div>
       </div>
