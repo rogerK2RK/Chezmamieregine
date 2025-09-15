@@ -1,7 +1,14 @@
 .contact-container {
   padding: 6rem 13rem;
   margin: auto;
-  background-color: #FDF6EB;
+  /* background-color: #FDF6EB; */
+}
+
+.contact-container {
+  background: url(../../../assets/background.png) no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: 45%;
 }
 
 .contact-container-content {
@@ -15,7 +22,7 @@
   margin-top: 0px;
   font-size: 3rem;
   margin-bottom: 48px;
-  color: #2c2c2c;
+  color: #FFF;
 }
 
 /* Bloc formulaire */
