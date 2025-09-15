@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import HomePage from '../pages/client/HomePage';
 import LoginPage from '../pages/client/LoginPage';
 import RegisterPage from '../pages/client/RegisterPage';
+import ContactPage from '../pages/client/ContactPage';
 // import PrivateRoute from './PrivateRoute'; ← à ajouter si tu sécurises des pages client
 // import { ROLES } from '../utils/roles';   ← utile plus tard si rôle client est vérifié
 
@@ -12,6 +13,7 @@ export default function ClientRouter() {
       <Route path="/" element={<HomePage />} />
       <Route path="/connexion" element={<LoginPage />} />
       <Route path="/inscription" element={<RegisterPage />} />
+      <Route path="/contact" element={<ContactPage />} />
 
       {/* Exemple pour plus tard : page réservée aux clients */}
       {/*

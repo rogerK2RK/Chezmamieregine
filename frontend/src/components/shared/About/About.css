@@ -3,7 +3,7 @@
   align-items: center;
   justify-content: center;
   margin: 0 auto;
-  padding: 6rem 13rem;
+  padding: 10rem 13rem;
   gap: 2rem;
   flex-wrap: wrap; /* permet le responsive */
 }
@@ -39,8 +39,8 @@
 }
 
 .section-text p {
-  font-size: 1rem;
-  line-height: 1.6;
+  font-size: 1.2rem;
+  line-height: 1.2;
   color: #555;
   margin-top: 0px;
   margin-bottom: 1.5rem;

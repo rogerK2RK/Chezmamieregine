@@ -2,7 +2,7 @@
 
 .ccm-container {
   margin: 0 0;
-  padding: 6rem 13rem;
+  padding: 10rem 13rem;
   background-color: #FDF6EB;
 }
 
@@ -68,6 +68,6 @@
 }
 
 .ccm-step-subtitle {
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   color: #4b5563;
 }

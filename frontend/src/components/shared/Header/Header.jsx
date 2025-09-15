@@ -39,7 +39,7 @@ export default function Header() {
           <nav className="nav">
             <Link className='nav-link menu-item' to="/">Accueil</Link>
             {/* <Link className='nav-link menu-item' to="/connexion">Nos plats</Link> */}
-            <Link className='nav-link menu-item' to="/connexion">Contact</Link>
+            <Link className='nav-link menu-item' to="/contact">Contact</Link>
             {token ? (
               <>
                 <span> Connecté : {name} ({role}) </span>
