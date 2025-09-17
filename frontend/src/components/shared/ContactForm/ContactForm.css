@@ -23,16 +23,16 @@
   font-size: 3rem;
   margin-bottom: 48px;
   color: #FFF;
+  text-align: center;
 }
 
 /* Bloc formulaire */
-form {
-  margin: 0px ! important;
-  max-width: none ! important;
-}
 
 .form-section {
   flex: 1;
+  padding: 4rem 2rem;
+  background-color: #FFF;
+  border-radius: 12px;
 }
 
 .contact-form .form-row {
@@ -47,14 +47,14 @@ form {
   margin-bottom: 1rem;
 }
 
-.contact-form label {
+.contact-form label, form label {
   margin-bottom: 0.5rem;
   font-weight: 600;
   color: #374151;
 }
 
 .contact-form input,
-.contact-form textarea {
+.contact-form textarea, form input {
   padding: 0.85rem 0.9rem;
   border: 1px solid #e5e7eb;
   border-radius: 10px;

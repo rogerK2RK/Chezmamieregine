@@ -37,7 +37,7 @@ export default function Header() {
 
         <div className={`menu ${scrolled ? 'scrolled' : ''}`} id="Menu">
           <nav className="nav">
-            <Link className='nav-link menu-item' to="/">Accueil</Link>
+            <Link className='nav-link menu-item' to="/">Nos plats</Link>
             {/* <Link className='nav-link menu-item' to="/connexion">Nos plats</Link> */}
             <Link className='nav-link menu-item' to="/contact">Contact</Link>
             {token ? (

@@ -43,8 +43,8 @@ h1 {
   font-family: 'MonteCarlo', cursive !important; font-weight: 400; 
 }
 
-h3, h4 {
-  font-family: var(--font-auther-title);
+h4 {
+  font-family: var(--font-body);
 }
 
 h2 {
