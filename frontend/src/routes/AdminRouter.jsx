@@ -3,7 +3,7 @@ import AdminDashboard from '../pages/admin/AdminDashboard';
 import AdminPlats from '../pages/admin/AdminPlats';
 import AdminCommandes from '../pages/admin/AdminCommandes';
 import AdminUsers from '../pages/admin/AdminUsers';
-import AdminLoginPage from '../pages/admin/AdminLoginPage';
+import AdminLoginPage from '../pages/admin/AdminLoginPage/AdminLoginPage';
 import PrivateRoute from './PrivateRoute';
 import { ADMIN_ROLES } from '../utils/roles'; // ⬅️ import ici
 
