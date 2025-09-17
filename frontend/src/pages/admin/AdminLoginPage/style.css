@@ -14,7 +14,7 @@
     border-radius: 20px;
     padding: 40px;
     width: 400px;
-    box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3);
+    /* box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3); */
     animation: slideUp 0.6s ease-out;
 }
 
