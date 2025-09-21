@@ -1,23 +1,13 @@
-import { BrowserRouter } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
-
-import Header from './components/shared/Header/Header';
-import Footer from './components/shared/Footer/Footer';
 import AppRouter from './routes/AppRouter';
+import { ClientAuthProvider } from './context/ClientAuthContext';
+import { AdminAuthProvider } from './context/AdminAuthContext'; // si tu l’utilises aussi
 
-function App() {
-  const location = useLocation();
-  const isAdminRoute = location.pathname.startsWith('/admin')
-
+export default function App() {
   return (
-    <>
-    {!isAdminRoute && <Header />}
-      {/* <Header /> */}
-      <AppRouter />
-      {!isAdminRoute && <Footer />}
-      {/* <Footer /> */}
-    </>
+    <ClientAuthProvider>
+      <AdminAuthProvider>
+        <AppRouter />
+      </AdminAuthProvider>
+    </ClientAuthProvider>
   );
 }
-
-export default App;

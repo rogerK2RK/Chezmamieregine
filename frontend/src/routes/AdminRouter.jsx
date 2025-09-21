@@ -1,3 +1,4 @@
+// src/routes/AdminRouter.jsx
 import { Routes, Route } from 'react-router-dom';
 import AdminDashboard from '../pages/admin/AdminDashboard';
 import AdminPlats from '../pages/admin/AdminPlats';
@@ -5,16 +6,14 @@ import AdminCommandes from '../pages/admin/AdminCommandes';
 import AdminUsers from '../pages/admin/AdminUsers';
 import AdminLoginPage from '../pages/admin/AdminLoginPage/AdminLoginPage';
 import PrivateRoute from './PrivateRoute';
-import { ADMIN_ROLES } from '../utils/roles'; // ⬅️ import ici
+import { ADMIN_ROLES } from '../utils/roles';
 
 export default function AdminRouter() {
   return (
     <Routes>
-      {/* Routes réservées aux administrateurs */}
-      <Route path="/admin/login" element={<AdminLoginPage />} />
-
+      <Route path="login" element={<AdminLoginPage />} />
       <Route
-        path="/admin/dashboard"
+        path="dashboard"
         element={
           <PrivateRoute allowedRoles={ADMIN_ROLES}>
             <AdminDashboard />
@@ -22,7 +21,7 @@ export default function AdminRouter() {
         }
       />
       <Route
-        path="/admin/plats"
+        path="plats"
         element={
           <PrivateRoute allowedRoles={ADMIN_ROLES}>
             <AdminPlats />
@@ -30,7 +29,7 @@ export default function AdminRouter() {
         }
       />
       <Route
-        path="/admin/commandes"
+        path="commandes"
         element={
           <PrivateRoute allowedRoles={ADMIN_ROLES}>
             <AdminCommandes />
@@ -38,7 +37,7 @@ export default function AdminRouter() {
         }
       />
       <Route
-        path="/admin/utilisateurs"
+        path="utilisateurs"
         element={
           <PrivateRoute allowedRoles={ADMIN_ROLES}>
             <AdminUsers />

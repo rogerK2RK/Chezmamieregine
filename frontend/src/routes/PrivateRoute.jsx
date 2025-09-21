@@ -1,18 +1,17 @@
 import { Navigate } from 'react-router-dom';
 
 export default function PrivateRoute({ children, allowedRoles = [] }) {
-  const token = localStorage.getItem('token');
-  const role = localStorage.getItem('role');
+  const token =
+    localStorage.getItem('adminToken') || sessionStorage.getItem('adminToken');
+  const role =
+    localStorage.getItem('adminRole') || sessionStorage.getItem('adminRole');
 
-  // Si pas de token → non connecté
-  if (!token) {
-    return <Navigate to="/login" />;
+  console.log('PRIVATEROUTE token:', localStorage.getItem('adminToken'), sessionStorage.getItem('adminToken'));
+  console.log('PRIVATEROUTE role:', localStorage.getItem('adminRole'), sessionStorage.getItem('adminRole'));
+
+  if (!token) return <Navigate to="/admin/login" />;
+  if (allowedRoles.length && !allowedRoles.includes(role)) {
+    return <Navigate to="/admin/login" />;
   }
-
-  // Si rôle non autorisé → refus d'accès
-  if (allowedRoles.length > 0 && !allowedRoles.includes(role)) {
-    return <Navigate to="/" />;
-  }
-
   return children;
 }
