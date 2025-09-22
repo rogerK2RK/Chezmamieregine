@@ -1,15 +1,19 @@
 const express = require("express");
 const router = express.Router();
 const { protect } = require("../middleware/authMiddleware");
+const { authorizeRoles } = require('../middleware/roleMiddleware');
 const platController = require("../controllers/platController");
 
-// Public routes
-router.get("/", platController.getPlats);
-router.get("/:id", platController.getPlatById);
+// Admin/owner : lister tous les plats
+router.get('/', protect, authorizeRoles('admin','owner','superAdmin'), platController.getAllPlats);
 
-// Protected routes (owners/admin)
-router.post("/", protect, platController.createPlat);
-router.put("/:id", protect, platController.updatePlat);
-router.delete("/:id", protect, platController.deletePlat);
+// Créer
+router.post('/', protect, authorizeRoles('admin','owner','superAdmin'), platController.createPlat);
+
+// Mettre à jour
+router.put('/:id', protect, authorizeRoles('admin','owner','superAdmin'), platController.updatePlat);
+
+// Supprimer
+router.delete('/:id', protect, authorizeRoles('admin','owner','superAdmin'), platController.deletePlat);
 
 module.exports = router;
