@@ -6,9 +6,6 @@ export default function PrivateRoute({ children, allowedRoles = [] }) {
   const role =
     localStorage.getItem('adminRole') || sessionStorage.getItem('adminRole');
 
-  console.log('PRIVATEROUTE token:', localStorage.getItem('adminToken'), sessionStorage.getItem('adminToken'));
-  console.log('PRIVATEROUTE role:', localStorage.getItem('adminRole'), sessionStorage.getItem('adminRole'));
-
   if (!token) return <Navigate to="/admin/login" />;
   if (allowedRoles.length && !allowedRoles.includes(role)) {
     return <Navigate to="/admin/login" />;

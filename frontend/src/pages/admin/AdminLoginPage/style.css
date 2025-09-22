@@ -170,3 +170,42 @@
         padding: 30px 20px;
     }
 }
+
+/* ===== Eye toggle button ===== */
+.eye-btn {
+  position: absolute;
+  right: 10px;
+  top: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.08);
+  color: #e5e7eb;
+  cursor: pointer;
+  transition: background .2s ease, border-color .2s ease, transform .12s ease;
+}
+.eye-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.28);
+  transform: translateY(-1px);
+}
+.eye-btn:active { transform: translateY(0); }
+
+.eye-svg { display: block; }
+
+/* Pupille : petit mouvement */
+.eye-btn .pupil { transition: transform .22s ease; }
+.eye-btn.open .pupil { transform: translateY(0); }
+.eye-btn.closed .pupil { transform: translateY(1px); }
+
+/* Paupières animées */
+.eye-btn .lid { transition: transform .22s ease; }
+.eye-btn.open .lid.top { transform: translateY(-34px); }
+.eye-btn.open .lid.bottom { transform: translateY(34px); }
+.eye-btn.closed .lid.top { transform: translateY(0); }
+.eye-btn.closed .lid.bottom { transform: translateY(0); }
+
+/* Trait barré quand fermé */
+.eye-btn .slash { transition: opacity .2s ease; }
+.eye-btn.closed .slash { opacity: 0.65; }

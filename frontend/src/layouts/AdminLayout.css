@@ -1,0 +1,30 @@
+/* frontend/src/layouts/admin-layout.css */
+.admin-shell {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  min-height: 100vh;
+  background: #0d0f12; /* fond sombre comme ta page de login */
+}
+
+.admin-sidebar {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  height: 100vh;
+  overflow-y: auto;
+  background: #0b0d10;
+  border-right: 1px solid rgba(255,255,255,0.08);
+}
+
+.admin-main {
+  min-width: 0; /* évite débordements */
+  padding: 24px;
+  color: #e5e7eb;
+}
+
+/* Responsive : sidebar repliée sous 1024px */
+@media (max-width: 1024px) {
+  .admin-shell {
+    grid-template-columns: 72px 1fr;
+  }
+}

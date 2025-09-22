@@ -1,0 +1,57 @@
+/* frontend/src/pages/admin/partials/sidebar.css */
+.sb-root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 16px 12px;
+  color: #e5e7eb;
+}
+
+.sb-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 8px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  margin-bottom: 10px;
+}
+.sb-logo { font-size: 22px; }
+.sb-title { font-weight: 700; letter-spacing: .2px; }
+
+.sb-nav {
+  display: grid;
+  gap: 6px;
+  padding: 10px 0;
+}
+
+.sb-link {
+  display: grid;
+  grid-template-columns: 26px 1fr;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  color: #cbd5e1;
+  text-decoration: none;
+  transition: background .15s ease, color .15s ease;
+}
+.sb-link:hover { background: rgba(255,255,255,0.06); color: #fff; }
+.sb-link.active { background: rgba(79,70,229,.18); color: #fff; }
+
+.sb-footer {
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+.sb-logout {
+  width: 100%;
+  background: rgba(239,68,68,0.1);
+  border: 1px solid rgba(239,68,68,0.25);
+  color: #fecaca;
+  border-radius: 10px;
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: background .15s ease, transform .12s ease;
+}
+.sb-logout:hover { background: rgba(239,68,68,0.16); }
+.sb-logout:active { transform: translateY(1px); }
