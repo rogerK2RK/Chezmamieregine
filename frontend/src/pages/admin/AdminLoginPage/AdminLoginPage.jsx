@@ -3,6 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import api from '../../../services/api';
 import EyeToggle from '../../../components/shared/ui/EyeToggle'; // 👁️ bouton toggle
 import './style.css';
+import { Link } from 'react-router-dom';
+import logoCmr from '../../../assets/Logo CMR Blc.svg';
+
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState('');
@@ -51,7 +54,8 @@ export default function AdminLoginPage() {
       <div className="particles"></div>
 
       <form onSubmit={handleLogin} className="login-container">
-        <h2 className="login-title">Connexion Administrateur</h2>
+        <img src={logoCmr} alt="Logo de chez Mamie Regine" />
+        <h2 className="login-title">Se connecter</h2>
 
         {/* Email */}
         <div className="form-group">
@@ -89,8 +93,12 @@ export default function AdminLoginPage() {
           <EyeToggle open={showPassword} onToggle={() => setShowPassword((v) => !v)} />
         </div>
 
+        <button type="submit" className="login-button">
+          SE CONNECTER
+        </button>
+
         {/* Se souvenir de moi */}
-        <div className="form-row remember-row">
+        <div className="form-row-remember">
           <label className="remember-label">
             <input
               type="checkbox"
@@ -99,11 +107,8 @@ export default function AdminLoginPage() {
             />
             <span>Se souvenir de moi</span>
           </label>
+          <Link>Mot de passe oublié</Link>
         </div>
-
-        <button type="submit" className="login-button">
-          Se connecter
-        </button>
       </form>
     </div>
   );

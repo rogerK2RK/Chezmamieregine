@@ -8,6 +8,9 @@
 }
 
 .login-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -88,7 +91,7 @@
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    margin-top: 20px;
+    margin-top: 10px;
     position: relative;
     overflow: hidden;
 }
@@ -179,15 +182,13 @@
   display: grid;
   place-items: center;
   border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  background: rgba(255, 255, 255, 0.08);
+  border: 0px solid rgba(255, 255, 255, 0.15); 
+  background: rgba(255, 255, 255, 0);
   color: #e5e7eb;
   cursor: pointer;
   transition: background .2s ease, border-color .2s ease, transform .12s ease;
 }
 .eye-btn:hover {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.28);
   transform: translateY(-1px);
 }
 .eye-btn:active { transform: translateY(0); }
@@ -209,3 +210,15 @@
 /* Trait barré quand fermé */
 .eye-btn .slash { transition: opacity .2s ease; }
 .eye-btn.closed .slash { opacity: 0.65; }
+
+.form-row-remember {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    margin-top: 15px;
+}
+
+.form-row-remember a {
+    text-transform: lowercase;
+    text-decoration: none;
+}
