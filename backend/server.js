@@ -4,31 +4,53 @@ const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 
 dotenv.config();
-connectDB();
 
 const app = express();
 
-// CORS en dev
-app.use(cors({ origin: "http://localhost:5173" }));
+/** CORS */
+const FRONT_ORIGIN = process.env.FRONT_ORIGIN || "http://localhost:5173";
+app.use(cors({
+  origin: FRONT_ORIGIN,
+  credentials: true,
+}));
 
 app.use(express.json());
 
-// Routes
+/** Routes ADMIN */
 const adminRoutes = require("./routes/adminRoutes");
 app.use("/api/admin", adminRoutes);
 
-const authRoutes = require("./routes/authRoutes");
+/** Routes CLIENT */
+const clientAuthRoutes = require("./routes/clientAuthRoutes");
+app.use("/api/auth", clientAuthRoutes);
+
+/** Autres routes métiers */
 const platRoutes = require("./routes/platRoutes");
 const commandeRoutes = require("./routes/commandeRoutes");
-
-app.use("/api/auth", authRoutes);
 app.use("/api/plats", platRoutes);
 app.use("/api/commandes", commandeRoutes);
 
+/** Ping / health */
+app.get("/healthz", (_req, res) => res.json({ ok: true }));
 
-// Test route
-app.get("/", (req, res) => res.send("Bienvenue sur l'API de Chez Mamie Régine"));
+/** 404 */
+app.use((req, res, _next) => {
+  res.status(404).json({ message: `Route introuvable: ${req.method} ${req.originalUrl}` });
+});
 
-// Lancement serveur
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`🚀 Serveur lancé sur le port ${PORT}`));
+/** Handler d’erreurs */
+app.use((err, _req, res, _next) => {
+  console.error("API error:", err);
+  res.status(err.status || 500).json({ message: err.message || "Erreur serveur" });
+});
+
+/** ⬇️ Import ET appel de l'init superAdmin après connexion DB */
+const { ensureSuperAdmin } = require('./utils/initAdmin');
+
+(async () => {
+  await connectDB();            // on attend la connexion Mongo
+  await ensureSuperAdmin();     // on crée le superAdmin si nécessaire
+
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => console.log(`🚀 Serveur lancé sur le port ${PORT}`));
+})();

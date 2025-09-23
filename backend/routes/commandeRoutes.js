@@ -1,21 +1,30 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const commandeController = require("../controllers/commandeController");
-const { protect } = require("../middleware/authMiddleware");
-const { authorizeRoles } = require("../middleware/roleMiddleware");
+
+const { adminProtect } = require('../middleware/adminAuth');              // BO
+const { clientProtect } = require('../middleware/clientAuth');            // Client
+const { authorizeAdminRoles } = require('../middleware/roleMiddleware');  // Rôles BO
+const commandeController = require('../controllers/commandeController');
+
 
 
 // Routes accessibles uniquement à admin/owner
-router.get("/", protect, authorizeRoles("admin", "owner"), commandeController.getAllCommandes);
-router.put("/:id", protect, authorizeRoles("admin", "owner"), commandeController.updateCommandeStatus);
+router.get(
+  '/',
+  adminProtect,
+  authorizeAdminRoles('admin', 'owner', 'superAdmin'),
+  commandeController.getAllCommandes
+);
+
+router.put(
+  '/:id',
+  adminProtect,
+  authorizeAdminRoles('admin', 'owner', 'superAdmin'),
+  commandeController.updateCommandeStatus
+);
 
 // Routes pour les clients
-router.get("/mes", protect, commandeController.getMesCommandes);
-router.post("/", protect, commandeController.createCommande);
-
-console.log("commandeController.getAllCommandes typeof:", typeof commandeController.getAllCommandes);
-console.log("protect typeof:", typeof protect);
-console.log("authorizeRoles typeof:", typeof authorizeRoles);
-
+router.get('/mes', clientProtect, commandeController.getMesCommandes);
+router.post('/', clientProtect, commandeController.createCommande);
 
 module.exports = router;

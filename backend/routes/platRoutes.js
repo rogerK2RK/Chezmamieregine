@@ -1,19 +1,37 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const { protect } = require("../middleware/authMiddleware");
-const { authorizeRoles } = require('../middleware/roleMiddleware');
-const platController = require("../controllers/platController");
 
-// Admin/owner : lister tous les plats
-router.get('/', protect, authorizeRoles('admin','owner','superAdmin'), platController.getAllPlats);
+const { adminProtect } = require('../middleware/adminAuth');           // ✅
+const { authorizeAdminRoles } = require('../middleware/roleMiddleware'); // ✅
+const platController = require('../controllers/platController');
 
-// Créer
-router.post('/', protect, authorizeRoles('admin','owner','superAdmin'), platController.createPlat);
+// Routes BO (gestion des plats)
+router.get(
+  '/',
+  adminProtect,
+  authorizeAdminRoles('admin', 'owner', 'superAdmin'),
+  platController.getAllPlats
+);
 
-// Mettre à jour
-router.put('/:id', protect, authorizeRoles('admin','owner','superAdmin'), platController.updatePlat);
+router.post(
+  '/',
+  adminProtect,
+  authorizeAdminRoles('admin', 'owner', 'superAdmin'),
+  platController.createPlat
+);
 
-// Supprimer
-router.delete('/:id', protect, authorizeRoles('admin','owner','superAdmin'), platController.deletePlat);
+router.put(
+  '/:id',
+  adminProtect,
+  authorizeAdminRoles('admin', 'owner', 'superAdmin'),
+  platController.updatePlat
+);
+
+router.delete(
+  '/:id',
+  adminProtect,
+  authorizeAdminRoles('admin', 'owner', 'superAdmin'),
+  platController.deletePlat
+);
 
 module.exports = router;

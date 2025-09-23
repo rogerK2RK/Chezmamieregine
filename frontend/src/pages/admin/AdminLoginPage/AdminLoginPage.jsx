@@ -41,6 +41,7 @@ export default function AdminLoginPage() {
 
       navigate('/admin/dashboard');
     } catch (err) {
+      console.log('ADMIN LOGIN ERROR:', err.response?.status, err.response?.data);
       alert('Erreur de connexion admin');
     }
   };

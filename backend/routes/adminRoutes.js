@@ -1,21 +1,16 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const { protect } = require("../middleware/authMiddleware");
-const { authorizeRoles } = require("../middleware/roleMiddleware");
-const authController = require("../controllers/authController");
-const adminController = require("../controllers/adminController");
+const { adminProtect } = require('../middleware/adminAuth');
+const { authorizeAdminRoles } = require('../middleware/roleMiddleware');
+const adminAuth = require('../controllers/adminAuthController');
 
-// === Connexion admin ===
-// POST /api/admin/login
-router.post("/login", adminController.adminLogin);
+router.post('/login', adminAuth.adminLogin);
 
-// === Gestion utilisateurs par admin ===
-// Seuls admin et superAdmin peuvent créer un compte admin/owner
 router.post(
-  "/create-user",
-  protect,
-  authorizeRoles("admin", "superAdmin"),
-  authController.createUserByAdmin
+  '/create-user',
+  adminProtect,
+  authorizeAdminRoles('superAdmin', 'admin'),
+  adminAuth.createAdminUser
 );
 
 module.exports = router;
