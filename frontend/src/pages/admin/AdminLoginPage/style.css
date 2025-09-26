@@ -14,7 +14,7 @@
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 20px;
+    border-radius: 4px;
     padding: 40px;
     width: 400px;
     /* box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3); */
@@ -30,6 +30,10 @@
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+.logo-back-connexion {
+    margin-bottom: 35px;
 }
 
 .login-title {
@@ -62,7 +66,7 @@
     padding: 15px 20px;
     background: rgba(255, 255, 255, 0.08);
     border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 12px;
+    border-radius: 4px;
     color: #ffffff;
     font-size: 16px;
     outline: none;
@@ -83,9 +87,9 @@
 .login-button {
     width: 100%;
     padding: 15px;
-    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    background: #25B9D7;
     border: none;
-    border-radius: 12px;
+    border-radius: 4px;
     color: white;
     font-size: 16px;
     font-weight: 600;
@@ -94,11 +98,6 @@
     margin-top: 10px;
     position: relative;
     overflow: hidden;
-}
-
-.login-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(79, 70, 229, 0.4);
 }
 
 .login-button:active {
@@ -221,4 +220,7 @@
 .form-row-remember a {
     text-transform: lowercase;
     text-decoration: none;
+    color: #25B9D7;
+    font-weight: 400;
 }
+

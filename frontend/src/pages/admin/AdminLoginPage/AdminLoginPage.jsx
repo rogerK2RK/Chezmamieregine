@@ -54,8 +54,8 @@ export default function AdminLoginPage() {
       <div className="particles"></div>
 
       <form onSubmit={handleLogin} className="login-container">
-        <img src={logoCmr} alt="Logo de chez Mamie Regine" />
-        <h2 className="login-title">Se connecter</h2>
+        <img className='logo-back-connexion' src={logoCmr} alt="Logo de chez Mamie Regine" />
+        {/* <h2 className="login-title">Se connecter</h2> */}
 
         {/* Email */}
         <div className="form-group">
@@ -107,7 +107,7 @@ export default function AdminLoginPage() {
             />
             <span>Se souvenir de moi</span>
           </label>
-          <Link>Mot de passe oublié</Link>
+          <Link className='link-back'>Mot de passe oublié</Link>
         </div>
       </form>
     </div>
