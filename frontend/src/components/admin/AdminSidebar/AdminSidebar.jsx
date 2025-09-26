@@ -29,8 +29,14 @@ export default function AdminSidebar() {
         <NavLink to="/admin/plats" className="sb-link">
           <span>📚</span><span>Plats</span>
         </NavLink>
+        <NavLink to="/admin/categories" className="sb-link">
+          <span>🗂️</span><span>Catégories</span>
+        </NavLink>
         <NavLink to="/admin/commandes" className="sb-link">
           <span>📦</span><span>Commandes</span>
+        </NavLink>
+        <NavLink to="/admin/clients" className="sb-link">
+          <span>🧑‍🍳</span><span>Clients</span>
         </NavLink>
         <NavLink to="/admin/utilisateurs" className="sb-link">
           <span>👥</span><span>Utilisateurs</span>

@@ -24,6 +24,13 @@ app.use("/api/admin", adminRoutes);
 const clientAuthRoutes = require("./routes/clientAuthRoutes");
 app.use("/api/auth", clientAuthRoutes);
 
+const clientBackRoutes = require('./routes/clientBackRoutes');
+app.use('/api/admin/clients', clientBackRoutes);
+
+/** Routes CATEGORY */
+const categoryRoutes = require('./routes/categoryRoutes');
+app.use('/api/categories', categoryRoutes);
+
 /** Autres routes métiers */
 const platRoutes = require("./routes/platRoutes");
 const commandeRoutes = require("./routes/commandeRoutes");

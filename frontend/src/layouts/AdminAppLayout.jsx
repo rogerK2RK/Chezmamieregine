@@ -1,6 +1,7 @@
 // frontend/src/layouts/AdminAppLayout.jsx
 import { Outlet, useNavigate } from 'react-router-dom';
 import AdminSidebar from '../components/admin/AdminSidebar/AdminSidebar';
+import AdminHeader from '../pages/admin/partials/AdminHeader';
 import './AdminLayout.css';
 
 export default function AdminAppLayout() {
@@ -19,10 +20,12 @@ export default function AdminAppLayout() {
       <aside className="admin-sidebar">
         <AdminSidebar />
       </aside>
-
-      <main className="admin-main">
-        <Outlet />
-      </main>
+      <div className="admin-content">
+        <AdminHeader />      
+        <main className="admin-main">
+          <Outlet />
+        </main>
+      </div>
     </div>
   );
 }

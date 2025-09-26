@@ -1,9 +1,8 @@
-/* frontend/src/layouts/admin-layout.css */
 .admin-shell {
   display: grid;
   grid-template-columns: 260px 1fr;
   min-height: 100vh;
-  background: #0d0f12; /* fond sombre comme ta page de login */
+  background: #0d0f12;
 }
 
 .admin-sidebar {
@@ -16,13 +15,19 @@
   border-right: 1px solid rgba(255,255,255,0.08);
 }
 
+.admin-content {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
 .admin-main {
-  min-width: 0; /* évite débordements */
+  min-width: 0;
   padding: 24px;
   color: #e5e7eb;
 }
 
-/* Responsive : sidebar repliée sous 1024px */
+
 @media (max-width: 1024px) {
   .admin-shell {
     grid-template-columns: 72px 1fr;

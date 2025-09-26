@@ -14,6 +14,8 @@ import AdminDashboard from '../pages/admin/AdminDashboard';
 import AdminPlats from '../pages/admin/AdminPlats';
 import AdminCommandes from '../pages/admin/AdminCommandes';
 import AdminUsers from '../pages/admin/AdminUsers';
+import AdminClients from '../pages/admin/AdminClients';
+import AdminCategories from '../pages/admin/AdminCategories';
 
 import PrivateRoute from './PrivateRoute';
 import { ADMIN_ROLES } from '../utils/roles';
@@ -65,6 +67,22 @@ export default function AppRouter() {
           element={
             <PrivateRoute allowedRoles={ADMIN_ROLES}>
               <AdminUsers />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/admin/clients"
+          element={
+            <PrivateRoute allowedRoles={ADMIN_ROLES}>
+              <AdminClients />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/admin/categories"
+          element={
+            <PrivateRoute allowedRoles={ADMIN_ROLES}>
+              <AdminCategories />
             </PrivateRoute>
           }
         />

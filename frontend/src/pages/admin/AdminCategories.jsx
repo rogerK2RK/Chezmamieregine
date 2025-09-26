@@ -1,0 +1,265 @@
+import { useEffect, useMemo, useState } from 'react';
+import api from '../../services/api';
+import authHeaderAdmin from '../../services/authHeaderAdmin';
+
+export default function AdminCategories() {
+  const headers = useMemo(() => ({ ...authHeaderAdmin() }), []);
+  const [cats, setCats] = useState([]);
+  const [plats, setPlats] = useState([]); // pour assignation
+  const [q, setQ] = useState('');
+  const [loading, setLoading] = useState(true);
+
+  const [editing, setEditing] = useState(null);
+  const [form, setForm] = useState({ name: '', description: '' });
+
+  const [assignOpen, setAssignOpen] = useState(null); // id catégorie
+  const [selectedPlatIds, setSelectedPlatIds] = useState([]);
+
+  const fetchCats = async () => {
+    setLoading(true);
+    try {
+      const { data } = await api.get('/categories', { headers });
+      setCats(data || []);
+    } catch {
+      alert('Erreur chargement catégories');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchPlats = async () => {
+    try {
+      const { data } = await api.get('/plats', { headers });
+      setPlats(data || []);
+    } catch {
+      // silencieux
+    }
+  };
+
+  useEffect(() => { fetchCats(); fetchPlats(); /* eslint-disable */ }, []);
+
+  const filtered = cats.filter(c => {
+    const s = q.toLowerCase().trim();
+    if (!s) return true;
+    return (c.name || '').toLowerCase().includes(s) || (c.slug || '').includes(s);
+  });
+
+  const openCreate = () => {
+    setEditing(null);
+    setForm({ name: '', description: '' });
+  };
+
+  const openEdit = (c) => {
+    setEditing(c);
+    setForm({ name: c.name || '', description: c.description || '' });
+  };
+
+  const saveCat = async (e) => {
+    e.preventDefault();
+    try {
+      if (editing) {
+        const { data } = await api.put(`/categories/${editing._id}`, form, { headers });
+        setCats(prev => prev.map(c => (c._id === editing._id ? data : c)));
+      } else {
+        const { data } = await api.post('/categories', form, { headers });
+        setCats(prev => [data, ...prev]);
+      }
+      setEditing(null);
+      setForm({ name: '', description: '' });
+    } catch {
+      alert('Enregistrement impossible');
+    }
+  };
+
+  const removeCat = async (id) => {
+    if (!confirm('Supprimer cette catégorie ?\n(Refusée si des plats y sont rattachés)')) return;
+    try {
+      await api.delete(`/categories/${id}`, { headers });
+      setCats(prev => prev.filter(c => c._id !== id));
+    } catch (e) {
+      alert(e?.response?.data?.message || 'Suppression impossible');
+    }
+  };
+
+  const openAssign = (catId) => {
+    setAssignOpen(catId);
+    setSelectedPlatIds([]);
+  };
+
+  const toggleSelectPlat = (id) => {
+    setSelectedPlatIds(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
+  };
+
+  const assign = async () => {
+    try {
+      await api.post(`/categories/${assignOpen}/assign-plats`, { platIds: selectedPlatIds }, { headers });
+      setAssignOpen(null);
+      setSelectedPlatIds([]);
+      // Pas obligatoire de refetch, mais on peut:
+      // fetchCats();
+    } catch {
+      alert('Assignation impossible');
+    }
+  };
+
+  return (
+    <div className="admin-page">
+      <h1 style={{ marginBottom: 16 }}>Catégories</h1>
+
+      {/* formulaire create/edit */}
+      <form onSubmit={saveCat} style={{ display: 'grid', gap: 10, maxWidth: 520, marginBottom: 18 }}>
+        <div>
+          <label>Nom</label>
+          <input
+            value={form.name}
+            onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+            style={input}
+            required
+          />
+        </div>
+        <div>
+          <label>Description</label>
+          <textarea
+            value={form.description}
+            onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
+            style={{ ...input, minHeight: 80 }}
+          />
+        </div>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button type="submit" style={btnPrimary}>{editing ? 'Enregistrer' : 'Créer'}</button>
+          {editing && <button type="button" style={btnGhost} onClick={() => { setEditing(null); setForm({ name:'', description:'' }); }}>Annuler</button>}
+        </div>
+      </form>
+
+      <div style={{ display: 'flex', gap: 12, marginBottom: 16 }}>
+        <input
+          placeholder="Rechercher une catégorie"
+          value={q}
+          onChange={e => setQ(e.target.value)}
+          style={input}
+        />
+      </div>
+
+      {loading ? (
+        <div>Chargement…</div>
+      ) : (
+        <div style={{ overflowX: 'auto' }}>
+          <table style={table}>
+            <thead>
+              <tr>
+                <th style={cell}>Nom</th>
+                <th style={cell}>Slug</th>
+                <th style={cell}>Active</th>
+                <th style={cell}>Créée le</th>
+                <th style={cell}>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.map(c => (
+                <tr key={c._id}>
+                  <td style={cell}>{c.name}</td>
+                  <td style={cell}>{c.slug}</td>
+                  <td style={cell}>{c.isActive ? 'Oui' : 'Non'}</td>
+                  <td style={cell}>{new Date(c.createdAt).toLocaleString()}</td>
+                  <td style={cell}>
+                    <button style={btnGhost} onClick={() => openEdit(c)}>Éditer</button>
+                    <button style={btnGhost} onClick={() => openAssign(c._id)}>Assigner des plats</button>
+                    <button style={btnDanger} onClick={() => removeCat(c._id)}>Supprimer</button>
+                  </td>
+                </tr>
+              ))}
+              {filtered.length === 0 && <tr><td style={cell} colSpan={5}>Aucune catégorie</td></tr>}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {/* Modale assignation */}
+      {assignOpen && (
+        <div style={backdrop} onClick={() => setAssignOpen(null)}>
+          <div style={card} onClick={(e) => e.stopPropagation()}>
+            <h3 style={{ marginTop: 0 }}>Assigner des plats</h3>
+            <div style={{ maxHeight: '50vh', overflow: 'auto', paddingRight: 4 }}>
+              {plats.map(p => (
+                <label key={p._id} style={{ display: 'flex', gap: 10, alignItems: 'center', padding: '6px 0' }}>
+                  <input
+                    type="checkbox"
+                    checked={selectedPlatIds.includes(p._id)}
+                    onChange={() => toggleSelectPlat(p._id)}
+                  />
+                  <span>{p.name} — {Number(p.price).toFixed(2)} €</span>
+                </label>
+              ))}
+            </div>
+            <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end', marginTop: 12 }}>
+              <button style={btnGhost} onClick={() => setAssignOpen(null)}>Annuler</button>
+              <button style={btnPrimary} onClick={assign}>Assigner</button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+const table = {
+  width: '100%',
+  borderCollapse: 'collapse',
+  border: '1px solid rgba(255,255,255,0.12)',
+  borderRadius: 12,
+  overflow: 'hidden'
+};
+const cell = {
+  padding: '12px 10px',
+  borderBottom: '1px solid rgba(255,255,255,0.08)',
+  textAlign: 'left'
+};
+const input = {
+  flex: 1,
+  padding: '10px 12px',
+  borderRadius: 8,
+  border: '1px solid rgba(255,255,255,0.18)',
+  background: 'rgba(255,255,255,0.06)',
+  color: '#fff',
+  minWidth: 260
+};
+const btnPrimary = {
+  background: 'linear-gradient(135deg, #4f46e5, #7c3aed)',
+  color: '#fff',
+  border: 'none',
+  padding: '10px 14px',
+  borderRadius: 10,
+  cursor: 'pointer'
+};
+const btnGhost = {
+  background: 'rgba(255,255,255,0.06)',
+  color: '#e5e7eb',
+  border: '1px solid rgba(255,255,255,0.18)',
+  padding: '8px 12px',
+  borderRadius: 10,
+  cursor: 'pointer'
+};
+const btnDanger = {
+  background: 'rgba(239,68,68,0.14)',
+  color: '#fecaca',
+  border: '1px solid rgba(239,68,68,0.35)',
+  padding: '8px 12px',
+  borderRadius: 10,
+  cursor: 'pointer'
+};
+const backdrop = {
+  position: 'fixed',
+  inset: 0,
+  background: 'rgba(0,0,0,0.55)',
+  display: 'grid',
+  placeItems: 'center',
+  zIndex: 40
+};
+const card = {
+  width: 'min(720px, 92vw)',
+  background: 'rgba(13,15,18, 0.98)',
+  border: '1px solid rgba(255,255,255,0.12)',
+  borderRadius: 14,
+  padding: 18,
+  color: '#e5e7eb'
+};
