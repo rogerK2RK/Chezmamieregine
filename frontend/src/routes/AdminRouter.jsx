@@ -5,6 +5,7 @@ import AdminPlats from '../pages/admin/AdminPlats';
 import AdminCommandes from '../pages/admin/AdminCommandes';
 import AdminUsers from '../pages/admin/AdminUsers';
 import AdminLoginPage from '../pages/admin/AdminLoginPage/AdminLoginPage';
+import AdminPlatForm from '../pages/admin/AdminPlatForm';
 import PrivateRoute from './PrivateRoute';
 import { ADMIN_ROLES } from '../utils/roles';
 
@@ -41,6 +42,22 @@ export default function AdminRouter() {
         element={
           <PrivateRoute allowedRoles={ADMIN_ROLES}>
             <AdminUsers />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/admin/plats/new"
+        element={
+          <PrivateRoute allowedRoles={ADMIN_ROLES}>
+            <AdminPlatForm />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/admin/plats/:id/edit"
+        element={
+          <PrivateRoute allowedRoles={ADMIN_ROLES}>
+            <AdminPlatForm />
           </PrivateRoute>
         }
       />

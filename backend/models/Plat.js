@@ -1,18 +1,22 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
+const { getNextId } = require('../utils/idGenerator');
 
 const platSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  description: String,
-  price: { type: Number, required: true },
+  platId: { type: String, unique: true, index: true },
+  ar:     { type: String, required: true, unique: true, trim: true },
+  name:   { type: String, required: true },
+  price:  { type: Number, required: true },
   category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', default: null },
-  images: [
-    {
-      url:  { type: String, required: true },
-      order:  { type: Number, default: 1 }  // pour gérer l’ordre d’affichage
-    }
-  ],
-  owner: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-  available: { type: Boolean, default: true }
+  description: String,
+  images: { type: [String], default: [] },
+  isAvailable: { type: Boolean, default: true },
+  createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'AdminUser', default: null }
 }, { timestamps: true });
 
-module.exports = mongoose.model("Plat", platSchema);
+platSchema.pre('save', async function(next) {
+  if (!this.isNew) return next();
+  if (!this.platId) this.platId = await getNextId('PLT', 'plat');
+  next();
+});
+
+module.exports = mongoose.model('Plat', platSchema);

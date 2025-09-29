@@ -1,3 +1,4 @@
+// backend/utils/initAdmin.js
 const bcrypt = require('bcryptjs');
 const AdminUser = require('../models/AdminUser');
 
@@ -15,10 +16,13 @@ async function ensureSuperAdmin() {
       return;
     }
 
+    const email = SUPERADMIN_EMAIL.trim().toLowerCase(); // 👈 normalise
+    const name  = SUPERADMIN_NAME.trim();
+
     const hashed = await bcrypt.hash(SUPERADMIN_PASSWORD, 10);
     const admin = await AdminUser.create({
-      name: SUPERADMIN_NAME,
-      email: SUPERADMIN_EMAIL,
+      name,
+      email,
       password: hashed,
       role: 'superAdmin',
     });

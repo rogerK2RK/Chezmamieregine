@@ -30,6 +30,9 @@ export default function AdminLoginPage() {
     e.preventDefault();
     try {
       const res = await api.post('/admin/login', { email, password });
+      localStorage.setItem('adminToken', res.data.token);
+      localStorage.setItem('adminRole',  res.data.role);
+
 
       if (!['admin', 'superAdmin'].includes(res.data.role)) {
         alert('Accès réservé aux administrateurs.');
