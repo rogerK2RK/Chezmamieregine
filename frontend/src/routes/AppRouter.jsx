@@ -47,14 +47,7 @@ export default function AppRouter() {
             </PrivateRoute>
           }
         />
-        <Route
-          path="/admin/plats"
-          element={
-            <PrivateRoute allowedRoles={['admin','superAdmin','owner']}>
-              <AdminPlats />
-            </PrivateRoute>
-          }
-        />
+        
         <Route
           path="/admin/commandes"
           element={
@@ -84,6 +77,14 @@ export default function AppRouter() {
           element={
             <PrivateRoute allowedRoles={ADMIN_ROLES}>
               <AdminCategories />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/admin/plats"
+          element={
+            <PrivateRoute allowedRoles={['admin','superAdmin','owner']}>
+              <AdminPlats />
             </PrivateRoute>
           }
         />

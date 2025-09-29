@@ -63,29 +63,49 @@ exports.createPlat = async (req, res) => {
 
 exports.updatePlat = async (req, res) => {
   try {
-    const patch = { ...req.body };
-    if (patch.ar) {
+    const allowed = ['ar','name','price','category','description','isAvailable','images'];
+    const patch = {};
+    for (const k of allowed) if (k in req.body) patch[k] = req.body[k];
+
+    if ('ar' in patch) {
       patch.ar = String(patch.ar).trim();
       const other = await Plat.findOne({ ar: patch.ar, _id: { $ne: req.params.id } });
-      if (other) return res.status(400).json({ message: 'AR déjà utilisée par un autre plat' });
+      if (other) return res.status(409).json({ message: 'Référence (AR) déjà utilisée par un autre plat' });
     }
+    if ('name' in patch) patch.name = String(patch.name).trim();
     if ('price' in patch) patch.price = Number(patch.price);
+    if ('description' in patch) patch.description = String(patch.description || '');
+
     if ('category' in patch) {
-      patch.category = mongoose.isValidObjectId(patch.category) ? patch.category : null;
+      // ⚠️ On ne remplace que si c’est un ObjectId valide
+      if (!mongoose.isValidObjectId(patch.category)) {
+        delete patch.category; // ne pas écraser par null
+      }
     }
 
-    const updated = await Plat.findByIdAndUpdate(req.params.id, patch, { new: true });
+    if ('images' in patch) {
+      patch.images = Array.isArray(patch.images)
+        ? patch.images.map(s => String(s).trim()).filter(Boolean)
+        : [];
+    }
+
+    const updated = await Plat.findByIdAndUpdate(
+      req.params.id,
+      { $set: patch },
+      { new: true, runValidators: true }
+    );
+
     if (!updated) return res.status(404).json({ message: 'Plat introuvable' });
     res.json(updated);
   } catch (err) {
     if (err?.code === 11000) {
-      const field = Object.keys(err.keyPattern || {})[0] || 'unique';
-      return res.status(400).json({ message: `Conflit d’unicité sur ${field}` });
+      return res.status(409).json({ message: 'Conflit d’unicité' });
     }
     console.error('PUT /plats/:id ERROR', err);
     res.status(500).json({ message: 'Erreur serveur', details: err.message });
   }
 };
+
 
 exports.deletePlat = async (req, res) => {
   try {

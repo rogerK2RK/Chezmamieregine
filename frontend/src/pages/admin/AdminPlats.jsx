@@ -8,6 +8,7 @@ export default function AdminPlats() {
   const [loading, setLoading] = useState(true);
   const [q, setQ] = useState('');
   const [selectedIds, setSelectedIds] = useState(new Set());
+  const [busyBulk, setBusyBulk] = useState(false);
   const navigate = useNavigate();
   const headers = useMemo(() => ({ ...authHeaderAdmin() }), []);
 
@@ -25,9 +26,17 @@ export default function AdminPlats() {
     }
   };
 
-  useEffect(() => { fetchPlats(); }, []);
+  useEffect(() => { fetchPlats(); /* eslint-disable-next-line */ }, []);
 
-  // ---- Sélection
+  // Helpers
+  const getDisplayCategory = (c) => {
+    if (!c) return '-';
+    if (typeof c === 'string') return c;         // si modèle "category: String"
+    if (typeof c === 'object') return c.name || c._id || '-';  // si ref Category
+    return String(c);
+  };
+
+  // Sélection
   const toggleOne = (id) => {
     setSelectedIds(prev => {
       const next = new Set(prev);
@@ -36,32 +45,33 @@ export default function AdminPlats() {
     });
   };
 
-  const allFilteredIds = plats
-    .filter(p =>
-      (p.name || '').toLowerCase().includes(q.toLowerCase()) ||
-      (p.category || '').toLowerCase().includes(q.toLowerCase()) ||
-      (p.ar || '').toLowerCase().includes(q.toLowerCase()) ||
-      (p.platId || '').toLowerCase().includes(q.toLowerCase()) ||
-      String(p.price || '').includes(q)
-    )
-    .map(p => p._id);
+  // Liste filtrée + ids filtrés
+  const filtered = plats.filter(p => {
+    const s = q.toLowerCase();
+    const inName = (p.name || '').toLowerCase().includes(s);
+    const inAr   = (p.ar || '').toLowerCase().includes(s);
+    const inPid  = (p.platId || '').toLowerCase().includes(s);
+    const inCat  = getDisplayCategory(p.category).toLowerCase().includes(s);
+    const inPrice = String(p.price ?? '').includes(s);
+    return inName || inAr || inPid || inCat || inPrice;
+  });
 
+  const allFilteredIds = filtered.map(p => p._id);
   const allSelected = allFilteredIds.length > 0 && allFilteredIds.every(id => selectedIds.has(id));
 
   const toggleAll = () => {
     setSelectedIds(prev => {
+      const next = new Set(prev);
       if (allSelected) {
-        const next = new Set(prev);
         allFilteredIds.forEach(id => next.delete(id));
-        return next;
       } else {
-        const next = new Set(prev);
         allFilteredIds.forEach(id => next.add(id));
-        return next;
       }
+      return next;
     });
   };
 
+  // Actions unitaires
   const handleDelete = async (id) => {
     if (!window.confirm('Supprimer ce plat ?')) return;
     try {
@@ -77,22 +87,53 @@ export default function AdminPlats() {
     }
   };
 
-  const filtered = plats.filter(p =>
-    (p.name || '').toLowerCase().includes(q.toLowerCase()) ||
-    (p.category || '').toLowerCase().includes(q.toLowerCase()) ||
-    (p.ar || '').toLowerCase().includes(q.toLowerCase()) ||
-    (p.platId || '').toLowerCase().includes(q.toLowerCase()) ||
-    String(p.price || '').includes(q)
-  );
+  // 🎯 ACTIONS GROUPÉES
+  const bulkDelete = async () => {
+    if (selectedIds.size === 0) return;
+    if (!window.confirm(`Supprimer ${selectedIds.size} plat(s) ?`)) return;
+    setBusyBulk(true);
+    try {
+      const ids = Array.from(selectedIds);
+      await Promise.all(ids.map(id => api.delete(`/plats/${id}`, { headers })));
+      setPlats(prev => prev.filter(p => !selectedIds.has(p._id)));
+      setSelectedIds(new Set());
+    } catch (e) {
+      console.error(e);
+      alert("Suppression groupée impossible");
+    } finally {
+      setBusyBulk(false);
+    }
+  };
+
+  const bulkSetAvailability = async (isAvailable) => {
+    if (selectedIds.size === 0) return;
+    setBusyBulk(true);
+    try {
+      const ids = Array.from(selectedIds);
+      await Promise.all(
+        ids.map(id => api.put(`/plats/${id}`, { isAvailable }, { headers }))
+      );
+      // Mise à jour optimiste locale
+      setPlats(prev =>
+        prev.map(p => selectedIds.has(p._id) ? { ...p, isAvailable } : p)
+      );
+      setSelectedIds(new Set());
+    } catch (e) {
+      console.error(e);
+      alert("Mise à jour groupée impossible");
+    } finally {
+      setBusyBulk(false);
+    }
+  };
 
   return (
     <div className="admin-page">
       <h1 style={{ marginBottom: 16 }}>Plats</h1>
 
       {/* Barre de recherche + bouton créer */}
-      <div style={{ display: 'flex', gap: 12, marginBottom: 16 }}>
+      <div style={{ display: 'flex', gap: 12, marginBottom: 12, alignItems: 'center' }}>
         <input
-          placeholder="Rechercher..."
+          placeholder="Rechercher (nom, AR, ID, catégorie, prix)"
           value={q}
           onChange={e => setQ(e.target.value)}
           style={input}
@@ -101,6 +142,24 @@ export default function AdminPlats() {
           + Nouveau plat
         </button>
       </div>
+
+      {/* ✅ Barre d'actions groupées (s’affiche s’il y a une sélection) */}
+      {selectedIds.size > 0 && (
+        <div style={bulkBar}>
+          <div>{selectedIds.size} sélectionné(s)</div>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <button disabled={busyBulk} onClick={() => bulkSetAvailability(true)} style={btnGhost}>
+              Marquer “Disponible”
+            </button>
+            <button disabled={busyBulk} onClick={() => bulkSetAvailability(false)} style={btnGhost}>
+              Marquer “Indisponible”
+            </button>
+            <button disabled={busyBulk} onClick={bulkDelete} style={btnDanger}>
+              Supprimer la sélection
+            </button>
+          </div>
+        </div>
+      )}
 
       {loading ? (
         <div>Chargement…</div>
@@ -153,7 +212,7 @@ export default function AdminPlats() {
                     <td style={thTd}>{plat.platId}</td>
                     <td style={thTd}>{plat.ar}</td>
                     <td style={thTd}>{plat.name}</td>
-                    <td style={thTd}>{plat.category || '-'}</td>
+                    <td style={thTd}>{getDisplayCategory(plat.category)}</td>
                     <td style={thTd}>{Number(plat.price).toFixed(2)}</td>
                     <td style={thTd}>
                       <span style={plat.isAvailable ? badgeOk : badgeOff}>
@@ -214,6 +273,18 @@ const input = {
   color: '#fff',
   minWidth: 240,
 };
+const bulkBar = {
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  gap: 12,
+  padding: '10px 12px',
+  border: '1px dashed rgba(255,255,255,0.18)',
+  borderRadius: 10,
+  marginBottom: 12,
+  background: 'rgba(255,255,255,0.04)',
+  color: '#e5e7eb',
+};
 const btnPrimary = {
   background: 'linear-gradient(135deg, #4f46e5, #7c3aed)',
   color: '#fff',
@@ -229,7 +300,6 @@ const btnGhost = {
   padding: '8px 12px',
   borderRadius: 10,
   cursor: 'pointer',
-  marginRight: 6,
 };
 const btnDanger = {
   background: 'rgba(239,68,68,0.14)',
