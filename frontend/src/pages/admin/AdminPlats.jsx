@@ -128,8 +128,6 @@ export default function AdminPlats() {
 
   return (
     <div className="admin-page">
-      <h1 style={{ marginBottom: 16 }}>Plats</h1>
-
       {/* Barre de recherche + bouton créer */}
       <div style={{ display: 'flex', gap: 12, marginBottom: 12, alignItems: 'center' }}>
         <input
