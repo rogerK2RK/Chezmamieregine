@@ -3,29 +3,34 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import api from '../../services/api';
 import authHeaderAdmin from '../../services/authHeaderAdmin';
+import AdminImageUploader from '../../components/admin/AdminImageUploader';
 
 export default function AdminPlatForm() {
-  const { id } = useParams();
+  const { id } = useParams();          // si présent => édition
   const isEdit = Boolean(id);
   const navigate = useNavigate();
 
-  // Guards pour éviter les effets multiples en dev/StrictMode
+  // Guards (évite doubles appels en dev/StrictMode)
   const didFetchCategories = useRef(false);
   const didFetchPlat = useRef(false);
 
+  // Form principal (sans images)
   const [form, setForm] = useState({
     ar: '',
     name: '',
     price: '',
-    category: '',        // contiendra l'_id de Category
+    category: '',         // _id d'une Category
     description: '',
-    isAvailable: true,
-    imageUrls: ''
+    isAvailable: true
   });
+
+  // Images gérées comme un tableau d’URLs
+  const [images, setImages] = useState([]);
+
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(isEdit);
 
-  // 1) Charger les catégories UNE SEULE FOIS
+  // 1) Charger les catégories UNE FOIS
   useEffect(() => {
     if (didFetchCategories.current) return;
     didFetchCategories.current = true;
@@ -35,13 +40,13 @@ export default function AdminPlatForm() {
         const { data } = await api.get('/categories', { headers: authHeaderAdmin() });
         setCategories(Array.isArray(data) ? data : []);
       } catch (e) {
-        console.error('[GET categories] error', e?.response?.status, e?.response?.data || e);
+        console.error('[GET categories]', e?.response?.status, e?.response?.data || e);
         setCategories([]);
       }
     })();
   }, []);
 
-  // 2) Charger le plat si édition — UNE SEULE FOIS par id
+  // 2) Charger le plat si édition — UNE FOIS
   useEffect(() => {
     if (!isEdit) return;
     if (didFetchPlat.current) return;
@@ -59,11 +64,11 @@ export default function AdminPlatForm() {
               ? data.category
               : (data.category?._id || ''),
           description: data.description || '',
-          isAvailable: data.isAvailable ?? true,
-          imageUrls: Array.isArray(data.images) ? data.images.join(', ') : ''
+          isAvailable: data.isAvailable ?? true
         });
+        setImages(Array.isArray(data.images) ? data.images : []);
       } catch (e) {
-        console.error('[GET plat] error', e?.response?.status, e?.response?.data || e);
+        console.error('[GET plat]', e?.response?.status, e?.response?.data || e);
         alert('Erreur lors du chargement du plat');
         navigate('/admin/plats');
       } finally {
@@ -72,6 +77,7 @@ export default function AdminPlatForm() {
     })();
   }, [isEdit, id, navigate]);
 
+  // Submit
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -79,10 +85,10 @@ export default function AdminPlatForm() {
       ar: form.ar.trim(),
       name: form.name.trim(),
       price: Number(form.price),
-      ...(form.category ? { category: form.category } : {}), // n’envoie que si présent
+      ...(form.category ? { category: form.category } : {}),
       description: form.description.trim(),
       isAvailable: !!form.isAvailable,
-      images: form.imageUrls.split(',').map(s => s.trim()).filter(Boolean)
+      images // ⬅️ tableau d’URLs déjà prêt
     };
 
     if (!payload.ar) { alert('AR requise'); return; }
@@ -100,13 +106,13 @@ export default function AdminPlatForm() {
     } catch (e) {
       const msg = e?.response?.data?.message || 'Enregistrement impossible';
       alert(msg);
-      console.error('[SAVE plat] error', e?.response?.status, e?.response?.data || e);
+      console.error('[SAVE plat]', e?.response?.status, e?.response?.data || e);
     }
   };
 
   if (loading) return <div>Chargement…</div>;
 
-  // Styles inline (identiques à avant)
+  // Styles
   const input = {
     width: '100%', padding: '10px 12px', borderRadius: 8,
     border: '1px solid rgba(255,255,255,0.18)', background: 'rgba(255,255,255,0.06)', color: '#fff'
@@ -124,7 +130,7 @@ export default function AdminPlatForm() {
     <div className="admin-page">
       <h1>{isEdit ? 'Éditer le plat' : 'Nouveau plat'}</h1>
 
-      <form onSubmit={handleSubmit} style={{ display: 'grid', gap: 14, maxWidth: 640 }}>
+      <form onSubmit={handleSubmit} style={{ display: 'grid', gap: 14, maxWidth: 720 }}>
         <div>
           <label>Référence (AR) *</label>
           <input
@@ -181,12 +187,9 @@ export default function AdminPlatForm() {
         </div>
 
         <div>
-          <label>Images (URLs séparées par des virgules)</label>
-          <input
-            value={form.imageUrls}
-            onChange={e => setForm(f => ({ ...f, imageUrls: e.target.value }))}
-            style={input}
-          />
+          <label>Images</label>
+          {/* Drag & Drop + import — renvoie une liste d’URLs */}
+          <AdminImageUploader value={images} onChange={setImages} />
         </div>
 
         <label style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
