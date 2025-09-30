@@ -125,6 +125,7 @@ export default function AdminPlats() {
       setBusyBulk(false);
     }
   };
+  
 
   return (
     <div className="admin-page">
