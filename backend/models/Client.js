@@ -3,15 +3,11 @@ const { getNextId } = require('../utils/idGenerator');
 
 const clientSchema = new mongoose.Schema({
   clientId: { type: String, unique: true, index: true }, 
-  name: { type: String, required: true, trim: true },
-  email: { type: String, unique: true, required: true, lowercase: true, trim: true },
-  password: { type: String, required: true },
-  phone: String,
-  addresses: [{
-    label: String,
-    line1: String, line2: String, city: String, zip: String, country: String
-  }],
-  // autres champs client si besoin
+  lastName:  { type: String, required: true, trim: true },
+  firstName: { type: String, required: true, trim: true },
+  email:     { type: String, required: true, unique: true, lowercase: true, trim: true, index: true },
+  sex:       { type: String, enum: ['H', 'F', 'other'], required: true },
+  password:  { type: String, required: true } // hashed
 }, { timestamps: true });
 
 clientSchema.pre('save', async function(next) {

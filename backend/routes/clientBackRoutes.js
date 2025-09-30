@@ -3,38 +3,37 @@ const express = require('express');
 const router = express.Router();
 
 const { adminProtect } = require('../middleware/adminAuthMiddleware');
-const { authorizeRoles } = require('../middleware/roleMiddleware');
+const { authorizeAdminRoles } = require('../middleware/roleMiddleware');
 const clientBack = require('../controllers/clientBackController');
 
-// Lister tous les clients (admin/superAdmin/owner)
+// Rôles autorisés au listing
+const allowList = ['superAdmin', 'admin', 'owner'];
+
 router.get(
   '/',
   adminProtect,
-  authorizeRoles('superAdmin', 'admin', 'owner'),
+  authorizeAdminRoles(...allowList),
   clientBack.getAllClients
 );
 
-// (Optionnel) Récupérer un client par ID
-// router.get(
-//   '/:id',
-//   adminProtect,
-//   authorizeRoles('superAdmin', 'admin'),
-//   clientBack.getClientById
-// );
-
-// Mettre à jour un client
 router.put(
   '/:id',
   adminProtect,
-  authorizeRoles('superAdmin', 'admin'),
+  authorizeAdminRoles('superAdmin', 'admin'),
   clientBack.updateClient
 );
 
-// Supprimer un client
+router.post(
+  '/:id/reset-password',
+  adminProtect,
+  authorizeAdminRoles('superAdmin', 'admin'),
+  clientBack.resetPassword
+);
+
 router.delete(
   '/:id',
   adminProtect,
-  authorizeRoles('superAdmin'),
+  authorizeAdminRoles('superAdmin'),
   clientBack.deleteClient
 );
 
