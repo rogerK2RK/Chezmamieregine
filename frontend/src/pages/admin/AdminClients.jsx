@@ -7,6 +7,8 @@ export default function AdminClients() {
   const [clients, setClients] = useState([]);
   const [q, setQ] = useState('');
   const [loading, setLoading] = useState(true);
+
+  // Édition (modale)
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState({
     firstName: '',
@@ -15,6 +17,9 @@ export default function AdminClients() {
     email: ''
   });
 
+  // Sélection pour actions groupées
+  const [selectedIds, setSelectedIds] = useState(new Set());
+
   const headers = useMemo(() => ({ ...authHeaderAdmin() }), []);
 
   const fetchClients = async () => {
@@ -22,6 +27,7 @@ export default function AdminClients() {
       setLoading(true);
       const { data } = await api.get('/admin/clients', { headers });
       setClients(Array.isArray(data) ? data : []);
+      setSelectedIds(new Set()); // reset selection après refresh
     } catch (e) {
       console.error('[GET clients] error', e?.response?.data || e);
       alert('Erreur lors du chargement des clients');
@@ -32,17 +38,45 @@ export default function AdminClients() {
 
   useEffect(() => { fetchClients(); /* eslint-disable-next-line */ }, []);
 
+  // --------- Filtrage ----------
   const filtered = clients.filter(c => {
     const s = q.toLowerCase().trim();
     if (!s) return true;
-    const fullName = `${c.firstName || ''} ${c.lastName || ''}`.toLowerCase();
     return (
       (c.clientId || '').toLowerCase().includes(s) ||
-      fullName.includes(s) ||
+      (c.firstName || '').toLowerCase().includes(s) ||
+      (c.lastName || '').toLowerCase().includes(s) ||
       (c.email || '').toLowerCase().includes(s)
     );
   });
 
+  // --------- Sélection ----------
+  const filteredIds = filtered.map(c => c._id);
+  const allSelected = filteredIds.length > 0 && filteredIds.every(id => selectedIds.has(id));
+
+  const toggleAll = () => {
+    setSelectedIds(prev => {
+      const next = new Set(prev);
+      if (allSelected) {
+        // désélectionne tout ce qui est dans la vue filtrée
+        filteredIds.forEach(id => next.delete(id));
+      } else {
+        // sélectionne tout ce qui est dans la vue filtrée
+        filteredIds.forEach(id => next.add(id));
+      }
+      return next;
+    });
+  };
+
+  const toggleOne = (id) => {
+    setSelectedIds(prev => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  };
+
+  // --------- Édition ----------
   const openEdit = (c) => {
     setEditing(c);
     setForm({
@@ -82,28 +116,68 @@ export default function AdminClients() {
     }
   };
 
+  // --------- Suppression ----------
   const removeClient = async (id) => {
     if (!window.confirm('Supprimer ce client ?')) return;
     try {
       await api.delete(`/admin/clients/${id}`, { headers });
       setClients(prev => prev.filter(c => c._id !== id));
+      setSelectedIds(prev => {
+        const next = new Set(prev);
+        next.delete(id);
+        return next;
+      });
     } catch (e) {
       console.error('[DELETE client] error', e?.response?.data || e);
       alert('Suppression impossible');
     }
   };
 
+  // --------- Suppression groupée ----------
+  const removeSelected = async () => {
+    if (selectedIds.size === 0) return;
+    if (!window.confirm(`Supprimer ${selectedIds.size} client(s) sélectionné(s) ?`)) return;
+
+    try {
+      // On supprime en série (simple et robuste)
+      for (const id of selectedIds) {
+        // si l’élément n’est pas dans la vue filtrée, on peut quand même supprimer côté API
+        await api.delete(`/admin/clients/${id}`, { headers });
+      }
+      setClients(prev => prev.filter(c => !selectedIds.has(c._id)));
+      setSelectedIds(new Set());
+    } catch (e) {
+      console.error('[BULK DELETE clients] error', e?.response?.data || e);
+      alert('Suppression groupée interrompue (voir console).');
+      // même si erreur, on refetch pour resynchroniser
+      fetchClients();
+    }
+  };
+
   return (
     <div className="admin-page">
-      <h1 style={{ marginBottom: 12 }}>Clients</h1>
-
-      <div style={{ display: 'flex', gap: 12, marginBottom: 16 }}>
+      {/* Barre d’actions */}
+      <div style={{ display: 'flex', gap: 12, marginBottom: 16, alignItems: 'center' }}>
         <input
-          placeholder="Rechercher (Client ID, nom, email)"
+          placeholder="Rechercher (ID, nom, email)"
           value={q}
           onChange={e => setQ(e.target.value)}
           style={input}
         />
+
+        {/* Boutons d’actions groupées */}
+        <button
+          style={{
+            ...btnDanger,
+            opacity: selectedIds.size ? 1 : 0.6,
+            cursor: selectedIds.size ? 'pointer' : 'not-allowed'
+          }}
+          disabled={selectedIds.size === 0}
+          onClick={removeSelected}
+          title={selectedIds.size ? `Supprimer ${selectedIds.size} sélection(s)` : 'Sélectionnez des clients'}
+        >
+          Supprimer la sélection
+        </button>
       </div>
 
       {loading ? (
@@ -113,30 +187,49 @@ export default function AdminClients() {
           <table style={table}>
             <thead>
               <tr>
-                <th style={cell}>Client ID</th>
-                <th style={cell}>Nom complet</th>
-                <th style={cell}>Sexe</th>
+                <th style={cell}>
+                  <input
+                    type="checkbox"
+                    checked={allSelected}
+                    onChange={toggleAll}
+                    aria-label="Tout sélectionner"
+                  />
+                </th>
+                <th style={cell}>ID client</th>
+                <th style={cell}>Nom</th>
                 <th style={cell}>Email</th>
+                <th style={cell}>Sexe</th>
                 <th style={cell}>Créé le</th>
                 <th style={cell}>Actions</th>
               </tr>
             </thead>
             <tbody>
-              {filtered.map(c => (
-                <tr key={c._id}>
-                  <td style={cell}>{c.clientId || '-'}</td>
-                  <td style={cell}>{`${c.firstName || ''} ${c.lastName || ''}`.trim() || '-'}</td>
-                  <td style={cell}>{c.sex || '-'}</td>
-                  <td style={cell}>{c.email || '-'}</td>
-                  <td style={cell}>{c.createdAt ? new Date(c.createdAt).toLocaleString() : '-'}</td>
-                  <td style={cell}>
-                    <button style={btnGhost} onClick={() => openEdit(c)}>Éditer</button>
-                    <button style={btnDanger} onClick={() => removeClient(c._id)}>Supprimer</button>
-                  </td>
-                </tr>
-              ))}
+              {filtered.map(c => {
+                const checked = selectedIds.has(c._id);
+                return (
+                  <tr key={c._id}>
+                    <td style={cell}>
+                      <input
+                        type="checkbox"
+                        checked={checked}
+                        onChange={() => toggleOne(c._id)}
+                        aria-label={`Sélectionner ${c.firstName} ${c.lastName}`}
+                      />
+                    </td>
+                    <td style={cell}>{c.clientId || '-'}</td>
+                    <td style={cell}>{`${c.firstName || ''} ${c.lastName || ''}`.trim()}</td>
+                    <td style={cell}>{c.email}</td>
+                    <td style={cell}>{c.sex || '-'}</td>
+                    <td style={cell}>{new Date(c.createdAt).toLocaleString()}</td>
+                    <td style={cell}>
+                      <button style={btnGhost} onClick={() => openEdit(c)}>Éditer</button>
+                      <button style={btnDanger} onClick={() => removeClient(c._id)}>Supprimer</button>
+                    </td>
+                  </tr>
+                );
+              })}
               {filtered.length === 0 && (
-                <tr><td style={cell} colSpan={6}>Aucun client</td></tr>
+                <tr><td style={cell} colSpan={7}>Aucun client</td></tr>
               )}
             </tbody>
           </table>
@@ -251,8 +344,7 @@ const readonlyField = {
 };
 
 const btnPrimary = { 
-  background: 'linear-gradient(135deg, #4f46e5, #7c3aed)', 
-  color: '#fff', 
+  background: 'linear-gradient(135deg, #4f46e5, #7c3aed)', color: '#fff', 
   border: 'none', 
   padding: '10px 14px', 
   borderRadius: 10, 
@@ -265,7 +357,8 @@ const btnGhost = {
   border: '1px solid rgba(255,255,255,0.18)', 
   padding: '8px 12px', 
   borderRadius: 10, 
-  cursor: 'pointer', marginRight: 6 
+  cursor: 'pointer', 
+  marginRight: 6 
 };
 
 const btnDanger = { 

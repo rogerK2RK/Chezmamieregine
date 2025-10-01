@@ -4,14 +4,13 @@ const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 
 // GET /api/admin/clients
-exports.getAllClients = async (_req, res) => {
+exports.getAllClients = async (req, res) => {
   try {
-    const clients = await Client.find()
-      .sort({ createdAt: -1 })
-      .select('lastName firstName email sex createdAt'); // pas de password
+    // ⬇️ on sélectionne explicitement clientId + firstName/lastName/email/sex/createdAt
+    const clients = await Client.find({}, 'clientId firstName lastName email sex createdAt');
     res.json(clients);
   } catch (e) {
-    console.error('getAllClients error', e);
+    console.error('getAllClients ERROR', e);
     res.status(500).json({ message: 'Erreur serveur' });
   }
 };
