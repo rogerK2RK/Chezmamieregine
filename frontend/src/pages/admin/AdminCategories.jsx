@@ -1,3 +1,4 @@
+// frontend/src/pages/admin/AdminCategories.jsx
 import { useEffect, useMemo, useState } from 'react';
 import api from '../../services/api';
 import authHeaderAdmin from '../../services/authHeaderAdmin';
@@ -9,9 +10,12 @@ export default function AdminCategories() {
   const [q, setQ] = useState('');
   const [loading, setLoading] = useState(true);
 
-  const [editing, setEditing] = useState(null);
+  // --- Modale Catégorie (create / edit) ---
+  const [catModalOpen, setCatModalOpen] = useState(false);
+  const [editing, setEditing] = useState(null); // null = création, sinon catégorie à éditer
   const [form, setForm] = useState({ name: '', description: '' });
 
+  // --- Modale d’assignation de plats ---
   const [assignOpen, setAssignOpen] = useState(null); // id catégorie
   const [selectedPlatIds, setSelectedPlatIds] = useState([]);
 
@@ -32,7 +36,7 @@ export default function AdminCategories() {
       const { data } = await api.get('/plats', { headers });
       setPlats(data || []);
     } catch {
-      // silencieux
+      /* silencieux */
     }
   };
 
@@ -44,30 +48,44 @@ export default function AdminCategories() {
     return (c.name || '').toLowerCase().includes(s) || (c.slug || '').includes(s);
   });
 
+  // --- Ouvrir modale création ---
   const openCreate = () => {
     setEditing(null);
     setForm({ name: '', description: '' });
+    setCatModalOpen(true);
   };
 
+  // --- Ouvrir modale édition ---
   const openEdit = (c) => {
     setEditing(c);
     setForm({ name: c.name || '', description: c.description || '' });
+    setCatModalOpen(true);
   };
 
+  // --- Enregistrer (création/édition) ---
   const saveCat = async (e) => {
     e.preventDefault();
+    const payload = {
+      name: (form.name || '').trim(),
+      description: (form.description || '').trim(),
+    };
+    if (!payload.name) {
+      alert('Le nom est requis');
+      return;
+    }
     try {
       if (editing) {
-        const { data } = await api.put(`/categories/${editing._id}`, form, { headers });
+        const { data } = await api.put(`/categories/${editing._id}`, payload, { headers });
         setCats(prev => prev.map(c => (c._id === editing._id ? data : c)));
       } else {
-        const { data } = await api.post('/categories', form, { headers });
+        const { data } = await api.post('/categories', payload, { headers });
         setCats(prev => [data, ...prev]);
       }
+      setCatModalOpen(false);
       setEditing(null);
       setForm({ name: '', description: '' });
-    } catch {
-      alert('Enregistrement impossible');
+    } catch (e2) {
+      alert(e2?.response?.data?.message || 'Enregistrement impossible');
     }
   };
 
@@ -81,6 +99,7 @@ export default function AdminCategories() {
     }
   };
 
+  // --- Assignation de plats ---
   const openAssign = (catId) => {
     setAssignOpen(catId);
     setSelectedPlatIds([]);
@@ -95,7 +114,7 @@ export default function AdminCategories() {
       await api.post(`/categories/${assignOpen}/assign-plats`, { platIds: selectedPlatIds }, { headers });
       setAssignOpen(null);
       setSelectedPlatIds([]);
-      // Pas obligatoire de refetch, mais on peut:
+      // Optionnel: refresh
       // fetchCats();
     } catch {
       alert('Assignation impossible');
@@ -106,31 +125,7 @@ export default function AdminCategories() {
     <div className="admin-page">
       <h1 style={{ marginBottom: 16 }}>Catégories</h1>
 
-      {/* formulaire create/edit */}
-      <form onSubmit={saveCat} style={{ display: 'grid', gap: 10, maxWidth: 520, marginBottom: 18 }}>
-        <div>
-          <label>Nom</label>
-          <input
-            value={form.name}
-            onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-            style={input}
-            required
-          />
-        </div>
-        <div>
-          <label>Description</label>
-          <textarea
-            value={form.description}
-            onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
-            style={{ ...input, minHeight: 80 }}
-          />
-        </div>
-        <div style={{ display: 'flex', gap: 8 }}>
-          <button type="submit" style={btnPrimary}>{editing ? 'Enregistrer' : 'Créer'}</button>
-          {editing && <button type="button" style={btnGhost} onClick={() => { setEditing(null); setForm({ name:'', description:'' }); }}>Annuler</button>}
-        </div>
-      </form>
-
+      {/* Barre d’actions */}
       <div style={{ display: 'flex', gap: 12, marginBottom: 16 }}>
         <input
           placeholder="Rechercher une catégorie"
@@ -138,6 +133,7 @@ export default function AdminCategories() {
           onChange={e => setQ(e.target.value)}
           style={input}
         />
+        <button style={btnPrimary} onClick={openCreate}>+ Nouvelle catégorie</button>
       </div>
 
       {loading ? (
@@ -174,7 +170,39 @@ export default function AdminCategories() {
         </div>
       )}
 
-      {/* Modale assignation */}
+      {/* Modale CREATE/EDIT Catégorie */}
+      {catModalOpen && (
+        <div style={backdrop} onClick={() => setCatModalOpen(false)}>
+          <div style={card} onClick={e => e.stopPropagation()}>
+            <h3 style={{ marginTop: 0 }}>{editing ? 'Éditer la catégorie' : 'Nouvelle catégorie'}</h3>
+            <form onSubmit={saveCat} style={{ display: 'grid', gap: 10, maxWidth: 520 }}>
+              <div>
+                <label>Nom *</label>
+                <input
+                  value={form.name}
+                  onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+                  style={input}
+                  required
+                />
+              </div>
+              <div>
+                <label>Description</label>
+                <textarea
+                  value={form.description}
+                  onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
+                  style={{ ...input, minHeight: 90 }}
+                />
+              </div>
+              <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
+                <button type="button" style={btnGhost} onClick={() => setCatModalOpen(false)}>Annuler</button>
+                <button type="submit" style={btnPrimary}>{editing ? 'Enregistrer' : 'Créer'}</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modale d’assignation de plats */}
       {assignOpen && (
         <div style={backdrop} onClick={() => setAssignOpen(null)}>
           <div style={card} onClick={(e) => e.stopPropagation()}>
@@ -202,6 +230,7 @@ export default function AdminCategories() {
   );
 }
 
+/* Styles */
 const table = {
   width: '100%',
   borderCollapse: 'collapse',
