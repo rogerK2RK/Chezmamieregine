@@ -54,3 +54,14 @@ exports.createUserByAdmin = async (req, res) => {
     res.status(500).json({ message: 'Erreur serveur' });
   }
 };
+
+// GET /api/admin/users
+exports.listAdmins = async (_req, res) => {
+  try {
+    const users = await AdminUser.find({}, '-password').sort({ createdAt: -1 });
+    res.json(users);
+  } catch (e) {
+    console.error('listAdmins error', e);
+    res.status(500).json({ message: 'Erreur serveur' });
+  }
+};
