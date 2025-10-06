@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
 
-const counterSchema = new mongoose.Schema({
-  name: { type: String, required: true, unique: true },
-  seq:  { type: Number, default: 0 }
-}, { versionKey: false });
+const CounterSchema = new mongoose.Schema({
+  name:   { type: String, required: true, unique: true, index: true }, // "admin", "client", "plat"...
+  seq:    { type: Number, default: 0 },
+  prefix: { type: String, required: true },
+}, { timestamps: true });
 
-module.exports = mongoose.model('Counter', counterSchema, 'counters');
+module.exports = mongoose.model('Counter', CounterSchema, 'counters');

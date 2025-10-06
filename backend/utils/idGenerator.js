@@ -1,23 +1,27 @@
-const mongoose = require('mongoose');
+const Counter = require('../models/Counter');
 
-// Collection counters: { _id: 'client', seq: 1 } etc.
-const counterSchema = new mongoose.Schema({
-  _id: { type: String, required: true }, // 'client', 'plat', ...
-  seq: { type: Number, default: 0 }
-}, { collection: 'counters' });
+/**
+ * getNextId('ADM','admin') -> ADM-000001
+ */
+async function getNextId(prefix, seqName) {
+  if (!prefix || !seqName) {
+    throw new Error(`getNextId: invalid args prefix="${prefix}" seqName="${seqName}"`);
+  }
 
-const Counter = mongoose.model('Counter', counterSchema);
+  const updated = await Counter.findOneAndUpdate(
+    { name: seqName },
+    {
+      // create doc if missing (without touching `seq`)
+      $setOnInsert: { prefix, name: seqName },
+      // always increment the sequence
+      $inc: { seq: 1 },
+    },
+    { new: true, upsert: true }
+  );
 
-// prefix ex: 'CLI', key ex: 'client'
-async function getNextId(prefix, key) {
-  const doc = await Counter.findByIdAndUpdate(
-    key,
-    { $inc: { seq: 1 } },
-    { new: true, upsert: true } // crée si n’existe pas
-  ).lean();
-
-  const num = String(doc.seq).padStart(6, '0'); // 000001
-  return `${prefix}-${num}`;
+  const n = updated.seq;                 // 1, 2, 3, ...
+  const padded = String(n).padStart(6, '0');
+  return `${prefix}-${padded}`;
 }
 
 module.exports = { getNextId };
