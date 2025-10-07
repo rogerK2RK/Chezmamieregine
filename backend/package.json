@@ -1,5 +1,6 @@
 {
   "name": "backend",
+  "private": true,
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -7,6 +8,9 @@
     "start": "node app.js",
     "dev": "nodemon server.js",
     "backfill:clients": "node scripts/backfillClientIds.js"
+  },
+  "engines": {
+    "node": ">=18"
   },
   "keywords": [],
   "author": "",

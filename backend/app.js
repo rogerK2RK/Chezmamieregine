@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 5000;
 
 // CORS — autorise Vercel en prod + Vite en dev
 const allowedOrigins = [
-  process.env.FRONTEND_URL,    // ex: https://chezmamie…vercel.app (on le mettra sur Render)
+  process.env.FRONTEND_URL,
   'http://localhost:5173'      // pour dev local
 ];
 
@@ -31,6 +31,8 @@ app.use(cors({
 }));
 
 app.use(express.json());
+
+app.get('/health', (req, res) => res.send('ok'));
 
 // CORS
 const FRONT_ORIGIN = process.env.FRONT_ORIGIN || "http://localhost:5173";
