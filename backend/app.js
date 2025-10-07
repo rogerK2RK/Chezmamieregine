@@ -40,6 +40,9 @@ app.use(express.json());
 
 // Health
 app.get('/health', (_req, res) => res.send('ok'));
+app.get('/healthz', (_req, res) => res.json({ ok: true }));
+
+app.get('/api/health', (_req, res) => res.send('ok'));
 app.get('/api/healthz', (_req, res) => res.json({ ok: true }));
 
 // Fichiers statiques (ok)
