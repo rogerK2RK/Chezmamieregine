@@ -42,6 +42,7 @@ app.use(express.json());
 app.get('/health', (_req, res) => res.send('ok'));
 app.get('/healthz', (_req, res) => res.json({ ok: true }));
 
+// Ajout pour compatibilité front (Render + Vercel)
 app.get('/api/health', (_req, res) => res.send('ok'));
 app.get('/api/healthz', (_req, res) => res.json({ ok: true }));
 
