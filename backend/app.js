@@ -40,6 +40,7 @@ app.use(express.json());
 
 // Health
 app.get('/health', (_req, res) => res.send('ok'));
+app.get('/api/healthz', (_req, res) => res.json({ ok: true }));
 
 // Fichiers statiques (ok)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
