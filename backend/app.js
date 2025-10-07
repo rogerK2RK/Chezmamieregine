@@ -50,14 +50,14 @@ app.get('/api/healthz', (_req, res) => res.json({ ok: true }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // ======== ROUTES (tu gardes ton prefix /api) ========
-app.use("/api/admin", require("./routes/adminRoutes"));
-app.use("/api/auth", require("./routes/clientAuthRoutes"));
-app.use('/api/admin/clients', require('./routes/clientBackRoutes'));
-app.use('/api/categories', require('./routes/categoryRoutes'));
-app.use("/api/plats", require("./routes/platRoutes"));
-app.use("/api/commandes", require("./routes/commandeRoutes"));
-app.use('/api/public', require('./routes/publicRoutes'));
-app.use('/api/uploads', require('./routes/uploadRoutes'));
+// app.use("/api/admin", require("./routes/adminRoutes"));
+// app.use("/api/auth", require("./routes/clientAuthRoutes"));
+// app.use('/api/admin/clients', require('./routes/clientBackRoutes'));
+// app.use('/api/categories', require('./routes/categoryRoutes'));
+// app.use("/api/plats", require("./routes/platRoutes"));
+// app.use("/api/commandes", require("./routes/commandeRoutes"));
+// app.use('/api/public', require('./routes/publicRoutes'));
+// app.use('/api/uploads', require('./routes/uploadRoutes'));
 
 app.get("/healthz", (_req, res) => res.json({ ok: true }));
 
