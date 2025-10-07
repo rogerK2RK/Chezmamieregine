@@ -1,6 +1,7 @@
 // backend/app.js
 const express = require("express");
 const cors = require("cors");
+
 const dotenv = require("dotenv");
 const path = require("path");
 const connectDB = require("./config/db");
@@ -9,6 +10,27 @@ const { ensureSuperAdmin } = require('./utils/initAdmin');
 dotenv.config();
 
 const app = express();
+
+// Laisse Render choisir le port
+const PORT = process.env.PORT || 5000;
+
+// CORS — autorise Vercel en prod + Vite en dev
+const allowedOrigins = [
+  process.env.FRONTEND_URL,    // ex: https://chezmamie…vercel.app (on le mettra sur Render)
+  'http://localhost:5173'      // pour dev local
+];
+
+app.use(cors({
+  origin(origin, cb) {
+    if (!origin || allowedOrigins.includes(origin)) return cb(null, true);
+    return cb(new Error('Not allowed by CORS'));
+  },
+  methods: ['GET','POST','PUT','PATCH','DELETE','OPTIONS'],
+  allowedHeaders: ['Content-Type','Authorization'],
+  credentials: true
+}));
+
+app.use(express.json());
 
 // CORS
 const FRONT_ORIGIN = process.env.FRONT_ORIGIN || "http://localhost:5173";
@@ -46,3 +68,7 @@ app.use((err, _req, res, _next) => {
 })();
 
 module.exports = app;
+
+app.listen(PORT, () => {
+  console.log('API running on port', PORT);
+});
