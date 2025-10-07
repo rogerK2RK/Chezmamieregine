@@ -41,6 +41,11 @@ export default function AdminSidebar() {
         <NavLink to="/admin/utilisateurs" className="sb-link">
           <span>👥</span><span>Utilisateurs</span>
         </NavLink>
+        <NavLink
+          to="/admin/comments"
+          className="sb-link">
+          <span >💬</span><span>Commentaires</span>
+        </NavLink>
       </nav>
 
       <div className="sb-footer">

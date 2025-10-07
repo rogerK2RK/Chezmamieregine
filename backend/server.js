@@ -42,6 +42,15 @@ app.use('/api/uploads', uploadRoutes);
 /** Healthcheck */
 app.get("/healthz", (_req, res) => res.json({ ok: true }));
 
+const commentRoutes = require('./routes/commentRoutes');
+app.use('/api/comments', commentRoutes);
+
+const commentBackRoutes = require('./routes/commentBackRoutes');
+app.use('/api/admin/comments', commentBackRoutes);
+
+const publicRoutes = require('./routes/publicRoutes');
+app.use('/api/public', publicRoutes);
+
 /** 404 (APRÈS TOUTES LES ROUTES !) */
 app.use((req, res, _next) => {
   res.status(404).json({ message: `Route introuvable: ${req.method} ${req.originalUrl}` });

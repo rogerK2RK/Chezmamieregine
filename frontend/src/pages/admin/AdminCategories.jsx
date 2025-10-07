@@ -13,7 +13,7 @@ export default function AdminCategories() {
   // --- Modale Catégorie (create / edit) ---
   const [catModalOpen, setCatModalOpen] = useState(false);
   const [editing, setEditing] = useState(null); // null = création, sinon catégorie à éditer
-  const [form, setForm] = useState({ name: '', description: '' });
+  const [form, setForm] = useState({ name: '', description: '', isActive: true });
 
   // --- Modale d’assignation de plats ---
   const [assignOpen, setAssignOpen] = useState(null); // id catégorie
@@ -51,14 +51,18 @@ export default function AdminCategories() {
   // --- Ouvrir modale création ---
   const openCreate = () => {
     setEditing(null);
-    setForm({ name: '', description: '' });
+    setForm({ name: '', description: '', isActive: true });
     setCatModalOpen(true);
   };
 
   // --- Ouvrir modale édition ---
   const openEdit = (c) => {
     setEditing(c);
-    setForm({ name: c.name || '', description: c.description || '' });
+    setForm({
+      name: c.name || '',
+      description: c.description || '',
+      isActive: !!c.isActive,
+    });
     setCatModalOpen(true);
   };
 
@@ -68,6 +72,7 @@ export default function AdminCategories() {
     const payload = {
       name: (form.name || '').trim(),
       description: (form.description || '').trim(),
+      isActive: !!form.isActive,
     };
     if (!payload.name) {
       alert('Le nom est requis');
@@ -83,7 +88,7 @@ export default function AdminCategories() {
       }
       setCatModalOpen(false);
       setEditing(null);
-      setForm({ name: '', description: '' });
+      setForm({ name: '', description: '', isActive: true });
     } catch (e2) {
       alert(e2?.response?.data?.message || 'Enregistrement impossible');
     }
@@ -96,6 +101,16 @@ export default function AdminCategories() {
       setCats(prev => prev.filter(c => c._id !== id));
     } catch (e) {
       alert(e?.response?.data?.message || 'Suppression impossible');
+    }
+  };
+
+  // --- Toggle rapide isActive dans le tableau ---
+  const quickToggleActive = async (cat) => {
+    try {
+      const { data } = await api.put(`/categories/${cat._id}`, { isActive: !cat.isActive }, { headers });
+      setCats(prev => prev.map(c => (c._id === cat._id ? data : c)));
+    } catch {
+      alert('Impossible de changer la visibilité');
     }
   };
 
@@ -114,7 +129,7 @@ export default function AdminCategories() {
       await api.post(`/categories/${assignOpen}/assign-plats`, { platIds: selectedPlatIds }, { headers });
       setAssignOpen(null);
       setSelectedPlatIds([]);
-      // Optionnel: refresh
+      // Optionnel: refresh categories si tu veux refléter côté UI
       // fetchCats();
     } catch {
       alert('Assignation impossible');
@@ -155,11 +170,18 @@ export default function AdminCategories() {
                 <tr key={c._id}>
                   <td style={cell}>{c.name}</td>
                   <td style={cell}>{c.slug}</td>
-                  <td style={cell}>{c.isActive ? 'Oui' : 'Non'}</td>
+                  <td style={cell}>
+                    <span style={c.isActive ? badgeOk : badgeOff}>
+                      {c.isActive ? 'Oui' : 'Non'}
+                    </span>
+                  </td>
                   <td style={cell}>{new Date(c.createdAt).toLocaleString()}</td>
                   <td style={cell}>
                     <button style={btnGhost} onClick={() => openEdit(c)}>Éditer</button>
                     <button style={btnGhost} onClick={() => openAssign(c._id)}>Assigner des plats</button>
+                    <button style={btnGhost} onClick={() => quickToggleActive(c)}>
+                      {c.isActive ? 'Désactiver' : 'Activer'}
+                    </button>
                     <button style={btnDanger} onClick={() => removeCat(c._id)}>Supprimer</button>
                   </td>
                 </tr>
@@ -193,6 +215,17 @@ export default function AdminCategories() {
                   style={{ ...input, minHeight: 90 }}
                 />
               </div>
+
+              {/* ✅ checkbox visibilité front */}
+              <label style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <input
+                  type="checkbox"
+                  checked={!!form.isActive}
+                  onChange={e => setForm(f => ({ ...f, isActive: e.target.checked }))}
+                />
+                Afficher cette catégorie en front
+              </label>
+
               <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
                 <button type="button" style={btnGhost} onClick={() => setCatModalOpen(false)}>Annuler</button>
                 <button type="submit" style={btnPrimary}>{editing ? 'Enregistrer' : 'Créer'}</button>
@@ -291,4 +324,22 @@ const card = {
   borderRadius: 14,
   padding: 18,
   color: '#e5e7eb'
+};
+const badgeOk = {
+  display: 'inline-block',
+  padding: '4px 10px',
+  borderRadius: 999,
+  fontSize: 12,
+  background: 'rgba(34,197,94,.18)',
+  color: '#86efac',
+  border: '1px solid rgba(34,197,94,.35)'
+};
+const badgeOff = {
+  display: 'inline-block',
+  padding: '4px 10px',
+  borderRadius: 999,
+  fontSize: 12,
+  background: 'rgba(239,68,68,.18)',
+  color: '#fecaca',
+  border: '1px solid rgba(239,68,68,.35)'
 };

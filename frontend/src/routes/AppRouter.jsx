@@ -8,6 +8,7 @@ import HomePage from '../pages/client/HomePage';
 import LoginPage from '../pages/client/LoginPage';
 import RegisterPage from '../pages/client/RegisterPage';
 import ContactPage from '../pages/client/ContactPage';
+import ProductsPage from '../pages/client/ProductsPage';
 
 import AdminLoginPage from '../pages/admin/AdminLoginPage/AdminLoginPage';
 import AdminDashboard from '../pages/admin/AdminDashboard';
@@ -17,6 +18,7 @@ import AdminUsers from '../pages/admin/AdminUsers';
 import AdminClients from '../pages/admin/AdminClients';
 import AdminCategories from '../pages/admin/AdminCategories';
 import AdminPlatForm from '../pages/admin/AdminPlatForm';
+import AdminComments from '../pages/admin/AdminComments';
 
 import PrivateRoute from './PrivateRoute';
 import { ADMIN_ROLES } from '../utils/roles';
@@ -30,6 +32,8 @@ export default function AppRouter() {
         <Route path="/connexion" element={<LoginPage />} />
         <Route path="/inscription" element={<RegisterPage />} />
         <Route path="/contact" element={<ContactPage />} />
+        <Route path="/produits" element={<ProductsPage />} />
+        <Route path="/produits/:slug" element={<ProductsPage />} />
       </Route>
 
       {/* ===== ADMIN : login (sans sidebar) ===== */}
@@ -101,6 +105,14 @@ export default function AppRouter() {
           element={
             <PrivateRoute allowedRoles={['admin','superAdmin','owner']}>
               <AdminPlatForm />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/admin/comments"
+          element={
+            <PrivateRoute allowedRoles={ADMIN_ROLES}>
+              <AdminComments />
             </PrivateRoute>
           }
         />

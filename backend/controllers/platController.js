@@ -117,3 +117,15 @@ exports.deletePlat = async (req, res) => {
     res.status(500).json({ message: 'Erreur serveur' });
   }
 };
+
+exports.listPublic = async (req, res) => {
+  try {
+    const { category } = req.query;
+    const filter = { isAvailable: true };
+    if (category && mongoose.isValidObjectId(category)) filter.category = category;
+    const plats = await Plat.find(filter).sort({ createdAt: -1 });
+    res.json(plats);
+  } catch (e) {
+    res.status(500).json({ message: 'Erreur serveur' });
+  }
+};
