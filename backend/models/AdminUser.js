@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const { getNextId } = require('../utils/idGenerator');
 
 const AdminUserSchema = new mongoose.Schema({
-  adminId: { type: String, index: true }, // index simple ici; l’unique arrive plus bas via schema.index
+  adminId: { type: String }, // index simple ici; l’unique arrive plus bas via schema.index
   name:    { type: String, required: true, trim: true },
   email:   { type: String, required: true, unique: true, lowercase: true, trim: true, index: true },
   password:{ type: String, required: true },
