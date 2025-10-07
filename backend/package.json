@@ -1,12 +1,12 @@
 {
-  "name": "backend",
+  "name": "cmr-backend",
   "private": true,
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "start": "node app.js",
-    "dev": "nodemon server.js",
+    "dev": "nodemon app.js",
     "backfill:clients": "node scripts/backfillClientIds.js"
   },
   "engines": {
