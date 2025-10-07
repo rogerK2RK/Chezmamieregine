@@ -1,10 +1,9 @@
-// frontend/src/lib/api.ts
 import axios from 'axios';
 
-export const api = axios.create({
-  baseURL: (import.meta.env.VITE_API_URL ?? 'http://localhost:5000') + '/api',
-  withCredentials: true
-});
+// ⬅️ BASE URL SANS /api
+const BASE = import.meta.env.VITE_API_URL ?? 'http://localhost:5000';
 
-// usage:
-await api.post('/admin/login', { email, password });
+export const api = axios.create({
+  baseURL: BASE + '/api',   // ⬅️ on ajoute /api ici une seule fois
+  withCredentials: true     // si cookies/sessions
+});
