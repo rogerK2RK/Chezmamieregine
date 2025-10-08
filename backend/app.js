@@ -11,79 +11,70 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.set("trust proxy", 1);
+// ======================
+// CORS (pour le local et le déploiement futur)
+// ======================
+const allowedOrigins = [
+  "http://localhost:5173",                         // Front local
+  process.env.FRONTEND_URL || "https://chezmamier egine.vercel.app" // Prod
+];
 
-// ===== CORS (unique) =====
-const PROD_ORIGIN = process.env.FRONTEND_URL; // ex: https://chezmamier egine.vercel.app
-const corsOptions = {
-  origin(origin, cb) {
-    if (!origin) return cb(null, true); // health/Postman
-    if (PROD_ORIGIN && origin === PROD_ORIGIN) return cb(null, true);             // prod
-    if (/^https:\/\/[a-z0-9-]+\.vercel\.app$/i.test(origin)) return cb(null, true); // previews
-    if (origin === "http://localhost:5173") return cb(null, true);                 // dev
-    return cb(new Error("Not allowed by CORS: " + origin));
-  },
-  methods: ["GET","POST","PUT","PATCH","DELETE","OPTIONS"],
-  allowedHeaders: ["Content-Type","Authorization"],
-  credentials: true
-};
-app.use(cors(corsOptions));
-app.options("*", cors(corsOptions)); // préflight global
+app.use(
+  cors({
+    origin(origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
+      return callback(new Error("Not allowed by CORS: " + origin));
+    },
+    credentials: true,
+  })
+);
 
-// Court-circuiter TOUTES les OPTIONS pour éviter 500 côté routeurs
-app.use((req, res, next) => {
-  if (req.method === "OPTIONS") return res.sendStatus(204);
-  next();
-});
-
+// ======================
 app.use(express.json());
 
-// ===== Health =====
+// ======================
+// Health checks simples
+// ======================
 app.get("/health", (_req, res) => res.send("ok"));
 app.get("/api/health", (_req, res) => res.send("ok"));
 
-// ===== Fichiers statiques =====
+// ======================
+// Fichiers statiques
+// ======================
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// ===== Helper de montage sécurisé (diagnostic) =====
-function safeMount(prefix, file) {
-  try {
-    const router = require(file);
-    app.use(prefix, router);
-    console.log("Mounted OK ->", prefix, "from", file);
-  } catch (e) {
-    console.error("❌ Failed mounting", prefix, "from", file);
-    console.error("   Error:", e && e.message);
-    console.error("STACK:", e && e.stack);
-    process.exit(1);
-  }
-}
+// ======================
+// Routes API
+// ======================
+app.use("/api/admin", require("./routes/adminRoutes"));
+app.use("/api/auth", require("./routes/clientAuthRoutes"));
+app.use("/api/admin/clients", require("./routes/clientBackRoutes"));
+app.use("/api/categories", require("./routes/categoryRoutes"));
+app.use("/api/plats", require("./routes/platRoutes"));
+app.use("/api/commandes", require("./routes/commandeRoutes"));
+app.use("/api/public", require("./routes/publicRoutes"));
+app.use("/api/uploads", require("./routes/uploadRoutes"));
 
-// ===== Routes API =====
-safeMount("/api/admin",        "./routes/adminRoutes");
-safeMount("/api/auth",         "./routes/clientAuthRoutes");
-safeMount("/api/admin/clients","./routes/clientBackRoutes");
-safeMount("/api/categories",   "./routes/categoryRoutes");
-safeMount("/api/plats",        "./routes/platRoutes");
-safeMount("/api/commandes",    "./routes/commandeRoutes");
-safeMount("/api/public",       "./routes/publicRoutes");
-safeMount("/api/uploads",      "./routes/uploadRoutes");
-
-// ===== 404 & erreurs =====
+// ======================
+// Gestion 404 & erreurs
+// ======================
 app.use((req, res) => {
   res.status(404).json({ message: `Route introuvable: ${req.method} ${req.originalUrl}` });
 });
+
 app.use((err, _req, res, _next) => {
   console.error("API error:", err);
   res.status(err.status || 500).json({ message: err.message || "Erreur serveur" });
 });
 
-// ===== Boot =====
+// ======================
+// Boot (connexion + admin)
+// ======================
 (async () => {
   await connectDB();
   await ensureSuperAdmin();
 })();
 
 app.listen(PORT, () => {
-  console.log("API running on port", PORT);
+  console.log(`🚀 API running on http://localhost:${PORT}`);
 });
