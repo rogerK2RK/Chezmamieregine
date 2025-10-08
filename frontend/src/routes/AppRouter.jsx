@@ -8,7 +8,7 @@ import HomePage from '../pages/client/HomePage';
 import LoginPage from '../pages/client/LoginPage';
 import RegisterPage from '../pages/client/RegisterPage';
 import ContactPage from '../pages/client/ContactPage';
-import ProductsPage from '../pages/client/ProductsPage';
+import ProductsPage from '../pages/client/ProductsPage/ProductsPage';
 
 import AdminLoginPage from '../pages/admin/AdminLoginPage/AdminLoginPage';
 import AdminDashboard from '../pages/admin/AdminDashboard';

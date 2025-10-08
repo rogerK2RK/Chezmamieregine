@@ -27,7 +27,6 @@ button, a {
     position: fixed;
     top: 0;
     width: 100%;
-    padding: 0.6rem 0.8rem;
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
     z-index: 999;
     background-color: transparent;
@@ -43,6 +42,7 @@ button, a {
     justify-content: space-between;
     align-items: center;
     gap: 0.6rem;
+    margin: 1rem;
 }
 
 .logo-image {
