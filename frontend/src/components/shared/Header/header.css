@@ -1,8 +1,3 @@
-/* ===========================
-   Header MOBILE-FIRST (couleurs inchangées)
-   Base = mobile ; on enrichit ensuite avec min-width
-   =========================== */
-
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=Playfair+Display:wght@600;700&display=swap');
 
 :root {
@@ -10,7 +5,6 @@
   --font-body: 'Montserrat', sans-serif;
 }
 
-/* Typo (inchangée) */
 h1 {
     font-family: var(--font-title);
     font-size: 2.5rem;
@@ -29,12 +23,11 @@ button, a {
 }
 
 /* ====== BASE MOBILE ====== */
-/* mêmes couleurs/gradients que ton code */
 .header {
     position: fixed;
     top: 0;
     width: 100%;
-    padding: 0.6rem 0.8rem;         /* mobile : un peu plus compact */
+    padding: 0.6rem 0.8rem;
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
     z-index: 999;
     background-color: transparent;
@@ -53,22 +46,22 @@ button, a {
 }
 
 .logo-image {
-    width: 10rem;                    /* mobile : plus petit */
+    width: 10rem;
     height: auto;
 }
 
 .menu {
-    width: 100%;                     /* mobile : occupe la largeur */
+    width: 100%;
     position: relative;
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
     background: rgba(230, 225, 221, 0.048);
-    border-radius: 16px;             /* mobile : arrondi plus petit */
-    padding: 12px 14px;              /* mobile : padding + compact */
+    border-radius: 16px;
+    padding: 12px 14px;
     border: 1px solid rgba(255, 255, 255, 0.15);
     display: flex;
     align-items: center;
-    gap: 12px;                       /* mobile : gap réduit */
+    gap: 12px;
     transition: all 0.3s ease;
     box-shadow: inset 0px 0px 2px #1b1b1b,
                 inset 1.2px 1.3px 5px #c0b5b599,
@@ -88,10 +81,10 @@ button, a {
 .nav {
     width: 100%;
     display: flex;
-    flex-wrap: wrap;                 /* mobile : retour à la ligne si besoin */
+    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    gap: 0.6rem;                     /* mobile : plus serré */
+    gap: 0.6rem;
     color: white;
 }
 
@@ -106,10 +99,10 @@ button, a {
 .menu-item {
     color: rgba(255, 255, 255, 0.9);
     text-decoration: none;
-    font-size: 1rem;                 /* mobile : 1rem */
+    font-size: 1rem;
     font-weight: 500;
-    padding: 8px 12px;               /* mobile : padding adapté */
-    border-radius: 14px;             /* mobile : arrondi adapté */
+    padding: 8px 12px;
+    border-radius: 14px;
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
@@ -142,9 +135,9 @@ button, a {
     background: #EF5007;
     color: white;
     text-decoration: none;
-    font-size: 1rem;                 /* mobile : 1rem */
+    font-size: 1rem;
     font-weight: 600;
-    padding: 10px 22px;              /* mobile : un peu plus compact */
+    padding: 10px 22px;
     border-radius: 30px;
     transition: all 0.3s ease;
     border: 1px solid rgba(255, 255, 255, 0.2);
@@ -186,7 +179,7 @@ button, a {
     100% { transform: translateX(100%) translateY(100%) rotate(45deg); opacity: 0; }
 }
 
-/* ===== AJOUTS : icône burger + dropdown (mobile) ===== */
+/* ===== icône burger + dropdown (mobile) ===== */
 
 .header-right {
     position: relative;
