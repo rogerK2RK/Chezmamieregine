@@ -1,59 +1,121 @@
-/* NosPlats.css */
-
-/* ====== Container principal ====== */
 .nosplats-container {
   --bg-img: none;
   background-color: #fffbeb;
-  padding: 3rem 13rem;
+  padding: 2rem 1rem;
   position: relative;
   overflow: hidden;
 }
 
-/* Image de fond en pseudo-élément */
+/* Image de fond  */
 .nosplats-container::before {
   content: "";
   position: absolute;
   inset: 0;
-  background-attachment: fixed;
-  background-size: cover;
   background-image: var(--bg-img);
   background-repeat: no-repeat;
   background-position: center;
-  background-size: 100% 100%;
-  opacity: 5;
+  background-size: cover;
+  background-attachment: scroll;
+  opacity: 1;
   z-index: 1;
   pointer-events: none;
 }
 
-/* ====== Wrapper (contenu) ====== */
+/* Wrapper */
 .nosplats-wrapper {
   position: relative; 
   z-index: 2;
   color: #ffffff;
 }
 
-/* ====== Titre ====== */
+/* Titre */
 .nosplats-title {
   text-align: center;
-  font-size: 2.5rem;
+  font-size: clamp(1.6rem, 6vw, 2rem);
   color: #ffffff;
   font-weight: bold;
-  margin-bottom: 48px;
-  margin-top: 0px;
+  margin: 0 0 24px 0;
 }
 
-/* ====== Grille des cartes ====== */
-.nosplats-grid {
+/* CARROUSEL */
+/* viewport + track */
+.slider {
+  position: relative;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 32px;
-  margin-bottom: 48px;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
 }
 
-/* ====== Carte d’un plat ====== */
+.slider-viewport {
+  overflow: hidden;
+  position: relative;
+}
+
+.slider-track {
+  display: flex;
+  width: 100%;
+  transition: transform .35s ease-in-out;
+}
+
+/* un item occupe 100% / per-view */
+.slider-item {
+  flex: 0 0 calc(100% / var(--per-view, 1));
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+/* Boutons prev/next (style en cohérence avec ta DA) */
+.slider-btn {
+  appearance: none;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(230, 225, 221, 0.12);
+  color: #fff;
+  width: 40px; height: 40px;
+  border-radius: 999px;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .2s ease, transform .12s ease, opacity .2s ease;
+}
+.slider-btn:hover { 
+  background: rgba(255,255,255,0.2); 
+  transform: translateY(-1px); 
+}
+.slider-btn:disabled { 
+  opacity: .4; 
+  cursor: not-allowed; 
+  transform: none; 
+}
+
+/* Dots */
+.slider-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+
+.slider-dots .dot {
+  width: 8px; height: 8px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.5);
+}
+
+.slider-dots .dot.active {
+  background: #fff;
+  transform: scale(1.15);
+}
+
+/* Carte */
 .nosplats-card {
   border-radius: 18px;
-  padding: 24px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -61,51 +123,138 @@
   backdrop-filter: blur(15px);
   background: rgba(230, 225, 221, 0.048);
   border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: inset 0px 0px 2px #1b1b1b, inset 1.2px 1.3px 5px #c0b5b599, 0px -3px 19px #0c0c0c27, 0px -12px 19px #0e0e0e1e;
+  box-shadow: inset 0px 0px 2px #1b1b1b,
+              inset 1.2px 1.3px 5px #c0b5b599,
+              0px -3px 19px #0c0c0c27,
+              0px -12px 19px #0e0e0e1e;
 }
 
-/* Image du plat */
-.nosplats-image-container {
-  margin-bottom: 20px;
+.nosplats-image-container { 
+  margin-bottom: 14px; 
 }
 
 .nosplats-image {
   width: 100%;
-  height: 190px;
+  height: 160px;
   object-fit: cover;
   border-radius: 12px;
 }
 
-/* ====== Infos plat ====== */
 .nosplats-name {
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin-bottom: 12px;
-}
-
-.nosplats-description {
-  font-size: 1.2rem;
-  line-height: 1.4;
-  margin-bottom: 20px;
-}
-
-.nosplats-price {
   font-size: 1.25rem;
   font-weight: bold;
-  margin-bottom: 20px;
+  margin-bottom: 8px;
+}
+.nosplats-description {
+  font-size: 1rem;
+  line-height: 1.45;
+  margin-bottom: 14px;
+}
+.nosplats-price {
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin-bottom: 14px;
 }
 
-/* ====== Boutons ====== */
 .nosplats-button {
   font-weight: 600;
-  width: 55%;
+  width: 100%;
+  max-width: 320px;
 }
 
-/* ====== Footer ====== */
-.nosplats-footer {
-  text-align: center;
+/* Footer */
+.nosplats-footer { 
+  text-align: center; 
 }
 
 .nosplats-footer .nosplats-button {
-  width: 10%;
+  width: 60%;
+  max-width: 280px;
+}
+
+/* ===========================
+   TABLET (≥768px)
+   =========================== */
+@media (min-width: 768px) {
+  .nosplats-container { 
+    padding: 3rem 3rem; 
+  }
+
+  .nosplats-title { 
+    font-size: 2.2rem; 
+    margin-bottom: 36px; 
+  }
+
+  .nosplats-image { 
+    height: 180px; 
+  }
+
+  .nosplats-name { 
+    font-size: 1.35rem; 
+  }
+
+  .nosplats-description { 
+    font-size: 1.05rem; 
+  }
+
+  .nosplats-price { 
+    font-size: 1.15rem; 
+  }
+
+  .nosplats-footer .nosplats-button { 
+    width: 40%; 
+  }
+}
+
+/* ===========================
+   DESKTOP (≥1024px)
+   =========================== */
+@media (min-width: 1024px) {
+  .nosplats-container {
+    padding: 3rem 13rem;
+  }
+
+  .nosplats-container::before {
+    background-attachment: fixed;
+    background-size: 100% 100%;
+  }
+
+  .nosplats-title { 
+    font-size: 2.5rem; 
+    margin-bottom: 48px; 
+  }
+
+  .slider-btn { 
+    width: 44px; 
+    height: 44px; 
+    font-size: 24px; 
+  }
+
+  .nosplats-card { 
+    padding: 24px; 
+  }
+
+  .nosplats-image { 
+    height: 190px; 
+  }
+
+  .nosplats-name { 
+    font-size: 1.5rem; 
+  }
+
+  .nosplats-description { 
+    font-size: 1.2rem; 
+    line-height: 1.4; 
+  }
+  .nosplats-price { 
+    font-size: 1.25rem; 
+  }
+
+  .nosplats-button { 
+    width: 55%; 
+  }
+
+  .nosplats-footer .nosplats-button { 
+    width: 10%; 
+  }
 }
