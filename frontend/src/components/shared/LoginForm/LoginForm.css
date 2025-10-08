@@ -1,20 +1,39 @@
+/* ===========================
+   CONNEXION — MOBILE FIRST
+   Base = mobile ; on enrichit en ≥768px / ≥1024px
+   Couleurs et .btn-primary inchangées
+   =========================== */
+
+/* ===== Base mobile ===== */
 .connexion-container-content {
-    background: url(../../../assets/background.png) no-repeat;
-    background-attachment: fixed;
-    background-size: cover;
-    background-position: 45%;
-    padding: 12rem 12rem;
-    display: flex;
-    justify-content: center;
+  background: url(../../../assets/background.png) no-repeat;
+  background-size: cover;
+  background-position: 45%;
+  background-attachment: scroll;       /* mobile: perf (pas de fixed) */
+  padding: 3.5rem 1rem;                /* mobile: compact */
+  min-height: 70vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .form-connexion {
-    background-color: #FFF;
-    padding: 3rem 4rem;
-    width: 18%;
-    display: flex;
-    border-radius: 12px;
-    flex-wrap: wrap;
+  background-color: #FFF;
+  padding: 1.5rem;                     /* mobile: compact */
+  width: 100%;
+  max-width: 420px;                    /* largeur confortable */
+  display: flex;
+  flex-direction: column;              /* pile les éléments */
+  gap: 0.5rem;
+  border-radius: 12px;
+}
+
+.connexion-container-content h2 {
+  width: 100%;
+  margin: 0 0 0.75rem 0;
+  text-align: center;
+  font-size: 1.6rem;
 }
 
 .form-group {
@@ -24,8 +43,65 @@
   margin-bottom: 1rem;
 }
 
-.connexion-container-content h2 {
-    width: 100%;
-    margin-top: 0px;
-    text-align: center;
+.form-connexion input,
+.form-connexion textarea {
+  padding: 0.85rem 0.9rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  font-size: 1rem;
+  background: #fff;
+}
+
+.form-connexion input:focus,
+.form-connexion textarea:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(239, 80, 7, 0.14); /* léger rappel brand */
+}
+
+/* Bouton : tu gardes ta classe globale .btn-primary */
+.form-connexion .btn-primary {
+  width: 100%;
+  max-width: 320px;
+  margin: 0.25rem auto 0;
+}
+
+/* ===========================
+   TABLET (≥768px)
+   =========================== */
+@media (min-width: 768px) {
+  .connexion-container-content {
+    padding: 5rem 3rem;
+  }
+
+  .form-connexion {
+    padding: 2rem 2.5rem;
+    max-width: 520px;
+  }
+
+  .connexion-container-content h2 {
+    font-size: 1.9rem;
+    margin-bottom: 1rem;
+  }
+}
+
+/* ===========================
+   DESKTOP (≥1024px)
+   — on remet tes valeurs d’origine
+   =========================== */
+@media (min-width: 1024px) {
+  .connexion-container-content {
+    background-attachment: fixed;     /* comme ton code */
+    padding: 12rem 12rem;             /* valeur d’origine */
+  }
+
+  .form-connexion {
+    padding: 3rem 4rem;               /* valeur d’origine */
+    width: 18%;                       /* valeur d’origine */
+    max-width: none;                  /* on respecte ta largeur fixe */
+    flex-wrap: wrap;                  /* comme ton code */
+  }
+
+  .connexion-container-content h2 {
+    font-size: 2rem;
+  }
 }

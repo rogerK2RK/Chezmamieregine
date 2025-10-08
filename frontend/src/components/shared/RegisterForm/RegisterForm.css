@@ -1,20 +1,37 @@
+/* ===========================
+   INSCRIPTION — MOBILE FIRST
+   Base = mobile ; enrichie pour tablette / desktop
+   =========================== */
+
+/* ===== Base mobile ===== */
 .connexion-container-content {
-    background: url(../../../assets/background.png) no-repeat;
-    background-attachment: fixed;
-    background-size: cover;
-    background-position: 45%;
-    padding: 12rem 12rem;
-    display: flex;
-    justify-content: center;
+  background: url(../../../assets/background.png) no-repeat;
+  background-size: cover;
+  background-position: 45%;
+  background-attachment: scroll;       /* mobile: plus fluide */
+  padding: 5.5rem 1rem;                /* mobile: plus compact */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 70vh;
 }
 
 .register-form {
-    background-color: #FFF;
-    padding: 3rem 4rem;
-    width: 18%;
-    display: flex;
-    border-radius: 12px;
-    flex-wrap: wrap;
+  background-color: #FFF;
+  padding: 1.5rem;
+  width: 100%;
+  max-width: 420px;                    /* mobile : largeur agréable */
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px;
+  gap: 0.5rem;
+}
+
+.connexion-container-content h2 {
+  width: 100%;
+  margin: 0 0 1rem 0;
+  text-align: center;
+  font-size: 1.6rem;
 }
 
 .form-group {
@@ -24,8 +41,62 @@
   margin-bottom: 1rem;
 }
 
-.connexion-container-content h2 {
-    width: 100%;
-    margin-top: 0px;
-    text-align: center;
+.register-form input,
+.register-form select {
+  padding: 0.85rem 0.9rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  font-size: 1rem;
+  background: #fff;
+}
+
+.register-form input:focus,
+.register-form select:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(239, 80, 7, 0.14);
+}
+
+.register-form .btn-primary {
+  width: 100%;
+  max-width: 320px;
+  margin: 0.5rem auto 0;
+}
+
+/* ===========================
+   TABLET (≥768px)
+   =========================== */
+@media (min-width: 768px) {
+  .connexion-container-content {
+    padding: 5rem 3rem;
+  }
+
+  .register-form {
+    padding: 2rem 2.5rem;
+    max-width: 520px;
+  }
+
+  .connexion-container-content h2 {
+    font-size: 1.9rem;
+  }
+}
+
+/* ===========================
+   DESKTOP (≥1024px)
+   — remet tes valeurs d’origine
+   =========================== */
+@media (min-width: 1024px) {
+  .connexion-container-content {
+    background-attachment: fixed;     /* ton fond fixe */
+    padding: 9rem 12rem;             /* valeurs d’origine */
+  }
+
+  .register-form {
+    padding: 3rem 4rem;
+    width: 30%;                       /* ta largeur fixe */
+    flex-wrap: wrap;
+  }
+
+  .connexion-container-content h2 {
+    font-size: 2rem;
+  }
 }
