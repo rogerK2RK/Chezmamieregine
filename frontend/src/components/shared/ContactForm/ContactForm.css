@@ -133,7 +133,7 @@
   }
 
   .map-wrapper {
-    min-height: 360px;
+    height: 548px;
   }
 }
 
@@ -160,6 +160,6 @@
   }
 
   .map-wrapper {
-    min-height: 420px;
+    min-height: 611px;
   }
 }
