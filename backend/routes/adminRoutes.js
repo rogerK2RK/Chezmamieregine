@@ -3,8 +3,10 @@ const router = express.Router();
 
 const { adminProtect }   = require('../middleware/adminAuthMiddleware');
 const { authorizeRoles } = require('../middleware/roleMiddleware');
-console.log('[DEBUG route <nom>]', typeof authorizeRoles);
 const adminAuthController = require('../controllers/adminAuthController');
+
+// ✅ répondre au préflight CORS sur /login
+router.options('/login', (_req, res) => res.sendStatus(204));
 
 // Login admin
 router.post(

@@ -41,6 +41,16 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.options("*", cors(corsOptions)); // Préflight indispensable
+
+// Répond tout de suite aux préflights pour éviter que des middlewares plantent
+app.use((req, res, next) => {
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(204); // No Content
+  }
+  next();
+});
+
+
 // ============================================================
 
 app.use(express.json());
