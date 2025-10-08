@@ -1,34 +1,30 @@
-const express = require('express');
+// backend/routes/adminRoutes.js
+const express = require("express");
 const router = express.Router();
 
-const { adminProtect }   = require('../middleware/adminAuthMiddleware');
-const { authorizeRoles } = require('../middleware/roleMiddleware');
-const adminAuthController = require('../controllers/adminAuthController');
+const { adminProtect }   = require("../middleware/adminAuthMiddleware");
+const { authorizeRoles } = require("../middleware/roleMiddleware");
+const adminAuthController = require("../controllers/adminAuthController");
 
-// ✅ répondre au préflight CORS sur /login
-router.options('/login', (_req, res) => res.sendStatus(204));
+// Préflight spécifique pour /login (ceinture + bretelles)
+router.options("/login", (req, res) => res.sendStatus(204));
 
-// ✅ Login PUBLIC (aucun middleware de protection ici)
-router.post('/login', ctrl.login);
+// --- Login admin (PUBLIC) ---
+router.post("/login", adminAuthController.loginAdmin);
 
-// Login admin
+// --- Création d'utilisateur (protégée) ---
 router.post(
-  '/login', adminAuthController.loginAdmin
-);
-
-// Créer un utilisateur
-router.post(
-  '/create-user',
+  "/create-user",
   adminProtect,
-  authorizeRoles('admin', 'superAdmin'),
+  authorizeRoles("admin", "superAdmin"),
   adminAuthController.createUserByAdmin
 );
 
-// Lister les utilisateurs “back-office”
+// --- Liste des utilisateurs (protégée) ---
 router.get(
-  '/users',
+  "/users",
   adminProtect,
-  authorizeRoles('admin', 'superAdmin', 'owner'),
+  authorizeRoles("admin", "superAdmin", "owner"),
   adminAuthController.listAdmins
 );
 

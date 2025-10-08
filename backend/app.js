@@ -11,94 +11,79 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Si tu utilises des cookies/sessions derrière un proxy (Render)
 app.set("trust proxy", 1);
 
-// ============================================================
-// ✅ CONFIGURATION CORS UNIQUE (Render + Vercel + local)
-// CORS unique
-const PROD_ORIGIN = process.env.FRONTEND_URL; // https://chezmamier egine.vercel.app
-
+// ===== CORS (unique) =====
+const PROD_ORIGIN = process.env.FRONTEND_URL; // ex: https://chezmamier egine.vercel.app
 const corsOptions = {
   origin(origin, cb) {
     if (!origin) return cb(null, true); // health/Postman
-    if (PROD_ORIGIN && origin === PROD_ORIGIN) return cb(null, true); // prod
+    if (PROD_ORIGIN && origin === PROD_ORIGIN) return cb(null, true);             // prod
     if (/^https:\/\/[a-z0-9-]+\.vercel\.app$/i.test(origin)) return cb(null, true); // previews
-    if (origin === 'http://localhost:5173') return cb(null, true); // dev
-    return cb(new Error('Not allowed by CORS: ' + origin));
+    if (origin === "http://localhost:5173") return cb(null, true);                 // dev
+    return cb(new Error("Not allowed by CORS: " + origin));
   },
-  methods: ['GET','POST','PUT','PATCH','DELETE','OPTIONS'],
-  allowedHeaders: ['Content-Type','Authorization'],
+  methods: ["GET","POST","PUT","PATCH","DELETE","OPTIONS"],
+  allowedHeaders: ["Content-Type","Authorization"],
   credentials: true
 };
-
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions)); // gère la pré-requête partout
+app.options("*", cors(corsOptions)); // préflight global
 
-// 🔴 IMPORTANT : court-circuiter toutes les OPTIONS AVANT les routes
+// Court-circuiter TOUTES les OPTIONS pour éviter 500 côté routeurs
 app.use((req, res, next) => {
-  if (req.method === 'OPTIONS') return res.sendStatus(204);
+  if (req.method === "OPTIONS") return res.sendStatus(204);
   next();
 });
 
 app.use(express.json());
 
-// (Optionnel) — Debug rapide pour voir les origines qui se connectent
-/*
-app.use((req, _res, next) => {
-  console.log("CORS DEBUG:", req.headers.origin, "→", req.method, req.originalUrl);
-  next();
-});
-*/
-
-// ============================================================
-// ✅ ROUTES HEALTH (pour Render + monitoring)
+// ===== Health =====
 app.get("/health", (_req, res) => res.send("ok"));
-app.get("/healthz", (_req, res) => res.json({ ok: true }));
-
 app.get("/api/health", (_req, res) => res.send("ok"));
-app.get("/api/healthz", (_req, res) => res.json({ ok: true }));
-// ============================================================
 
-// Fichiers statiques (uploads d’images)
+// ===== Fichiers statiques =====
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// ============================================================
-// OPTIONS explicite sur la route finale (utile si un middleware capte avant)
-app.options('/api/admin/login', cors(corsOptions), (req, res) => res.sendStatus(204));
+// ===== Helper de montage sécurisé (diagnostic) =====
+function safeMount(prefix, file) {
+  try {
+    const router = require(file);
+    app.use(prefix, router);
+    console.log("Mounted OK ->", prefix, "from", file);
+  } catch (e) {
+    console.error("❌ Failed mounting", prefix, "from", file);
+    console.error("   Error:", e && e.message);
+    console.error("STACK:", e && e.stack);
+    process.exit(1);
+  }
+}
 
-// ✅ ROUTES API
-app.use("/api/admin", require("./routes/adminRoutes"));
-app.use("/api/auth", require("./routes/clientAuthRoutes"));
-app.use("/api/admin/clients", require("./routes/clientBackRoutes"));
-app.use("/api/categories", require("./routes/categoryRoutes"));
-app.use("/api/plats", require("./routes/platRoutes"));
-app.use("/api/commandes", require("./routes/commandeRoutes"));
-app.use("/api/public", require("./routes/publicRoutes"));
-app.use("/api/uploads", require("./routes/uploadRoutes"));
-// ============================================================
+// ===== Routes API =====
+safeMount("/api/admin",        "./routes/adminRoutes");
+safeMount("/api/auth",         "./routes/clientAuthRoutes");
+safeMount("/api/admin/clients","./routes/clientBackRoutes");
+safeMount("/api/categories",   "./routes/categoryRoutes");
+safeMount("/api/plats",        "./routes/platRoutes");
+safeMount("/api/commandes",    "./routes/commandeRoutes");
+safeMount("/api/public",       "./routes/publicRoutes");
+safeMount("/api/uploads",      "./routes/uploadRoutes");
 
-// 404 & gestion d’erreurs
+// ===== 404 & erreurs =====
 app.use((req, res) => {
-  res.status(404).json({
-    message: `Route introuvable: ${req.method} ${req.originalUrl}`,
-  });
+  res.status(404).json({ message: `Route introuvable: ${req.method} ${req.originalUrl}` });
 });
-
 app.use((err, _req, res, _next) => {
   console.error("API error:", err);
-  res.status(err.status || 500).json({
-    message: err.message || "Erreur serveur",
-  });
+  res.status(err.status || 500).json({ message: err.message || "Erreur serveur" });
 });
 
-// ============================================================
-// ✅ Démarrage et initialisation DB
+// ===== Boot =====
 (async () => {
   await connectDB();
   await ensureSuperAdmin();
 })();
 
 app.listen(PORT, () => {
-  console.log("✅ API running on port", PORT);
+  console.log("API running on port", PORT);
 });
