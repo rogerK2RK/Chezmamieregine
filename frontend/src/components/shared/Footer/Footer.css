@@ -1,71 +1,162 @@
 .footer {
-    background: linear-gradient(135deg, #73230D, #73230D);
-    padding: 6rem 13rem 13rem 13rem;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    color: white;
-    font-size: 1.2rem;
-    background: url(./images/Footer.png) no-repeat;
-    /* background-attachment: fixed; */
-    background-size: cover;
-    background-position: 45%;
-
+  background: url(./images/Footer.png) no-repeat;
+  background-size: cover;
+  background-position: 45%;
+  padding: 3rem 1.5rem;
+  text-align: center;
+  color: #fff;
+  font-size: 1rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .footer h4 {
-    margin-bottom: 5px;
+  margin-bottom: 5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 1rem;
 }
 
 .footer a {
-    color: #FFF;
-    text-decoration-line: none;
-    font-weight: 400;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 400;
 }
 
 .footer-top {
-    display: flex;
-    justify-content: space-between;
-    gap: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
 }
 
 .footer-top--left {
-    width: 33%;
-    text-align: left;
+  width: 100%;
+  text-align: center;
 }
 
 .footer-top--left .logo {
-    width: 80%;
+  width: 70%;
+  max-width: 280px;
+  margin-bottom: 1rem;
+}
+
+.footer-top--left p {
+  margin: 1rem auto;
+  text-align: justify;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  max-width: 480px;
 }
 
 .blc-hours {
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 0.5rem;
+  text-align: center;
 }
 
 .footer-top--right {
-    display: flex;
-    text-align: left;
-    justify-content: space-around;
-    width: 67%;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  text-align: center;
 }
 
 .footer-top--right .content {
-    display: flex;
-    flex-direction: column;
-    gap: 45px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
-.footer-btm, .footer-btm .links {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+hr {
+  margin: 3rem 0;
+  border: none;
+  border-top: 1px solid rgba(255,255,255,0.2);
+}
+
+.footer-btm {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer-btm p {
+  font-size: 0.9rem;
+  margin: 0;
 }
 
 .footer-btm .links {
-    gap: 60px;
+  display: flex;
+  gap: 1.5rem;
 }
 
+/* ===========================
+   TABLET (≥768px)
+   =========================== */
+@media (min-width: 768px) {
+  .footer {
+    padding: 4rem 3rem 6rem 3rem;
+    font-size: 1.05rem;
+  }
 
-hr {
-    margin: 5em 0em ;
+  .footer-top {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .footer-top--left {
+    width: 45%;
+    text-align: left;
+  }
+
+  .footer-top--right {
+    width: 55%;
+    flex-direction: row;
+    justify-content: space-around;
+    text-align: left;
+    align-items: flex-start;
+  }
+
+  .blc-hours {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .footer-btm {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+
+/* ===========================
+   DESKTOP (≥1024px)
+   =========================== */
+@media (min-width: 1024px) {
+  .footer {
+    padding: 6rem 13rem 13rem 13rem;
+    background-attachment: fixed;
+    font-size: 1.2rem;
+  }
+
+  .footer-top--left .logo {
+    width: 80%;
+  }
+
+  .footer-top--left p {
+    margin: 0px;
+  }
+
+  .footer-top--right .content {
+    gap: 45px;
+  }
+
+  .footer-btm .links {
+    gap: 60px;
+  }
 }
