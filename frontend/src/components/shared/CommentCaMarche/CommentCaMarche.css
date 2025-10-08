@@ -1,31 +1,29 @@
-/* CommentCaMarche.css */
-
 .ccm-container {
-  margin: 0 0;
-  padding: 10rem 13rem;
+  margin: 0;
+  padding: 3rem 1rem;
   background-color: #FDF6EB;
 }
 
 .ccm-title {
-  font-size: 2.5rem;
+  font-size: clamp(1.8rem, 6vw, 2.2rem);
   font-weight: bold;
   text-align: center;
   color: #1f2937;
-  margin-top: 0px;
-  margin-bottom: 48px;
+  margin: 0 0 2rem 0;
 }
 
 .ccm-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 24px;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
 }
 
+/* ===== Étapes ===== */
 .ccm-step {
   background-color: #ffffff;
   border: 1px solid #c8360631;
   border-radius: 20px;
-  padding: 40px 60px;
+  padding: 2rem 1.5rem;
   text-align: center;
   transition: box-shadow 0.3s ease;
 }
@@ -34,6 +32,7 @@
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
 }
 
+/* Icône */
 .ccm-icon-wrapper {
   width: 64px;
   height: 64px;
@@ -42,7 +41,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 24px auto;
+  margin: 0 auto 1.5rem auto;
 }
 
 .ccm-icon-circle {
@@ -54,20 +53,92 @@
 }
 
 .ccm-icon {
-  /* color: #f97316; */
-  font-size: 1.25rem;
-  width: 100px;
+  width: 72px;
+  height: auto;
 }
 
+/* Titres */
 .ccm-step-title {
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: bold;
   color: #1f2937;
-  margin-bottom: 8px;
-  min-height: 58px;
+  margin-bottom: 0.5rem;
+  min-height: auto;
 }
 
 .ccm-step-subtitle {
-  font-size: 1.2rem;
+  font-size: 1rem;
   color: #4b5563;
+  line-height: 1.4;
+}
+
+/* ===========================
+   TABLET (≥768px)
+   =========================== */
+@media (min-width: 768px) {
+  .ccm-container {
+    padding: 5rem 4rem;
+  }
+
+  .ccm-title {
+    font-size: 2.3rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .ccm-grid {
+    grid-template-columns: repeat(3, minmax(240px, 1fr));
+    gap: 2rem;
+  }
+
+  .ccm-step {
+    padding: 2.5rem 2rem;
+  }
+
+  .ccm-icon {
+    width: 90px;
+  }
+
+  .ccm-step-title {
+    font-size: 1.35rem;
+  }
+
+  .ccm-step-subtitle {
+    font-size: 1.05rem;
+  }
+}
+
+/* ===========================
+   DESKTOP (≥1024px)
+   =========================== */
+@media (min-width: 1024px) {
+  .ccm-container {
+    padding: 10rem 13rem;
+  }
+
+  .ccm-title {
+    font-size: 2.5rem;
+    margin-bottom: 48px;
+  }
+
+  .ccm-grid {
+    grid-template-columns: repeat(3, minmax(260px, 1fr));
+    gap: 24px;
+  }
+
+  .ccm-step {
+    padding: 40px 60px;
+  }
+
+  .ccm-icon { 
+    width: 100px; 
+  }
+
+  .ccm-step-title {
+    font-size: 1.5rem;
+    min-height: 58px;
+  }
+
+  .ccm-step-subtitle {
+    font-size: 1.2rem;
+  }
 }
