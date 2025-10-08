@@ -82,7 +82,7 @@ export default function ProductsPage() {
 
   return (
     <div className="products-container">
-      <h2>Nos produits</h2>
+      <h2>Nos plats</h2>
 
       <div className="products-categories">
         <button
