@@ -16,42 +16,30 @@ app.set("trust proxy", 1);
 
 // ============================================================
 // ✅ CONFIGURATION CORS UNIQUE (Render + Vercel + local)
-const PROD_ORIGIN = process.env.FRONTEND_URL; // ex: https://chezmamier egine.vercel.app
+// CORS unique
+const PROD_ORIGIN = process.env.FRONTEND_URL; // https://chezmamier egine.vercel.app
 
 const corsOptions = {
   origin(origin, cb) {
-    // Autoriser les requêtes internes (health, Postman, etc.)
-    if (!origin) return cb(null, true);
-
-    // Domaine principal du front
-    if (PROD_ORIGIN && origin === PROD_ORIGIN) return cb(null, true);
-
-    // Autoriser les préviews Vercel (*.vercel.app)
-    if (/^https:\/\/[a-z0-9-]+\.vercel\.app$/i.test(origin)) return cb(null, true);
-
-    // Autoriser localhost en dev
-    if (origin === "http://localhost:5173") return cb(null, true);
-
-    return cb(new Error("Not allowed by CORS: " + origin));
+    if (!origin) return cb(null, true); // health/Postman
+    if (PROD_ORIGIN && origin === PROD_ORIGIN) return cb(null, true); // prod
+    if (/^https:\/\/[a-z0-9-]+\.vercel\.app$/i.test(origin)) return cb(null, true); // previews
+    if (origin === 'http://localhost:5173') return cb(null, true); // dev
+    return cb(new Error('Not allowed by CORS: ' + origin));
   },
-  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true,
+  methods: ['GET','POST','PUT','PATCH','DELETE','OPTIONS'],
+  allowedHeaders: ['Content-Type','Authorization'],
+  credentials: true
 };
 
 app.use(cors(corsOptions));
-app.options("*", cors(corsOptions)); // Préflight indispensable
+app.options('*', cors(corsOptions)); // gère la pré-requête partout
 
-// Répond tout de suite aux préflights pour éviter que des middlewares plantent
+// 🔴 IMPORTANT : court-circuiter toutes les OPTIONS AVANT les routes
 app.use((req, res, next) => {
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(204); // No Content
-  }
+  if (req.method === 'OPTIONS') return res.sendStatus(204);
   next();
 });
-
-
-// ============================================================
 
 app.use(express.json());
 
@@ -76,6 +64,9 @@ app.get("/api/healthz", (_req, res) => res.json({ ok: true }));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // ============================================================
+// OPTIONS explicite sur la route finale (utile si un middleware capte avant)
+app.options('/api/admin/login', cors(corsOptions), (req, res) => res.sendStatus(204));
+
 // ✅ ROUTES API
 app.use("/api/admin", require("./routes/adminRoutes"));
 app.use("/api/auth", require("./routes/clientAuthRoutes"));
