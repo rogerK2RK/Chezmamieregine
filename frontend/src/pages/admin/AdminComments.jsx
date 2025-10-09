@@ -1,5 +1,6 @@
+// frontend/src/pages/admin/AdminComments.jsx
 import { useEffect, useMemo, useState } from 'react';
-import api from '../../services/api';
+import apiAdmin from '../../services/apiAdmin';          // ✅ utilise l'API admin
 import authHeaderAdmin from '../../services/authHeaderAdmin';
 
 export default function AdminComments() {
@@ -15,10 +16,11 @@ export default function AdminComments() {
   const fetchComments = async () => {
     try {
       setLoading(true);
-      const { data } = await api.get('/admin/comments', { headers });
+      // ✅ bon endpoint
+      const { data } = await apiAdmin.get('/api/admin/comments', { headers });
       setItems(Array.isArray(data) ? data : []);
     } catch (e) {
-      console.error('[GET comments] error', e?.response?.data || e);
+      console.error('[GET /api/admin/comments] error', e?.response?.data || e);
       alert('Erreur lors du chargement des commentaires');
     } finally {
       setLoading(false);
@@ -48,8 +50,9 @@ export default function AdminComments() {
   const saveReply = async () => {
     if (!replyOpen) return;
     try {
-      const { data } = await api.put(
-        `/admin/comments/${replyOpen}/reply`,
+      // ✅ bon endpoint
+      const { data } = await apiAdmin.put(
+        `/api/admin/comments/${replyOpen}/reply`,
         { reply: replyText },
         { headers }
       );
@@ -57,17 +60,18 @@ export default function AdminComments() {
       setReplyOpen(null);
       setReplyText('');
     } catch (e) {
-      console.error('[PUT reply] error', e?.response?.data || e);
+      console.error('[PUT /api/admin/comments/:id/reply] error', e?.response?.data || e);
       alert('Réponse impossible');
     }
   };
 
   const toggleVisible = async (id) => {
     try {
-      const { data } = await api.put(`/admin/comments/${id}/toggle-visible`, {}, { headers });
+      // ✅ bon endpoint
+      const { data } = await apiAdmin.put(`/api/admin/comments/${id}/toggle-visible`, {}, { headers });
       setItems(prev => prev.map(c => c._id === id ? data : c));
     } catch (e) {
-      console.error('[PUT toggle-visible] error', e?.response?.data || e);
+      console.error('[PUT /api/admin/comments/:id/toggle-visible] error', e?.response?.data || e);
       alert('Action impossible');
     }
   };
@@ -75,10 +79,11 @@ export default function AdminComments() {
   const removeOne = async (id) => {
     if (!window.confirm('Supprimer ce commentaire ?')) return;
     try {
-      await api.delete(`/admin/comments/${id}`, { headers });
+      // ✅ bon endpoint
+      await apiAdmin.delete(`/api/admin/comments/${id}`, { headers });
       setItems(prev => prev.filter(c => c._id !== id));
     } catch (e) {
-      console.error('[DELETE comment] error', e?.response?.data || e);
+      console.error('[DELETE /api/admin/comments/:id] error', e?.response?.data || e);
       alert('Suppression impossible');
     }
   };

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import api from '../../services/api';
+import apiAdmin from '../../services/apiAdmin';
 
 // AdminCommandes.jsx
 export default function AdminCommandes() {
@@ -8,7 +8,7 @@ export default function AdminCommandes() {
   useEffect(() => {
     const fetchCommandes = async () => {
       const token = localStorage.getItem('token');
-      const res = await api.get('/commandes', {
+      const res = await apiAdmin.get('/commandes', {
         headers: { Authorization: `Bearer ${token}` }
       });
       setCommandes(res.data);

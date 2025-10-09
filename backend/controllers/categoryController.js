@@ -156,3 +156,15 @@ exports.listPublic = async (_req, res) => {
   const categories = await Category.find({ isActive: true }).sort({ createdAt: -1 });
   res.json(categories);
 };
+
+// ➤ PUBLIC : liste des catégories visibles (pour le front)
+exports.publicList = async (req, res) => {
+  try {
+    const cats = await Category.find({ isPublic: true, isActive: true })
+      .sort({ createdAt: -1 });
+    res.json(cats);
+  } catch (e) {
+    console.error('GET /categories/public ERROR', e);
+    res.status(500).json({ message: 'Erreur serveur' });
+  }
+};

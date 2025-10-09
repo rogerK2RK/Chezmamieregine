@@ -1,22 +1,28 @@
-// backend/routes/categoryRoutes.js
 const express = require('express');
 const router = express.Router();
 
-const { adminProtect } = require('../middleware/adminAuthMiddleware'); // ✅ bon fichier
-const { authorizeRoles } = require('../middleware/roleMiddleware');    // ✅ middleware unifié
-const ctrl = require('../controllers/categoryController');
+const c = require('../controllers/categoryController');
+const { adminProtect } = require('../middleware/adminAuthMiddleware');
+const { authorizeRoles } = require('../middleware/roleMiddleware');
 
-const allow = ['admin', 'owner', 'superAdmin'];
+// ➤ Si ?public=1 → route non protégée
+router.get('/', async (req, res, next) => {
+  if (String(req.query.public) === '1') {
+    return c.publicList(req, res);
+  }
+  return next();
+}, adminProtect, authorizeRoles('admin', 'owner', 'superAdmin'), c.list);
 
-// CRUD Catégories
-router.get('/', adminProtect, authorizeRoles(...allow), ctrl.list);
-router.post('/', adminProtect, authorizeRoles(...allow), ctrl.create);
-router.put('/:id', adminProtect, authorizeRoles(...allow), ctrl.update);
-router.delete('/:id', adminProtect, authorizeRoles(...allow), ctrl.remove);
+// ➤ ADMIN CRUD
+router.post('/', adminProtect, authorizeRoles('admin', 'owner', 'superAdmin'), c.create);
+router.put('/:id', adminProtect, authorizeRoles('admin', 'owner', 'superAdmin'), c.update);
+router.delete('/:id', adminProtect, authorizeRoles('owner', 'superAdmin'), c.remove);
 
-// Gestion association plats <-> catégorie
-router.get('/:id/plats', adminProtect, authorizeRoles(...allow), ctrl.listPlatsOfCategory);
-router.post('/:id/assign-plats', adminProtect, authorizeRoles(...allow), ctrl.assignPlats);
-router.post('/unassign-plats', adminProtect, authorizeRoles(...allow), ctrl.unassignPlats);
+// ➤ Assignations
+router.post('/:id/assign-plats', adminProtect, authorizeRoles('admin', 'owner', 'superAdmin'), c.assignPlats);
+router.post('/unassign-plats', adminProtect, authorizeRoles('admin', 'owner', 'superAdmin'), c.unassignPlats);
+
+// ➤ Lister les plats d’une catégorie (publique)
+router.get('/:id/plats', c.listPlatsOfCategory);
 
 module.exports = router;

@@ -129,3 +129,16 @@ exports.listPublic = async (req, res) => {
     res.status(500).json({ message: 'Erreur serveur' });
   }
 };
+
+// ➤ PUBLIC : tous les plats disponibles (pour le front)
+exports.getPublicPlats = async (req, res) => {
+  try {
+    const plats = await Plat.find({ isPublic: true, isActive: true })
+      .select('name price images description category')
+      .sort({ createdAt: -1 });
+    res.json(plats);
+  } catch (e) {
+    console.error('GET /plats/public ERROR', e);
+    res.status(500).json({ message: 'Erreur serveur' });
+  }
+};

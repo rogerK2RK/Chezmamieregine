@@ -1,6 +1,6 @@
 // frontend/src/pages/admin/AdminCategories.jsx
 import { useEffect, useMemo, useState } from 'react';
-import api from '../../services/api';
+import apiAdmin from '../../services/apiAdmin';           // ✅ bon client
 import authHeaderAdmin from '../../services/authHeaderAdmin';
 
 export default function AdminCategories() {
@@ -12,7 +12,7 @@ export default function AdminCategories() {
 
   // --- Modale Catégorie (create / edit) ---
   const [catModalOpen, setCatModalOpen] = useState(false);
-  const [editing, setEditing] = useState(null); // null = création, sinon catégorie à éditer
+  const [editing, setEditing] = useState(null); // null = création
   const [form, setForm] = useState({ name: '', description: '', isActive: true });
 
   // --- Modale d’assignation de plats ---
@@ -22,7 +22,8 @@ export default function AdminCategories() {
   const fetchCats = async () => {
     setLoading(true);
     try {
-      const { data } = await api.get('/categories', { headers });
+      // ✅ /api/categories
+      const { data } = await apiAdmin.get('/api/categories', { headers });
       setCats(data || []);
     } catch {
       alert('Erreur chargement catégories');
@@ -33,7 +34,8 @@ export default function AdminCategories() {
 
   const fetchPlats = async () => {
     try {
-      const { data } = await api.get('/plats', { headers });
+      // ✅ /api/plats
+      const { data } = await apiAdmin.get('/api/plats', { headers });
       setPlats(data || []);
     } catch {
       /* silencieux */
@@ -45,7 +47,8 @@ export default function AdminCategories() {
   const filtered = cats.filter(c => {
     const s = q.toLowerCase().trim();
     if (!s) return true;
-    return (c.name || '').toLowerCase().includes(s) || (c.slug || '').includes(s);
+    return (c.name || '').toLowerCase().includes(s)
+        || (c.slug || '').toLowerCase().includes(s); // ✅ toLowerCase
   });
 
   // --- Ouvrir modale création ---
@@ -80,10 +83,12 @@ export default function AdminCategories() {
     }
     try {
       if (editing) {
-        const { data } = await api.put(`/categories/${editing._id}`, payload, { headers });
+        // ✅ /api/categories/:id
+        const { data } = await apiAdmin.put(`/api/categories/${editing._id}`, payload, { headers });
         setCats(prev => prev.map(c => (c._id === editing._id ? data : c)));
       } else {
-        const { data } = await api.post('/categories', payload, { headers });
+        // ✅ /api/categories
+        const { data } = await apiAdmin.post('/api/categories', payload, { headers });
         setCats(prev => [data, ...prev]);
       }
       setCatModalOpen(false);
@@ -95,9 +100,10 @@ export default function AdminCategories() {
   };
 
   const removeCat = async (id) => {
-    if (!confirm('Supprimer cette catégorie ?\n(Refusée si des plats y sont rattachés)')) return;
+    if (!window.confirm('Supprimer cette catégorie ?\n(Refusée si des plats y sont rattachés)')) return; // ✅ window.confirm
     try {
-      await api.delete(`/categories/${id}`, { headers });
+      // ✅ /api/categories/:id
+      await apiAdmin.delete(`/api/categories/${id}`, { headers });
       setCats(prev => prev.filter(c => c._id !== id));
     } catch (e) {
       alert(e?.response?.data?.message || 'Suppression impossible');
@@ -107,7 +113,8 @@ export default function AdminCategories() {
   // --- Toggle rapide isActive dans le tableau ---
   const quickToggleActive = async (cat) => {
     try {
-      const { data } = await api.put(`/categories/${cat._id}`, { isActive: !cat.isActive }, { headers });
+      // ✅ /api/categories/:id
+      const { data } = await apiAdmin.put(`/api/categories/${cat._id}`, { isActive: !cat.isActive }, { headers });
       setCats(prev => prev.map(c => (c._id === cat._id ? data : c)));
     } catch {
       alert('Impossible de changer la visibilité');
@@ -126,11 +133,11 @@ export default function AdminCategories() {
 
   const assign = async () => {
     try {
-      await api.post(`/categories/${assignOpen}/assign-plats`, { platIds: selectedPlatIds }, { headers });
+      // ✅ /api/categories/:id/assign-plats
+      await apiAdmin.post(`/api/categories/${assignOpen}/assign-plats`, { platIds: selectedPlatIds }, { headers });
       setAssignOpen(null);
       setSelectedPlatIds([]);
-      // Optionnel: refresh categories si tu veux refléter côté UI
-      // fetchCats();
+      // Optionnel: fetchCats();
     } catch {
       alert('Assignation impossible');
     }

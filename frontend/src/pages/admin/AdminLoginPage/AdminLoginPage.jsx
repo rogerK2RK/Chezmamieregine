@@ -18,10 +18,13 @@ export default function AdminLoginPage() {
     const token =
       localStorage.getItem('adminToken') ||
       sessionStorage.getItem('adminToken');
-    const role =
-      localStorage.getItem('adminRole') || sessionStorage.getItem('adminRole');
 
-    if (token && ['admin', 'superAdmin'].includes(role)) {
+    const role =
+      localStorage.getItem('adminRole') ||
+      sessionStorage.getItem('adminRole');
+
+    // autoriser admin, owner, superAdmin (ton middleware accepte ces 3 rôles)
+    if (token && ['admin', 'owner', 'superAdmin'].includes(role)) {
       navigate('/admin/dashboard', { replace: true });
     }
   }, [navigate]);
@@ -29,22 +32,38 @@ export default function AdminLoginPage() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const res = await api.post('/admin/login', { email, password });
-      localStorage.setItem('adminToken', res.data.token);
-      localStorage.setItem('adminRole',  res.data.role);
+      // 🔐 Appel login
+      const res = await api.post('/api/admin/login', { email, password });
 
+      // Selon ton controller, le payload peut être:
+      // { token, role, name } OU { token, user: { role, name } }
+      const token = res?.data?.token;
+      const role  = res?.data?.role  || res?.data?.user?.role;
+      const name  = res?.data?.name  || res?.data?.user?.name;
 
-      if (!['admin', 'superAdmin'].includes(res.data.role)) {
+      if (!token || !role) {
+        alert("Réponse de login inattendue (token/role manquant).");
+        return;
+      }
+
+      // Vérif rôle autorisé pour la BO
+      if (!['admin', 'owner', 'superAdmin'].includes(role)) {
         alert('Accès réservé aux administrateurs.');
         return;
       }
 
-      // Stockage selon "Se souvenir de moi"
+      // 🗄️ Stockage selon "Se souvenir de moi"
       const storage = rememberMe ? localStorage : sessionStorage;
-      storage.setItem('adminToken', res.data.token);
-      storage.setItem('adminRole', res.data.role);
-      storage.setItem('adminName', res.data.name);
+      storage.setItem('adminToken', token);
+      storage.setItem('adminRole',  role);
+      if (name) storage.setItem('adminName', name);
 
+      // (Optionnel) garder une copie en localStorage "persistante" si tu le souhaites
+      // localStorage.setItem('adminToken', token);
+      // localStorage.setItem('adminRole',  role);
+      // if (name) localStorage.setItem('adminName', name);
+
+      // ✅ Redirection BO
       navigate('/admin/dashboard');
     } catch (err) {
       console.log('ADMIN LOGIN ERROR:', err.response?.status, err.response?.data);

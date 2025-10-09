@@ -14,21 +14,23 @@ export default function ProductsPage() {
   const [plats, setPlats] = useState([]);
   const [activeCat, setActiveCat] = useState(null);
   const [loadingCats, setLoadingCats] = useState(true);
-  const [loadingPlats, setLoadingPlats] = useState(false);
+  const [loadingPlats, setLoadingPlats] = useState(true);
   const [page, setPage] = useState(1);
   const [errMsg, setErrMsg] = useState('');
 
+  // Catégories publiques
   useEffect(() => {
     (async () => {
       try {
         setLoadingCats(true);
         setErrMsg('');
-        const { data } = await api.get('/public/categories');
+        // ✅ route publique (remplace /public/categories)
+        const { data } = await api.get('/categories?public=1');
         const list = Array.isArray(data) ? data : [];
         setCats(list);
 
         if (slug) {
-          const found = list.find(c => c.slug === slug);
+          const found = list.find((c) => c.slug === slug);
           if (found) setActiveCat(found._id);
           else {
             setActiveCat(null);
@@ -38,14 +40,15 @@ export default function ProductsPage() {
           setActiveCat(null);
         }
       } catch (e) {
-        console.error('[GET /public/categories]', e?.response?.data || e);
-        setErrMsg("Impossible de charger les catégories.");
+        console.error('[GET /categories?public=1]', e?.response?.data || e);
+        setErrMsg('Impossible de charger les catégories.');
       } finally {
         setLoadingCats(false);
       }
     })();
   }, [slug, navigate]);
 
+  // Plats publics (avec filtre catégorie côté API)
   useEffect(() => {
     (async () => {
       try {
@@ -53,15 +56,16 @@ export default function ProductsPage() {
         setErrMsg('');
         setPage(1);
 
+        // ✅ route publique (remplace /public/plats)
         const url = activeCat
-          ? `/public/plats?category=${activeCat}`
-          : `/public/plats`;
+          ? `/plats/public?category=${activeCat}`
+          : `/plats/public`;
 
         const { data } = await api.get(url);
         setPlats(Array.isArray(data) ? data : []);
       } catch (e) {
-        console.error('[GET /public/plats]', e?.response?.data || e);
-        setErrMsg("Impossible de charger les plats.");
+        console.error('[GET /plats/public]', e?.response?.data || e);
+        setErrMsg('Impossible de charger les plats.');
         setPlats([]);
       } finally {
         setLoadingPlats(false);
@@ -117,18 +121,16 @@ export default function ProductsPage() {
                 <article key={p._id} className="product-card">
                   <div className="thumb">
                     {Array.isArray(p.images) && p.images[0] ? (
-                      <img
-                        src={p.images[0]}
-                        alt={p.name}
-                        className="thumb-img"
-                      />
+                      <img src={p.images[0]} alt={p.name} className="thumb-img" />
                     ) : (
                       <div className="thumb-placeholder">🍽️</div>
                     )}
                   </div>
                   <h3>{p.name}</h3>
                   <p className="desc">{p.description || ''}</p>
-                  <p className="price">{Number(p.price).toFixed(2)} €</p>
+                  {typeof p.price === 'number' && (
+                    <p className="price">{p.price.toFixed(2)} €</p>
+                  )}
                 </article>
               ))}
             </div>

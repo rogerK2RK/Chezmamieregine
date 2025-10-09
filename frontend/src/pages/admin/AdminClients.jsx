@@ -1,6 +1,6 @@
 // frontend/src/pages/admin/AdminClients.jsx
 import { useEffect, useMemo, useState } from 'react';
-import api from '../../services/api';
+import apiAdmin from '../../services/apiAdmin';          // ✅ bon client axios (injecte le token)
 import authHeaderAdmin from '../../services/authHeaderAdmin';
 
 export default function AdminClients() {
@@ -25,7 +25,8 @@ export default function AdminClients() {
   const fetchClients = async () => {
     try {
       setLoading(true);
-      const { data } = await api.get('/admin/clients', { headers });
+      // ✅ bon endpoint : /api/admin/clients
+      const { data } = await apiAdmin.get('/api/admin/clients', { headers });
       setClients(Array.isArray(data) ? data : []);
       setSelectedIds(new Set()); // reset selection après refresh
     } catch (e) {
@@ -58,10 +59,8 @@ export default function AdminClients() {
     setSelectedIds(prev => {
       const next = new Set(prev);
       if (allSelected) {
-        // désélectionne tout ce qui est dans la vue filtrée
         filteredIds.forEach(id => next.delete(id));
       } else {
-        // sélectionne tout ce qui est dans la vue filtrée
         filteredIds.forEach(id => next.add(id));
       }
       return next;
@@ -100,12 +99,17 @@ export default function AdminClients() {
     }
 
     try {
-      const { data } = await api.put(`/admin/clients/${editing._id}`, {
-        firstName: form.firstName.trim(),
-        lastName:  form.lastName.trim(),
-        sex:       form.sex,
-        email:     form.email.trim()
-      }, { headers });
+      // ✅ /api/admin/clients/:id
+      const { data } = await apiAdmin.put(
+        `/api/admin/clients/${editing._id}`,
+        {
+          firstName: form.firstName.trim(),
+          lastName:  form.lastName.trim(),
+          sex:       form.sex,
+          email:     form.email.trim()
+        },
+        { headers }
+      );
 
       setClients(prev => prev.map(c => (c._id === editing._id ? data : c)));
       setEditing(null);
@@ -120,7 +124,8 @@ export default function AdminClients() {
   const removeClient = async (id) => {
     if (!window.confirm('Supprimer ce client ?')) return;
     try {
-      await api.delete(`/admin/clients/${id}`, { headers });
+      // ✅ /api/admin/clients/:id
+      await apiAdmin.delete(`/api/admin/clients/${id}`, { headers });
       setClients(prev => prev.filter(c => c._id !== id));
       setSelectedIds(prev => {
         const next = new Set(prev);
@@ -139,17 +144,14 @@ export default function AdminClients() {
     if (!window.confirm(`Supprimer ${selectedIds.size} client(s) sélectionné(s) ?`)) return;
 
     try {
-      // On supprime en série (simple et robuste)
       for (const id of selectedIds) {
-        // si l’élément n’est pas dans la vue filtrée, on peut quand même supprimer côté API
-        await api.delete(`/admin/clients/${id}`, { headers });
+        await apiAdmin.delete(`/api/admin/clients/${id}`, { headers }); // ✅
       }
       setClients(prev => prev.filter(c => !selectedIds.has(c._id)));
       setSelectedIds(new Set());
     } catch (e) {
       console.error('[BULK DELETE clients] error', e?.response?.data || e);
       alert('Suppression groupée interrompue (voir console).');
-      // même si erreur, on refetch pour resynchroniser
       fetchClients();
     }
   };

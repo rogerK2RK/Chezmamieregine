@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../../services/api';
 import authHeaderAdmin from '../../services/authHeaderAdmin';
+import apiAdmin from '../../services/apiAdmin'; // ← on utilise UNIQUEMENT apiAdmin
 
 export default function AdminPlats() {
   const [plats, setPlats] = useState([]);
@@ -15,7 +15,8 @@ export default function AdminPlats() {
   const fetchPlats = async () => {
     try {
       setLoading(true);
-      const { data } = await api.get('/plats', { headers });
+      // ✅ bonne URL (préfixe /api) + bon client apiAdmin
+      const { data } = await apiAdmin.get('/api/plats', { headers });
       setPlats(data || []);
       setSelectedIds(new Set());
     } catch (e) {
@@ -75,7 +76,8 @@ export default function AdminPlats() {
   const handleDelete = async (id) => {
     if (!window.confirm('Supprimer ce plat ?')) return;
     try {
-      await api.delete(`/plats/${id}`, { headers });
+      // ✅ /api/plats/:id et apiAdmin
+      await apiAdmin.delete(`/api/plats/${id}`, { headers });
       setPlats(prev => prev.filter(p => p._id !== id));
       setSelectedIds(prev => {
         const next = new Set(prev);
@@ -94,7 +96,8 @@ export default function AdminPlats() {
     setBusyBulk(true);
     try {
       const ids = Array.from(selectedIds);
-      await Promise.all(ids.map(id => api.delete(`/plats/${id}`, { headers })));
+      // ✅ /api/plats/:id et apiAdmin
+      await Promise.all(ids.map(id => apiAdmin.delete(`/api/plats/${id}`, { headers })));
       setPlats(prev => prev.filter(p => !selectedIds.has(p._id)));
       setSelectedIds(new Set());
     } catch (e) {
@@ -110,8 +113,9 @@ export default function AdminPlats() {
     setBusyBulk(true);
     try {
       const ids = Array.from(selectedIds);
+      // ✅ /api/plats/:id et apiAdmin
       await Promise.all(
-        ids.map(id => api.put(`/plats/${id}`, { isAvailable }, { headers }))
+        ids.map(id => apiAdmin.put(`/api/plats/${id}`, { isAvailable }, { headers }))
       );
       // Mise à jour optimiste locale
       setPlats(prev =>
@@ -125,7 +129,6 @@ export default function AdminPlats() {
       setBusyBulk(false);
     }
   };
-  
 
   return (
     <div className="admin-page">

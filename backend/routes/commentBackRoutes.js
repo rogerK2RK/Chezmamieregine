@@ -4,11 +4,32 @@ const { adminProtect } = require('../middleware/adminAuthMiddleware');
 const { authorizeRoles } = require('../middleware/roleMiddleware');
 const ctrl = require('../controllers/commentBackController');
 
-const ALLOW = ['owner','admin','superAdmin'];
+// liste globale / recherche (BO)
+router.get('/',
+  adminProtect,
+  authorizeRoles('admin', 'superAdmin', 'owner'),
+  ctrl.list
+);
 
-router.get('/', adminProtect, authorizeRoles(...ALLOW), ctrl.adminList);
-router.put('/:id/reply', adminProtect, authorizeRoles(...ALLOW), ctrl.reply);
-router.put('/:id/status', adminProtect, authorizeRoles(...ALLOW), ctrl.setStatus);
-router.delete('/:id', adminProtect, authorizeRoles(...ALLOW), ctrl.remove);
+// répondre (staff) à un commentaire
+router.post('/:id/reply',
+  adminProtect,
+  authorizeRoles('admin', 'superAdmin', 'owner'),
+  ctrl.reply
+);
+
+// masquer/afficher
+router.patch('/:id/visibility',
+  adminProtect,
+  authorizeRoles('admin', 'superAdmin', 'owner'),
+  ctrl.setVisibility
+);
+
+// suppression (modération)
+router.delete('/:id',
+  adminProtect,
+  authorizeRoles('admin', 'superAdmin', 'owner'),
+  ctrl.remove
+);
 
 module.exports = router;
