@@ -67,12 +67,12 @@
    =========================== */
 @media (min-width: 768px) {
   .connexion-container-content {
-    padding: 5rem 3rem;
+    padding: 9rem 3rem;
   }
 
   .register-form {
     padding: 2rem 2.5rem;
-    max-width: 520px;
+    width: 70%;
   }
 
   .connexion-container-content h2 {
@@ -91,7 +91,7 @@
   }
 
   .register-form {
-    padding: 3rem 4rem;
+    padding: 3rem 4rem 3rem;
     width: 30%;                       /* ta largeur fixe */
     flex-wrap: wrap;
   }

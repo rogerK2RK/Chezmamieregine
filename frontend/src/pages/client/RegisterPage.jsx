@@ -1,5 +1,5 @@
 import React from 'react';
-import RegisterForm from '../../components/shared/RegisterForm/RegisterForm.jsx';
+import RegisterForm from '../../components/client/RegisterForm/RegisterForm.jsx';
 
 export default function LoginPage() {
   return <>
