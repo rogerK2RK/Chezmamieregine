@@ -22,7 +22,6 @@ button, a {
     text-transform: uppercase;
 }
 
-/* ====== BASE MOBILE ====== */
 .header {
     position: fixed;
     top: 0;
@@ -328,7 +327,7 @@ button, a {
         gap: 1rem; 
     }
     .nav-link, .menu-item { 
-        font-size: 1.05rem; 
+        font-size: 1rem; 
         padding: 8px 14px; 
         border-radius: 18px; 
     }
