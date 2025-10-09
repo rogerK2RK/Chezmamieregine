@@ -34,6 +34,9 @@ app.use('/api/uploads',        require('./routes/uploadRoutes'));
 app.use('/api/comments',       require('./routes/commentFrontRoutes')); // clients
 app.use('/api/admin/comments', require('./routes/commentBackRoutes'));  // BO
 
+app.use('/api/public', require('./routes/publicRoutes'));
+
+
 /* Health */
 app.get('/healthz', (_req, res) => res.json({ ok: true }));
 

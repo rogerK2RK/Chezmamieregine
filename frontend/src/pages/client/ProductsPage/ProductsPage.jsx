@@ -1,7 +1,7 @@
 // frontend/src/pages/ProductsPage.jsx
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import api from '../../../services/api';
+import api from '../../../services/api';                 // ✅ chemin corrigé (../services/api)
 import './style.css';
 
 const PAGE_SIZE = 8;
@@ -18,19 +18,19 @@ export default function ProductsPage() {
   const [page, setPage] = useState(1);
   const [errMsg, setErrMsg] = useState('');
 
-  // Catégories publiques
+  // 1) Catégories publiques
   useEffect(() => {
     (async () => {
       try {
         setLoadingCats(true);
         setErrMsg('');
-        // ✅ route publique (remplace /public/categories)
-        const { data } = await api.get('/categories?public=1');
+        // ✅ bon endpoint public
+        const { data } = await api.get('/api/public/categories');
         const list = Array.isArray(data) ? data : [];
         setCats(list);
 
         if (slug) {
-          const found = list.find((c) => c.slug === slug);
+          const found = list.find(c => c.slug === slug);
           if (found) setActiveCat(found._id);
           else {
             setActiveCat(null);
@@ -40,7 +40,7 @@ export default function ProductsPage() {
           setActiveCat(null);
         }
       } catch (e) {
-        console.error('[GET /categories?public=1]', e?.response?.data || e);
+        console.error('[GET /api/public/categories]', e?.response?.data || e);
         setErrMsg('Impossible de charger les catégories.');
       } finally {
         setLoadingCats(false);
@@ -48,7 +48,7 @@ export default function ProductsPage() {
     })();
   }, [slug, navigate]);
 
-  // Plats publics (avec filtre catégorie côté API)
+  // 2) Plats publics (optionnellement filtrés par catégorie)
   useEffect(() => {
     (async () => {
       try {
@@ -56,15 +56,15 @@ export default function ProductsPage() {
         setErrMsg('');
         setPage(1);
 
-        // ✅ route publique (remplace /public/plats)
+        // ✅ bon endpoint public
         const url = activeCat
-          ? `/plats/public?category=${activeCat}`
-          : `/plats/public`;
+          ? `/api/public/plats?category=${activeCat}`
+          : `/api/public/plats`;
 
         const { data } = await api.get(url);
         setPlats(Array.isArray(data) ? data : []);
       } catch (e) {
-        console.error('[GET /plats/public]', e?.response?.data || e);
+        console.error('[GET /api/public/plats]', e?.response?.data || e);
         setErrMsg('Impossible de charger les plats.');
         setPlats([]);
       } finally {
@@ -73,12 +73,14 @@ export default function ProductsPage() {
     })();
   }, [activeCat]);
 
+  // 3) pagination front
   const pageCount = Math.max(1, Math.ceil(plats.length / PAGE_SIZE));
   const currentPageItems = useMemo(() => {
     const start = (page - 1) * PAGE_SIZE;
     return plats.slice(start, start + PAGE_SIZE);
   }, [plats, page]);
 
+  // 4) navigation catégorie
   const goCat = (c) => {
     if (!c) navigate('/produits');
     else navigate(`/produits/${c.slug}`);
@@ -88,6 +90,7 @@ export default function ProductsPage() {
     <div className="products-container">
       <h2>Nos plats</h2>
 
+      {/* Boutons catégories */}
       <div className="products-categories">
         <button
           onClick={() => goCat(null)}
@@ -95,20 +98,21 @@ export default function ProductsPage() {
         >
           Tous
         </button>
-        {!loadingCats &&
-          cats.map((c) => (
-            <button
-              key={c._id}
-              onClick={() => goCat(c)}
-              className={`cat-btn ${slug === c.slug ? 'active' : ''}`}
-            >
-              {c.name}
-            </button>
-          ))}
+        {!loadingCats && cats.map(c => (
+          <button
+            key={c._id}
+            onClick={() => goCat(c)}
+            className={`cat-btn ${slug === c.slug ? 'active' : ''}`}
+          >
+            {c.name}
+          </button>
+        ))}
       </div>
 
+      {/* Erreur globale éventuelle */}
       {errMsg && <div className="error-msg">{errMsg}</div>}
 
+      {/* Liste des plats */}
       {loadingPlats ? (
         <div className="loading">Chargement…</div>
       ) : (
@@ -117,7 +121,7 @@ export default function ProductsPage() {
             <div className="no-results">Aucun plat dans cette catégorie.</div>
           ) : (
             <div className="products-grid">
-              {currentPageItems.map((p) => (
+              {currentPageItems.map(p => (
                 <article key={p._id} className="product-card">
                   <div className="thumb">
                     {Array.isArray(p.images) && p.images[0] ? (
@@ -128,19 +132,18 @@ export default function ProductsPage() {
                   </div>
                   <h3>{p.name}</h3>
                   <p className="desc">{p.description || ''}</p>
-                  {typeof p.price === 'number' && (
-                    <p className="price">{p.price.toFixed(2)} €</p>
-                  )}
+                  <p className="price">{Number(p.price ?? 0).toFixed(2)} €</p>
                 </article>
               ))}
             </div>
           )}
 
+          {/* Pagination */}
           {pageCount > 1 && (
             <div className="pagination">
               <button
                 disabled={page === 1}
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                onClick={() => setPage(p => Math.max(1, p - 1))}
               >
                 ‹
               </button>
@@ -155,7 +158,7 @@ export default function ProductsPage() {
               ))}
               <button
                 disabled={page === pageCount}
-                onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
+                onClick={() => setPage(p => Math.min(pageCount, p + 1))}
               >
                 ›
               </button>

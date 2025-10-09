@@ -1,14 +1,17 @@
 // frontend/src/pages/admin/AdminPlatForm.jsx
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import api from '../../services/api';
 import authHeaderAdmin from '../../services/authHeaderAdmin';
 import AdminImageUploader from '../../components/admin/AdminImageUploader';
 
 export default function AdminPlatForm() {
-  const { id } = useParams();          // si présent => édition
+  const { id } = useParams();               // si présent => édition
   const isEdit = Boolean(id);
   const navigate = useNavigate();
+
+  // ⚙️ Headers (mémoisés)
+  const headers = useMemo(() => ({ ...authHeaderAdmin() }), []);
 
   // Guards (évite doubles appels en dev/StrictMode)
   const didFetchCategories = useRef(false);
@@ -18,95 +21,100 @@ export default function AdminPlatForm() {
   const [form, setForm] = useState({
     ar: '',
     name: '',
-    price: '',
-    category: '',         // _id d'une Category
+    price: '',       // string pour l’input, on parse au submit
+    category: '',    // _id Category
     description: '',
-    isAvailable: true
+    isAvailable: true,
   });
 
-  // Images gérées comme un tableau d’URLs
+  // Images stockées comme tableau d’URL(s)
   const [images, setImages] = useState([]);
 
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(isEdit);
 
-  // 1) Charger les catégories UNE FOIS
+  // 1) Charger les catégories (une seule fois)
   useEffect(() => {
     if (didFetchCategories.current) return;
     didFetchCategories.current = true;
 
     (async () => {
       try {
-        const { data } = await api.get('/categories', { headers: authHeaderAdmin() });
+        const { data } = await api.get('/categories', { headers });
         setCategories(Array.isArray(data) ? data : []);
       } catch (e) {
-        console.error('[GET categories]', e?.response?.status, e?.response?.data || e);
+        console.error('[GET /categories]', e?.response?.status, e?.response?.data || e);
         setCategories([]);
       }
     })();
-  }, []);
+  }, [headers]);
 
-  // 2) Charger le plat si édition — UNE FOIS
+  // 2) Charger le plat si édition (une seule fois)
   useEffect(() => {
-    if (!isEdit) return;
-    if (didFetchPlat.current) return;
+    if (!isEdit || didFetchPlat.current) return;
     didFetchPlat.current = true;
 
     (async () => {
       try {
-        const { data } = await api.get(`/plats/${id}`, { headers: authHeaderAdmin() });
+        const { data } = await api.get(`/plats/${id}`, { headers });
         setForm({
-          ar: data.ar || '',
-          name: data.name || '',
-          price: data.price ?? '',
+          ar: data?.ar || '',
+          name: data?.name || '',
+          price: data?.price ?? '', // on reconvertira en nombre au submit
           category:
-            typeof data.category === 'string'
+            typeof data?.category === 'string'
               ? data.category
-              : (data.category?._id || ''),
-          description: data.description || '',
-          isAvailable: data.isAvailable ?? true
+              : (data?.category?._id || ''),
+          description: data?.description || '',
+          isAvailable: data?.isAvailable ?? true,
         });
-        setImages(Array.isArray(data.images) ? data.images : []);
+        setImages(Array.isArray(data?.images) ? data.images : []);
       } catch (e) {
-        console.error('[GET plat]', e?.response?.status, e?.response?.data || e);
+        console.error('[GET /plats/:id]', e?.response?.status, e?.response?.data || e);
         alert('Erreur lors du chargement du plat');
-        navigate('/admin/plats');
+        navigate('/admin/plats', { replace: true });
       } finally {
         setLoading(false);
       }
     })();
-  }, [isEdit, id, navigate]);
+  }, [isEdit, id, headers, navigate]);
 
   // Submit
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const priceNum = parseFloat(String(form.price).replace(',', '.'));
     const payload = {
-      ar: form.ar.trim(),
-      name: form.name.trim(),
-      price: Number(form.price),
+      ar: String(form.ar || '').trim(),
+      name: String(form.name || '').trim(),
+      price: Number.isFinite(priceNum) ? priceNum : NaN,
       ...(form.category ? { category: form.category } : {}),
-      description: form.description.trim(),
+      description: String(form.description || '').trim(),
       isAvailable: !!form.isAvailable,
-      images // ⬅️ tableau d’URLs déjà prêt
+      images: Array.isArray(images)
+        ? images.map((s) => String(s).trim()).filter(Boolean)
+        : [],
     };
 
-    if (!payload.ar) { alert('AR requise'); return; }
-    if (!payload.name || !Number.isFinite(payload.price)) {
-      alert('Nom et prix valides requis'); return;
-    }
+    if (!payload.ar) { alert('Référence (AR) requise'); return; }
+    if (!payload.name) { alert('Nom requis'); return; }
+    if (!Number.isFinite(payload.price)) { alert('Prix invalide'); return; }
+    if (payload.price < 0) { alert('Le prix doit être positif'); return; }
 
     try {
       if (isEdit) {
-        await api.put(`/plats/${id}`, payload, { headers: authHeaderAdmin() });
+        await api.put(`/plats/${id}`, payload, { headers });
       } else {
-        await api.post('/plats', payload, { headers: authHeaderAdmin() });
+        await api.post('/plats', payload, { headers });
       }
       navigate('/admin/plats');
-    } catch (e) {
-      const msg = e?.response?.data?.message || 'Enregistrement impossible';
+    } catch (e2) {
+      const msg =
+        e2?.response?.data?.message ||
+        e2?.response?.data?.details ||
+        'Enregistrement impossible';
       alert(msg);
-      console.error('[SAVE plat]', e?.response?.status, e?.response?.data || e);
+      console.error('[SAVE plat]', e2?.response?.status, e2?.response?.data || e2);
     }
   };
 
@@ -155,8 +163,10 @@ export default function AdminPlatForm() {
           <label>Prix (€) *</label>
           <input
             type="number"
+            inputMode="decimal"
             step="0.01"
-            value={form.price}
+            min="0"
+            value={String(form.price ?? '')}
             onChange={e => setForm(f => ({ ...f, price: e.target.value }))}
             style={input}
             required
@@ -195,15 +205,19 @@ export default function AdminPlatForm() {
         <label style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
           <input
             type="checkbox"
-            checked={form.isAvailable}
+            checked={!!form.isAvailable}
             onChange={e => setForm(f => ({ ...f, isAvailable: e.target.checked }))}
           />
           Disponible à la commande
         </label>
 
         <div style={{ display: 'flex', gap: 10 }}>
-          <button type="submit" style={btnPrimary}>{isEdit ? 'Enregistrer' : 'Créer'}</button>
-          <button type="button" onClick={() => navigate('/admin/plats')} style={btnGhost}>Annuler</button>
+          <button type="submit" style={btnPrimary}>
+            {isEdit ? 'Enregistrer' : 'Créer'}
+          </button>
+          <button type="button" onClick={() => navigate('/admin/plats')} style={btnGhost}>
+            Annuler
+          </button>
         </div>
       </form>
     </div>
