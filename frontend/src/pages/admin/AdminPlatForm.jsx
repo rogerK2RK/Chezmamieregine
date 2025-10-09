@@ -1,7 +1,7 @@
 // frontend/src/pages/admin/AdminPlatForm.jsx
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import api from '../../services/api';
+import apiAdmin from '../../services/apiAdmin';
 import authHeaderAdmin from '../../services/authHeaderAdmin';
 import AdminImageUploader from '../../components/admin/AdminImageUploader';
 
@@ -40,7 +40,7 @@ export default function AdminPlatForm() {
 
     (async () => {
       try {
-        const { data } = await api.get('/categories', { headers });
+        const { data } = await apiAdmin.get('/categories', { headers });
         setCategories(Array.isArray(data) ? data : []);
       } catch (e) {
         console.error('[GET /categories]', e?.response?.status, e?.response?.data || e);
@@ -56,7 +56,7 @@ export default function AdminPlatForm() {
 
     (async () => {
       try {
-        const { data } = await api.get(`/plats/${id}`, { headers });
+        const { data } = await apiAdmin.get(`/plats/${id}`, { headers });
         setForm({
           ar: data?.ar || '',
           name: data?.name || '',
@@ -103,9 +103,9 @@ export default function AdminPlatForm() {
 
     try {
       if (isEdit) {
-        await api.put(`/plats/${id}`, payload, { headers });
+        await apiAdmin.put(`/plats/${id}`, payload, { headers });
       } else {
-        await api.post('/plats', payload, { headers });
+        await apiAdmin.post('/plats', payload, { headers });
       }
       navigate('/admin/plats');
     } catch (e2) {

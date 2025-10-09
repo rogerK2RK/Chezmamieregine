@@ -17,10 +17,10 @@ export default function AdminComments() {
     try {
       setLoading(true);
       // ✅ bon endpoint
-      const { data } = await apiAdmin.get('/api/admin/comments', { headers });
+      const { data } = await apiAdmin.get('/admin/comments', { headers });
       setItems(Array.isArray(data) ? data : []);
     } catch (e) {
-      console.error('[GET /api/admin/comments] error', e?.response?.data || e);
+      console.error('[GET /admin/comments] error', e?.response?.data || e);
       alert('Erreur lors du chargement des commentaires');
     } finally {
       setLoading(false);
@@ -52,7 +52,7 @@ export default function AdminComments() {
     try {
       // ✅ bon endpoint
       const { data } = await apiAdmin.put(
-        `/api/admin/comments/${replyOpen}/reply`,
+        `/admin/comments/${replyOpen}/reply`,
         { reply: replyText },
         { headers }
       );
@@ -60,7 +60,7 @@ export default function AdminComments() {
       setReplyOpen(null);
       setReplyText('');
     } catch (e) {
-      console.error('[PUT /api/admin/comments/:id/reply] error', e?.response?.data || e);
+      console.error('[PUT /admin/comments/:id/reply] error', e?.response?.data || e);
       alert('Réponse impossible');
     }
   };
@@ -68,10 +68,10 @@ export default function AdminComments() {
   const toggleVisible = async (id) => {
     try {
       // ✅ bon endpoint
-      const { data } = await apiAdmin.put(`/api/admin/comments/${id}/toggle-visible`, {}, { headers });
+      const { data } = await apiAdmin.put(`/admin/comments/${id}/toggle-visible`, {}, { headers });
       setItems(prev => prev.map(c => c._id === id ? data : c));
     } catch (e) {
-      console.error('[PUT /api/admin/comments/:id/toggle-visible] error', e?.response?.data || e);
+      console.error('[PUT /admin/comments/:id/toggle-visible] error', e?.response?.data || e);
       alert('Action impossible');
     }
   };
@@ -80,10 +80,10 @@ export default function AdminComments() {
     if (!window.confirm('Supprimer ce commentaire ?')) return;
     try {
       // ✅ bon endpoint
-      await apiAdmin.delete(`/api/admin/comments/${id}`, { headers });
+      await apiAdmin.delete(`/admin/comments/${id}`, { headers });
       setItems(prev => prev.filter(c => c._id !== id));
     } catch (e) {
-      console.error('[DELETE /api/admin/comments/:id] error', e?.response?.data || e);
+      console.error('[DELETE /admin/comments/:id] error', e?.response?.data || e);
       alert('Suppression impossible');
     }
   };

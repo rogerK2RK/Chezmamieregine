@@ -23,10 +23,10 @@ export default function AdminUsers() {
     try {
       setLoading(true);
       // ✅ bon endpoint
-      const { data } = await apiAdmin.get('/api/admin/users', getHeaders());
+      const { data } = await apiAdmin.get('/admin/users', getHeaders());
       setUsers(Array.isArray(data) ? data : []);
     } catch (err) {
-      console.error('[GET /api/admin/users] error', err?.response?.data || err);
+      console.error('[GET /admin/users] error', err?.response?.data || err);
       alert("Impossible de charger les utilisateurs");
     } finally {
       setLoading(false);
@@ -77,7 +77,7 @@ export default function AdminUsers() {
       setSaving(true);
       const body = { name, email, password, role: form.role };
       // ✅ bon endpoint
-      const { data } = await apiAdmin.post('/api/admin/create-user', body, getHeaders());
+      const { data } = await apiAdmin.post('/admin/create-user', body, getHeaders());
 
       const normalized = { createdAt: new Date().toISOString(), ...data };
       setUsers(prev => [normalized, ...prev]);
@@ -88,7 +88,7 @@ export default function AdminUsers() {
     } catch (err) {
       const msg = err?.response?.data?.message || 'Création impossible';
       setErrorMsg(msg);
-      console.error('[POST /api/admin/create-user] error', err?.response?.data || err);
+      console.error('[POST /admin/create-user] error', err?.response?.data || err);
     } finally {
       setSaving(false);
     }

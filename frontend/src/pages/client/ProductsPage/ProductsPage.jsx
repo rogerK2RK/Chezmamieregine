@@ -25,7 +25,7 @@ export default function ProductsPage() {
         setLoadingCats(true);
         setErrMsg('');
         // ✅ bon endpoint public
-        const { data } = await api.get('/api/public/categories');
+        const { data } = await api.get('/public/categories');
         const list = Array.isArray(data) ? data : [];
         setCats(list);
 
@@ -58,8 +58,8 @@ export default function ProductsPage() {
 
         // ✅ bon endpoint public
         const url = activeCat
-          ? `/api/public/plats?category=${activeCat}`
-          : `/api/public/plats`;
+          ? `/public/plats?category=${activeCat}`
+          : `/public/plats`;
 
         const { data } = await api.get(url);
         setPlats(Array.isArray(data) ? data : []);

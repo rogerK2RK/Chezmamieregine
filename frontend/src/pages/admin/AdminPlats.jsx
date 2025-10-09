@@ -16,7 +16,7 @@ export default function AdminPlats() {
     try {
       setLoading(true);
       // ✅ bonne URL (préfixe /api) + bon client apiAdmin
-      const { data } = await apiAdmin.get('/api/plats', { headers });
+      const { data } = await apiAdmin.get('/plats', { headers });
       setPlats(data || []);
       setSelectedIds(new Set());
     } catch (e) {
@@ -77,7 +77,7 @@ export default function AdminPlats() {
     if (!window.confirm('Supprimer ce plat ?')) return;
     try {
       // ✅ /api/plats/:id et apiAdmin
-      await apiAdmin.delete(`/api/plats/${id}`, { headers });
+      await apiAdmin.delete(`/plats/${id}`, { headers });
       setPlats(prev => prev.filter(p => p._id !== id));
       setSelectedIds(prev => {
         const next = new Set(prev);
@@ -115,7 +115,7 @@ export default function AdminPlats() {
       const ids = Array.from(selectedIds);
       // ✅ /api/plats/:id et apiAdmin
       await Promise.all(
-        ids.map(id => apiAdmin.put(`/api/plats/${id}`, { isAvailable }, { headers }))
+        ids.map(id => apiAdmin.put(`/plats/${id}`, { isAvailable }, { headers }))
       );
       // Mise à jour optimiste locale
       setPlats(prev =>

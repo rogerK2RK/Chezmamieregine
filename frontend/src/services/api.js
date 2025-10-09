@@ -1,11 +1,11 @@
 import axios from 'axios';
 
-const baseURL =
-  import.meta.env.VITE_API_URL?.replace(/\/$/, '') || 'http://localhost:5000';
+const root = (import.meta.env.VITE_API_URL || 'http://localhost:5000').replace(/\/$/, '');
+const baseURL = root.endsWith('/api') ? root : `${root}/api`; // <-- évite le /api en double
 
 const api = axios.create({
-  baseURL: `${baseURL}/api`,   // <-- IMPORTANT : ajoute /api
-  withCredentials: true
+  baseURL,
+  withCredentials: true,
 });
 
 export default api;

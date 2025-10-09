@@ -33,7 +33,7 @@ export default function AdminLoginPage() {
     e.preventDefault();
     try {
       // 🔐 Appel login
-      const res = await api.post('/api/admin/login', { email, password });
+      const res = await api.post('/admin/login', { email, password });
 
       // Selon ton controller, le payload peut être:
       // { token, role, name } OU { token, user: { role, name } }

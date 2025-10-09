@@ -26,7 +26,7 @@ export default function AdminClients() {
     try {
       setLoading(true);
       // ✅ bon endpoint : /api/admin/clients
-      const { data } = await apiAdmin.get('/api/admin/clients', { headers });
+      const { data } = await apiAdmin.get('/admin/clients', { headers });
       setClients(Array.isArray(data) ? data : []);
       setSelectedIds(new Set()); // reset selection après refresh
     } catch (e) {
@@ -125,7 +125,7 @@ export default function AdminClients() {
     if (!window.confirm('Supprimer ce client ?')) return;
     try {
       // ✅ /api/admin/clients/:id
-      await apiAdmin.delete(`/api/admin/clients/${id}`, { headers });
+      await apiAdmin.delete(`/admin/clients/${id}`, { headers });
       setClients(prev => prev.filter(c => c._id !== id));
       setSelectedIds(prev => {
         const next = new Set(prev);
@@ -145,7 +145,7 @@ export default function AdminClients() {
 
     try {
       for (const id of selectedIds) {
-        await apiAdmin.delete(`/api/admin/clients/${id}`, { headers }); // ✅
+        await apiAdmin.delete(`/admin/clients/${id}`, { headers }); // ✅
       }
       setClients(prev => prev.filter(c => !selectedIds.has(c._id)));
       setSelectedIds(new Set());
