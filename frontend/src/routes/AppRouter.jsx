@@ -11,14 +11,14 @@ import ContactPage from '../pages/client/ContactPage';
 import ProductsPage from '../pages/client/ProductsPage/ProductsPage';
 
 import AdminLoginPage from '../pages/admin/AdminLoginPage/AdminLoginPage';
-import AdminDashboard from '../pages/admin/AdminDashboard';
-import AdminPlats from '../pages/admin/AdminPlats';
-import AdminCommandes from '../pages/admin/AdminCommandes';
-import AdminUsers from '../pages/admin/AdminUsers';
-import AdminClients from '../pages/admin/AdminClients';
-import AdminCategories from '../pages/admin/AdminCategories';
-import AdminPlatForm from '../pages/admin/AdminPlatForm';
-import AdminComments from '../pages/admin/AdminComments';
+import AdminDashboard from '../pages/admin/AdminDashboard/AdminDashboard';
+import AdminPlats from '../pages/admin/AdminPlats/AdminPlats';
+import AdminCommandes from '../pages/admin/AdminCommandes/AdminCommandes';
+import AdminUsers from '../pages/admin/AdminUsers/AdminUsers';
+import AdminClients from '../pages/admin/AdminClients/AdminClients';
+import AdminCategories from '../pages/admin/AdminCategories/AdminCategories';
+import AdminPlatForm from '../pages/admin/AdminPlatForm/AdminPlatForm';
+import AdminComments from '../pages/admin/AdminComments/AdminComments';
 
 import PrivateRoute from './PrivateRoute';
 import { ADMIN_ROLES } from '../utils/roles';

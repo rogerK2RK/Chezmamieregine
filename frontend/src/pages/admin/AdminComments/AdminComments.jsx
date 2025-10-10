@@ -1,7 +1,7 @@
 // frontend/src/pages/admin/AdminComments.jsx
 import { useEffect, useMemo, useState } from 'react';
-import apiAdmin from '../../services/apiAdmin';          // ✅ utilise l'API admin
-import authHeaderAdmin from '../../services/authHeaderAdmin';
+import apiAdmin from '../../../services/apiAdmin';          // ✅ utilise l'API admin
+import authHeaderAdmin from '../../../services/authHeaderAdmin';
 
 export default function AdminComments() {
   const headers = useMemo(() => ({ ...authHeaderAdmin() }), []);

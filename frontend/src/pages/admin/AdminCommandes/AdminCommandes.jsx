@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import apiAdmin from '../../services/apiAdmin';
+import apiAdmin from '../../../services/apiAdmin';
 
 // AdminCommandes.jsx
 export default function AdminCommandes() {

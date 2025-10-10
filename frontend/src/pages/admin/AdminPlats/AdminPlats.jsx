@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import authHeaderAdmin from '../../services/authHeaderAdmin';
-import apiAdmin from '../../services/apiAdmin'; // ← on utilise UNIQUEMENT apiAdmin
+import authHeaderAdmin from '../../../services/authHeaderAdmin';
+import apiAdmin from '../../../services/apiAdmin';
 
 export default function AdminPlats() {
   const [plats, setPlats] = useState([]);

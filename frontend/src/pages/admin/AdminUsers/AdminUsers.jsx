@@ -1,7 +1,7 @@
 // frontend/src/pages/admin/AdminUsers.jsx
 import { useEffect, useState, useCallback } from 'react';
-import apiAdmin from '../../services/apiAdmin';          // ✅ utilise l'API admin
-import authHeaderAdmin from '../../services/authHeaderAdmin';
+import apiAdmin from '../../../services/apiAdmin';          // ✅ utilise l'API admin
+import authHeaderAdmin from '../../../services/authHeaderAdmin';
 
 const ROLES = ['admin', 'owner'];
 

@@ -1,0 +1,109 @@
+/* Barre d’actions */
+.admin-actions {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+  align-items: center;
+}
+
+/* Table */
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.admin-cell {
+  padding: 12px 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  text-align: left;
+}
+
+/* Input générique */
+.admin-input {
+  flex: 1;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+  min-width: 240px;
+}
+
+/* Champ lecture seule (Client ID) */
+.readonly-field {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px dashed rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.04);
+  color: #ddd;
+}
+
+/* Boutons */
+.btn-primary-back {
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  color: #fff;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.btn-ghost {
+  background: rgba(255,255,255,0.06);
+  color: #e5e7eb;
+  border: 1px solid rgba(255,255,255,0.18);
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-right: 6px;
+}
+.btn-danger {
+  background: rgba(239,68,68,0.14);
+  color: #fecaca;
+  border: 1px solid rgba(239,68,68,0.35);
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+/* état désactivé pour la suppression groupée */
+.btn-danger.is-disabled {
+  opacity: .6;
+  cursor: not-allowed;
+}
+
+/* Modale */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: grid;
+  place-items: center;
+  z-index: 40;
+}
+.card {
+  width: min(720px, 92vw);
+  background: rgba(13,15,18, 0.98);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 14px;
+  padding: 18px;
+  color: #e5e7eb;
+}
+
+/* Divers */
+.modal-form {
+  display: grid;
+  gap: 12px;
+}
+.grid-gap-8 {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.modal-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+.overflow-x { overflow-x: auto; }
+.mt0 { margin-top: 0; }

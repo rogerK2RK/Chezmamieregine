@@ -1,0 +1,134 @@
+/* Conteneur générique de la page admin (déjà présent dans ton app normalement) */
+.admin-page {}
+
+/* Barre d’actions (recherche + bouton) */
+.admin-actions {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+/* Table */
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.admin-cell {
+  padding: 12px 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  text-align: left;
+}
+
+/* Inputs */
+.admin-input {
+  flex: 1;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+  min-width: 260px;
+}
+
+/* Boutons */
+.btn-primary-back {
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  color: #fff;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.btn-ghost {
+  background: rgba(255,255,255,0.06);
+  color: #e5e7eb;
+  border: 1px solid rgba(255,255,255,0.18);
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-right: 6px; /* même espacement que ton tableau d’actions */
+}
+.btn-danger {
+  background: rgba(239,68,68,0.14);
+  color: #fecaca;
+  border: 1px solid rgba(239,68,68,0.35);
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+/* Badges */
+.badge-ok {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  background: rgba(34,197,94,.18);
+  color: #86efac;
+  border: 1px solid rgba(34,197,94,.35);
+}
+.badge-off {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  background: rgba(239,68,68,.18);
+  color: #fecaca;
+  border: 1px solid rgba(239,68,68,.35);
+}
+
+/* Modale (backdrop + carte) */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: grid;
+  place-items: center;
+  z-index: 40;
+}
+.card {
+  width: min(720px, 92vw);
+  background: rgba(13,15,18, 0.98);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 14px;
+  padding: 18px;
+  color: #e5e7eb;
+}
+
+/* Petites grilles internes des formulaires modales */
+.modal-form {
+  display: grid;
+  gap: 10px;
+  max-width: 520px;
+}
+
+/* Grille d’assignation */
+.assign-list {
+  max-height: 50vh;
+  overflow: auto;
+  padding-right: 4px;
+}
+.assign-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 6px 0;
+}
+
+/* Boutons de pied de modale */
+.modal-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+
+/* Titre avec marge */
+.h1-mb16 { margin-bottom: 16px; }
+.mt0 { margin-top: 0; }
+
+/* Wrapper pour scroll horizontal table */
+.overflow-x { overflow-x: auto; }

@@ -133,6 +133,7 @@ export default function ProductsPage() {
                   <h3>{p.name}</h3>
                   <p className="desc">{p.description || ''}</p>
                   <p className="price">{Number(p.price ?? 0).toFixed(2)} €</p>
+                  <button className='btn-primary'>Voire le plat</button>
                 </article>
               ))}
             </div>

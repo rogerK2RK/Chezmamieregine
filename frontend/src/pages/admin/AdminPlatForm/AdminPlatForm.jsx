@@ -1,9 +1,9 @@
 // frontend/src/pages/admin/AdminPlatForm.jsx
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import apiAdmin from '../../services/apiAdmin';
-import authHeaderAdmin from '../../services/authHeaderAdmin';
-import AdminImageUploader from '../../components/admin/AdminImageUploader';
+import apiAdmin from '../../../services/apiAdmin';
+import authHeaderAdmin from '../../../services/authHeaderAdmin';
+import AdminImageUploader from '../../../components/admin/AdminImageUploader';
 
 export default function AdminPlatForm() {
   const { id } = useParams();               // si présent => édition

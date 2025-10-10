@@ -1,34 +1,25 @@
-// frontend/src/pages/admin/AdminClients.jsx
 import { useEffect, useMemo, useState } from 'react';
-import apiAdmin from '../../services/apiAdmin';          // ✅ bon client axios (injecte le token)
-import authHeaderAdmin from '../../services/authHeaderAdmin';
+import apiAdmin from '../../../services/apiAdmin';
+import authHeaderAdmin from '../../../services/authHeaderAdmin';
+import './AdminClients.css'; // ⬅️ nouveau CSS
 
 export default function AdminClients() {
   const [clients, setClients] = useState([]);
   const [q, setQ] = useState('');
   const [loading, setLoading] = useState(true);
 
-  // Édition (modale)
   const [editing, setEditing] = useState(null);
-  const [form, setForm] = useState({
-    firstName: '',
-    lastName: '',
-    sex: '',
-    email: ''
-  });
+  const [form, setForm] = useState({ firstName: '', lastName: '', sex: '', email: '' });
 
-  // Sélection pour actions groupées
   const [selectedIds, setSelectedIds] = useState(new Set());
-
   const headers = useMemo(() => ({ ...authHeaderAdmin() }), []);
 
   const fetchClients = async () => {
     try {
       setLoading(true);
-      // ✅ bon endpoint : /api/admin/clients
       const { data } = await apiAdmin.get('/admin/clients', { headers });
       setClients(Array.isArray(data) ? data : []);
-      setSelectedIds(new Set()); // reset selection après refresh
+      setSelectedIds(new Set());
     } catch (e) {
       console.error('[GET clients] error', e?.response?.data || e);
       alert('Erreur lors du chargement des clients');
@@ -37,9 +28,10 @@ export default function AdminClients() {
     }
   };
 
-  useEffect(() => { fetchClients(); /* eslint-disable-next-line */ }, []);
+  useEffect(() => { 
+    fetchClients();
+   }, []);
 
-  // --------- Filtrage ----------
   const filtered = clients.filter(c => {
     const s = q.toLowerCase().trim();
     if (!s) return true;
@@ -51,18 +43,14 @@ export default function AdminClients() {
     );
   });
 
-  // --------- Sélection ----------
   const filteredIds = filtered.map(c => c._id);
   const allSelected = filteredIds.length > 0 && filteredIds.every(id => selectedIds.has(id));
 
   const toggleAll = () => {
     setSelectedIds(prev => {
       const next = new Set(prev);
-      if (allSelected) {
-        filteredIds.forEach(id => next.delete(id));
-      } else {
-        filteredIds.forEach(id => next.add(id));
-      }
+      if (allSelected) filteredIds.forEach(id => next.delete(id));
+      else filteredIds.forEach(id => next.add(id));
       return next;
     });
   };
@@ -75,7 +63,6 @@ export default function AdminClients() {
     });
   };
 
-  // --------- Édition ----------
   const openEdit = (c) => {
     setEditing(c);
     setForm({
@@ -88,7 +75,6 @@ export default function AdminClients() {
 
   const saveEdit = async (e) => {
     e.preventDefault();
-
     if (!form.firstName.trim() || !form.lastName.trim() || !form.email.trim()) {
       alert('Prénom, nom et email sont requis');
       return;
@@ -97,9 +83,7 @@ export default function AdminClients() {
       alert('Sexe invalide (H, F ou other)');
       return;
     }
-
     try {
-      // ✅ /api/admin/clients/:id
       const { data } = await apiAdmin.put(
         `/api/admin/clients/${editing._id}`,
         {
@@ -110,21 +94,17 @@ export default function AdminClients() {
         },
         { headers }
       );
-
       setClients(prev => prev.map(c => (c._id === editing._id ? data : c)));
       setEditing(null);
     } catch (e2) {
       console.error('[PUT client] error', e2?.response?.data || e2);
-      const msg = e2?.response?.data?.message || 'Mise à jour impossible';
-      alert(msg);
+      alert(e2?.response?.data?.message || 'Mise à jour impossible');
     }
   };
 
-  // --------- Suppression ----------
   const removeClient = async (id) => {
     if (!window.confirm('Supprimer ce client ?')) return;
     try {
-      // ✅ /api/admin/clients/:id
       await apiAdmin.delete(`/admin/clients/${id}`, { headers });
       setClients(prev => prev.filter(c => c._id !== id));
       setSelectedIds(prev => {
@@ -138,14 +118,12 @@ export default function AdminClients() {
     }
   };
 
-  // --------- Suppression groupée ----------
   const removeSelected = async () => {
     if (selectedIds.size === 0) return;
     if (!window.confirm(`Supprimer ${selectedIds.size} client(s) sélectionné(s) ?`)) return;
-
     try {
       for (const id of selectedIds) {
-        await apiAdmin.delete(`/admin/clients/${id}`, { headers }); // ✅
+        await apiAdmin.delete(`/admin/clients/${id}`, { headers });
       }
       setClients(prev => prev.filter(c => !selectedIds.has(c._id)));
       setSelectedIds(new Set());
@@ -159,21 +137,15 @@ export default function AdminClients() {
   return (
     <div className="admin-page">
       {/* Barre d’actions */}
-      <div style={{ display: 'flex', gap: 12, marginBottom: 16, alignItems: 'center' }}>
+      <div className="admin-actions">
         <input
+          className="admin-input"
           placeholder="Rechercher (ID, nom, email)"
           value={q}
           onChange={e => setQ(e.target.value)}
-          style={input}
         />
-
-        {/* Boutons d’actions groupées */}
         <button
-          style={{
-            ...btnDanger,
-            opacity: selectedIds.size ? 1 : 0.6,
-            cursor: selectedIds.size ? 'pointer' : 'not-allowed'
-          }}
+          className={`btn-danger ${selectedIds.size ? '' : 'is-disabled'}`}
           disabled={selectedIds.size === 0}
           onClick={removeSelected}
           title={selectedIds.size ? `Supprimer ${selectedIds.size} sélection(s)` : 'Sélectionnez des clients'}
@@ -185,11 +157,11 @@ export default function AdminClients() {
       {loading ? (
         <div>Chargement…</div>
       ) : (
-        <div style={{ overflowX: 'auto' }}>
-          <table style={table}>
+        <div className="overflow-x">
+          <table className="admin-table">
             <thead>
               <tr>
-                <th style={cell}>
+                <th className="admin-cell">
                   <input
                     type="checkbox"
                     checked={allSelected}
@@ -197,12 +169,12 @@ export default function AdminClients() {
                     aria-label="Tout sélectionner"
                   />
                 </th>
-                <th style={cell}>ID client</th>
-                <th style={cell}>Nom</th>
-                <th style={cell}>Email</th>
-                <th style={cell}>Sexe</th>
-                <th style={cell}>Créé le</th>
-                <th style={cell}>Actions</th>
+                <th className="admin-cell">ID client</th>
+                <th className="admin-cell">Nom</th>
+                <th className="admin-cell">Email</th>
+                <th className="admin-cell">Sexe</th>
+                <th className="admin-cell">Créé le</th>
+                <th className="admin-cell">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -210,7 +182,7 @@ export default function AdminClients() {
                 const checked = selectedIds.has(c._id);
                 return (
                   <tr key={c._id}>
-                    <td style={cell}>
+                    <td className="admin-cell">
                       <input
                         type="checkbox"
                         checked={checked}
@@ -218,20 +190,20 @@ export default function AdminClients() {
                         aria-label={`Sélectionner ${c.firstName} ${c.lastName}`}
                       />
                     </td>
-                    <td style={cell}>{c.clientId || '-'}</td>
-                    <td style={cell}>{`${c.firstName || ''} ${c.lastName || ''}`.trim()}</td>
-                    <td style={cell}>{c.email}</td>
-                    <td style={cell}>{c.sex || '-'}</td>
-                    <td style={cell}>{new Date(c.createdAt).toLocaleString()}</td>
-                    <td style={cell}>
-                      <button style={btnGhost} onClick={() => openEdit(c)}>Éditer</button>
-                      <button style={btnDanger} onClick={() => removeClient(c._id)}>Supprimer</button>
+                    <td className="admin-cell">{c.clientId || '-'}</td>
+                    <td className="admin-cell">{`${c.firstName || ''} ${c.lastName || ''}`.trim()}</td>
+                    <td className="admin-cell">{c.email}</td>
+                    <td className="admin-cell">{c.sex || '-'}</td>
+                    <td className="admin-cell">{new Date(c.createdAt).toLocaleString()}</td>
+                    <td className="admin-cell">
+                      <button className="btn-ghost" onClick={() => openEdit(c)}>Éditer</button>
+                      <button className="btn-danger" onClick={() => removeClient(c._id)}>Supprimer</button>
                     </td>
                   </tr>
                 );
               })}
               {filtered.length === 0 && (
-                <tr><td style={cell} colSpan={7}>Aucun client</td></tr>
+                <tr><td className="admin-cell" colSpan={7}>Aucun client</td></tr>
               )}
             </tbody>
           </table>
@@ -240,25 +212,22 @@ export default function AdminClients() {
 
       {/* Modale édition client */}
       {editing && (
-        <div style={backdrop} onClick={() => setEditing(null)}>
-          <div style={card} onClick={e => e.stopPropagation()}>
-            <h3 style={{ marginTop: 0 }}>
-              Éditer {editing.firstName} {editing.lastName}
-            </h3>
+        <div className="backdrop" onClick={() => setEditing(null)}>
+          <div className="card" onClick={e => e.stopPropagation()}>
+            <h3 className="mt0">Éditer {editing.firstName} {editing.lastName}</h3>
 
-            {/* Client ID en lecture seule */}
-            <div style={{ display: 'grid', gap: 8, marginBottom: 8 }}>
+            <div className="grid-gap-8">
               <label>Client ID</label>
-              <div style={readonlyField}>
+              <div className="readonly-field">
                 <span>{editing.clientId || '-'}</span>
               </div>
             </div>
 
-            <form onSubmit={saveEdit} style={{ display: 'grid', gap: 12 }}>
+            <form onSubmit={saveEdit} className="modal-form">
               <div>
                 <label>Prénom</label>
                 <input
-                  style={input}
+                  className="admin-input"
                   value={form.firstName}
                   onChange={e => setForm(f => ({ ...f, firstName: e.target.value }))}
                   required
@@ -268,7 +237,7 @@ export default function AdminClients() {
               <div>
                 <label>Nom</label>
                 <input
-                  style={input}
+                  className="admin-input"
                   value={form.lastName}
                   onChange={e => setForm(f => ({ ...f, lastName: e.target.value }))}
                   required
@@ -278,7 +247,7 @@ export default function AdminClients() {
               <div>
                 <label>Sexe</label>
                 <select
-                  style={input}
+                  className="admin-input"
                   value={form.sex}
                   onChange={e => setForm(f => ({ ...f, sex: e.target.value }))}
                 >
@@ -292,7 +261,7 @@ export default function AdminClients() {
               <div>
                 <label>Email</label>
                 <input
-                  style={input}
+                  className="admin-input"
                   type="email"
                   value={form.email}
                   onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
@@ -300,9 +269,9 @@ export default function AdminClients() {
                 />
               </div>
 
-              <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
-                <button type="button" style={btnGhost} onClick={() => setEditing(null)}>Annuler</button>
-                <button type="submit" style={btnPrimary}>Enregistrer</button>
+              <div className="modal-actions">
+                <button type="button" className="btn-ghost" onClick={() => setEditing(null)}>Annuler</button>
+                <button type="submit" className="btn-primary">Enregistrer</button>
               </div>
             </form>
           </div>
@@ -311,81 +280,3 @@ export default function AdminClients() {
     </div>
   );
 }
-
-/* Styles */
-const table = { 
-  width: '100%', 
-  borderCollapse: 'collapse', 
-  border: '1px solid rgba(255,255,255,0.12)', 
-  borderRadius: 12, 
-  overflow: 'hidden' 
-};
-
-const cell = { 
-  padding: '12px 10px', 
-  borderBottom: '1px solid rgba(255,255,255,0.08)', 
-  textAlign: 'left' 
-};
-
-const input = { 
-  flex: 1, 
-  padding: '10px 12px', 
-  borderRadius: 8, 
-  border: '1px solid rgba(255,255,255,0.18)', 
-  background: 'rgba(255,255,255,0.06)', 
-  color: '#fff', 
-  minWidth: 240 
-};
-
-const readonlyField = { 
-  padding: '10px 12px', 
-  borderRadius: 8, 
-  border: '1px dashed rgba(255,255,255,0.18)', 
-  background: 'rgba(255,255,255,0.04)', 
-  color: '#ddd' 
-};
-
-const btnPrimary = { 
-  background: 'linear-gradient(135deg, #4f46e5, #7c3aed)', color: '#fff', 
-  border: 'none', 
-  padding: '10px 14px', 
-  borderRadius: 10, 
-  cursor: 'pointer' 
-};
-
-const btnGhost = { 
-  background: 'rgba(255,255,255,0.06)', 
-  color: '#e5e7eb', 
-  border: '1px solid rgba(255,255,255,0.18)', 
-  padding: '8px 12px', 
-  borderRadius: 10, 
-  cursor: 'pointer', 
-  marginRight: 6 
-};
-
-const btnDanger = { 
-  background: 'rgba(239,68,68,0.14)', 
-  color: '#fecaca', 
-  border: '1px solid rgba(239,68,68,0.35)', 
-  padding: '8px 12px', 
-  borderRadius: 10, 
-  cursor: 'pointer' 
-};
-
-const backdrop = { 
-  position: 'fixed', 
-  inset: 0, 
-  background: 'rgba(0,0,0,0.55)', 
-  display: 'grid', 
-  placeItems: 'center', 
-  zIndex: 40 
-};
-
-const card = { 
-  width: 'min(720px, 92vw)', 
-  background: 'rgba(13,15,18, 0.98)', 
-  border: '1px solid rgba(255,255,255,0.12)', 
-  borderRadius: 14, 
-  padding: 18, 
-  color: '#e5e7eb' 
-};
