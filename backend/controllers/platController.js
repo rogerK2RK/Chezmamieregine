@@ -3,7 +3,9 @@ const Plat = require('../models/Plat');
 
 exports.getAllPlats = async (req, res) => {
   try {
-    const plats = await Plat.find().sort({ createdAt: -1 });
+    const plats = await Plat.find()
+    .sort({ createdAt: -1 })
+    .populate('category', 'name slug');
     res.json(plats);
   } catch (err) {
     console.error('GET /plats ERROR', err);
@@ -13,7 +15,7 @@ exports.getAllPlats = async (req, res) => {
 
 exports.getPlatById = async (req, res) => {
   try {
-    const plat = await Plat.findById(req.params.id);
+    const plat = await Plat.findById(req.params.id).populate('category', 'name slug');
     if (!plat) return res.status(404).json({ message: 'Plat introuvable' });
     res.json(plat);
   } catch (err) {
@@ -123,7 +125,9 @@ exports.listPublic = async (req, res) => {
     const { category } = req.query;
     const filter = { isAvailable: true };
     if (category && mongoose.isValidObjectId(category)) filter.category = category;
-    const plats = await Plat.find(filter).sort({ createdAt: -1 });
+    const plats = await Plat.find(filter)
+    .sort({ createdAt: -1 })
+    .populate('category', 'name slug');
     res.json(plats);
   } catch (e) {
     res.status(500).json({ message: 'Erreur serveur' });
@@ -135,7 +139,8 @@ exports.getPublicPlats = async (req, res) => {
   try {
     const plats = await Plat.find({ isPublic: true, isActive: true })
       .select('name price images description category')
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .populate('category', 'name slug');
     res.json(plats);
   } catch (e) {
     console.error('GET /plats/public ERROR', e);

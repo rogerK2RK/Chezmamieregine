@@ -5,6 +5,8 @@ import apiAdmin from '../../../services/apiAdmin';
 
 export default function AdminPlats() {
   const [plats, setPlats] = useState([]);
+  const [cats, setCats] = useState([]);
+  const [catMap, setCatMap] = useState({});
   const [loading, setLoading] = useState(true);
   const [q, setQ] = useState('');
   const [selectedIds, setSelectedIds] = useState(new Set());
@@ -27,16 +29,30 @@ export default function AdminPlats() {
     }
   };
 
-  useEffect(() => { fetchPlats(); /* eslint-disable-next-line */ }, []);
+  const fetchCats = async () => {
+   try {
+     const { data } = await apiAdmin.get('/categories', { headers });
+     setCats(Array.isArray(data) ? data : []);
+     const map = {};
+     (data || []).forEach(c => { map[c._id] = c.name; });
+     setCatMap(map);
+   } catch (e) {
+     console.error('Erreur chargement catégories', e?.response?.data || e);
+   }
+ };
+
+ useEffect(() => { fetchPlats(); fetchCats();}, []);
 
   // Helpers
-  const getDisplayCategory = (c) => {
-    if (!c) return '-';
-    if (typeof c === 'string') return c;         // si modèle "category: String"
-    if (typeof c === 'object') return c.name || c._id || '-';  // si ref Category
-    return String(c);
-  };
-
+const getDisplayCategory = (c) => {
+   if (!c) return '-';
+   // populate OK → objet avec name
+   if (typeof c === 'object') return c.name || '-';
+   // sinon, c’est probablement un ObjectId en string : on tente la map
+   if (typeof c === 'string') return catMap[c] || '-';
+   return '-';
+ };
+ 
   // Sélection
   const toggleOne = (id) => {
     setSelectedIds(prev => {

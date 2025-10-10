@@ -144,7 +144,9 @@ exports.listPlatsOfCategory = async (req, res) => {
     const filter = { category: id };
     if (onlyAvailable) filter.isAvailable = true;
 
-    const plats = await Plat.find(filter).sort({ createdAt: -1 });
+    const plats = await Plat.find(filter)
+    .sort({ createdAt: -1 })
+    .populate('category', 'name slug');
     res.json(plats);
   } catch (e) {
     console.error('GET /categories/:id/plats error', e);
