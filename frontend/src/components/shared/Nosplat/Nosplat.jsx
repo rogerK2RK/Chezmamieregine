@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import './NosPlats.css';
 import imgbackground from './images/Nos Plats.png';
 
@@ -113,7 +114,7 @@ const NosPlats = () => {
         </div>
 
         <div className="nosplats-footer">
-          <button className="nosplats-button btn-primary scrolled">Voir plus</button>
+          <Link to="/produits" className="nosplats-button btn-primary scrolled">Voir plus</Link>
         </div>
       </div>
     </div>

@@ -1,4 +1,5 @@
 import './About.css';
+import { Link } from 'react-router-dom';
 import imageapropos from "./images/Apropos.png";
 
 export default function ImageTextSlider() {
@@ -31,7 +32,7 @@ export default function ImageTextSlider() {
             directement chez vous. Une cuisine authentique, inspirée des saveurs
             malgaches, pour partager des moments uniques.
           </p>
-          <button className="btn-primary">Découvrir le menu</button>
+          <Link to="/produits" className="btn-primary">Découvrir le menu</Link>
         </div>
       </div>
     </div>

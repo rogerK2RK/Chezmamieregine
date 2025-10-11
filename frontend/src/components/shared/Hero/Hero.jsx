@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import React, { useEffect, useState } from "react";
 import './Hero.css';
 
@@ -43,7 +44,7 @@ export default function Hero() {
             Mamie Régine</h1>
           <div className="hero-content-scd">
             <span className="text-lg">Les saveurs authentiques de la grande île</span>
-            <button className="btn-primary" to="/produits">Voire nos plats</button>
+            <Link className="btn-primary" to="/produits">Voire nos plats</Link>
           </div>
       </div>
 
