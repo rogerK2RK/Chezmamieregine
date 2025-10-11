@@ -147,3 +147,19 @@ exports.getPublicPlats = async (req, res) => {
     res.status(500).json({ message: 'Erreur serveur' });
   }
 };
+
+// Détail public d’un plat
+exports.getOnePublic = async (req, res) => {
+  try {
+    const plat = await Plat.findById(req.params.id)
+      .populate('category', 'name slug'); // optionnel, si tu veux afficher la catégorie
+    if (!plat) {
+      return res.status(404).json({ message: 'Plat introuvable' });
+    }
+    res.json(plat);
+  } catch (e) {
+    console.error('getOnePublic error:', e);
+    res.status(500).json({ message: 'Erreur serveur lors du chargement du plat' });
+  }
+};
+

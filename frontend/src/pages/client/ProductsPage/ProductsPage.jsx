@@ -121,8 +121,16 @@ export default function ProductsPage() {
             <div className="no-results">Aucun plat dans cette catégorie.</div>
           ) : (
             <div className="products-grid">
-              {currentPageItems.map(p => (
-                <article key={p._id} className="product-card">
+             {currentPageItems.map(p => (
+                <article
+                  key={p._id}
+                  className="product-card is-clickable"
+                  onClick={() => navigate(`/produit/${p._id}`)}
+                  tabIndex={0}
+                  onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && navigate(`/produit/${p._id}`)}
+                  role="button"
+                  aria-label={`Ouvrir ${p.name}`}
+                >
                   <div className="thumb">
                     {Array.isArray(p.images) && p.images[0] ? (
                       <img src={p.images[0]} alt={p.name} className="thumb-img" />
@@ -133,7 +141,7 @@ export default function ProductsPage() {
                   <h3>{p.name}</h3>
                   <p className="desc">{p.description || ''}</p>
                   <p className="price">{Number(p.price ?? 0).toFixed(2)} €</p>
-                  <button className='btn-primary'>Voire le plat</button>
+                  <button className='btn-primary' onClick={(e) => { e.stopPropagation(); navigate(`/produit/${p._id}`); }}>Voir le plat</button>
                 </article>
               ))}
             </div>

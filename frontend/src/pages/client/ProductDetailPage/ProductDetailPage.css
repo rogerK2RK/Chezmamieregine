@@ -1,0 +1,6 @@
+.product-detail { max-width: 960px; margin: 0 auto; padding: 24px; color: #fff; }
+.detail-top { display: flex; gap: 20px; align-items: flex-start; }
+.detail-img { width: 340px; height: 240px; object-fit: cover; border-radius: 12px; background: rgba(255,255,255,0.06); display: block; }
+.detail-img.placeholder { display: grid; place-items: center; font-size: 32px; color: #ccc; }
+.detail-info .price { font-size: 20px; font-weight: 600; margin-bottom: 8px; }
+.detail-info .desc { opacity: .9; line-height: 1.5; }

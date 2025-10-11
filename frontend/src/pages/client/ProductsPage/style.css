@@ -150,6 +150,13 @@ article button {
   cursor: not-allowed;
 }
 
+.product-card.is-clickable { cursor: pointer; }
+.product-card.is-clickable:hover {
+  transform: translateY(-2px);
+  transition: transform .15s ease;
+}
+
+
 /* ===========================
    TABLET (≥768px)
    =========================== */
