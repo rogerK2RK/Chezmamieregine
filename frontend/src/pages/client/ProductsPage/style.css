@@ -103,8 +103,6 @@
 .desc {
   font-size: 0.9rem;
   line-height: 1.3;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;       /* nombre de lignes max */
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
