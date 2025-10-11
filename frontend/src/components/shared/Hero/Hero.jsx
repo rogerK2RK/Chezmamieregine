@@ -43,7 +43,7 @@ export default function Hero() {
             Mamie Régine</h1>
           <div className="hero-content-scd">
             <span className="text-lg">Les saveurs authentiques de la grande île</span>
-            <button className="btn-primary">Voire nos plats</button>
+            <button className="btn-primary" to="/produits">Voire nos plats</button>
           </div>
       </div>
 

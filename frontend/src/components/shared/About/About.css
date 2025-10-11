@@ -52,7 +52,7 @@
 }
 
 .section-text .btn-primary {
-  width: 100%;
+  width: fit-content;
   max-width: 280px;
   margin: 0.75rem auto 0;
   font-size: 1rem;
