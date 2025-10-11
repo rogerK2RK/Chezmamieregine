@@ -59,7 +59,7 @@
 /* Grid produits */
 .products-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
   gap: 1rem;
 }
 
@@ -178,7 +178,7 @@ article button {
   }
 
   .products-grid {
-    grid-template-columns: repeat(auto-fill, minmax(390px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
     gap: 1.5rem;
   }
 
