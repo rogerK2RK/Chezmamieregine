@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import './cta.css';
+import './style.css';
 import ctaImage from './images/cta.png';
 
 const Cta = () => {

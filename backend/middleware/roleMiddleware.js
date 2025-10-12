@@ -1,24 +1,25 @@
-// Middleware générique : accepte un rôle depuis req.admin (back) OU req.user (front)
+// Middleware générique pour restreindre l’accès selon les rôles autorisés
 function authorizeRoles(...allowed) {
   return (req, res, next) => {
-    const role = req.admin?.role || req.user?.role;
+    const role = req.admin?.role || req.user?.role; // Récupère le rôle (admin ou user)
     if (!role) return res.status(401).json({ message: 'Non autorisé' });
     if (!allowed.includes(role)) {
       return res.status(403).json({ message: 'Accès refusé : rôle insuffisant' });
     }
-    next();
+    next(); // Accès autorisé
   };
 }
 
-// Variante dédiée admin pour le back-office
+// Middleware spécifique pour les rôles d’administrateurs
 function authorizeAdminRoles(...allowed) {
   return (req, res, next) => {
     if (!req.admin?.role) return res.status(401).json({ message: 'Non autorisé' });
     if (!allowed.includes(req.admin.role)) {
       return res.status(403).json({ message: 'Accès refusé : rôle insuffisant' });
     }
-    next();
+    next(); // Accès autorisé
   };
 }
 
+// Exporte les deux middlewares
 module.exports = { authorizeRoles, authorizeAdminRoles };

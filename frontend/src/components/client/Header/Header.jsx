@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import './header.css';
+import './style.css';
 import logo from '../../../assets/Logo CMR Blc.svg';
 
 export default function Header() {

@@ -1,6 +1,7 @@
-// backend/config/db.js
+// Import de mongoose pour gérer la connexion à MongoDB
 const mongoose = require('mongoose');
 
+// Fonction asynchrone de connexion à la base de données MongoDB
 module.exports = async function connectDB() {
   const uri = process.env.MONGO_URI;
   const dbName = process.env.DB_NAME || 'chezmamie';
@@ -11,7 +12,6 @@ module.exports = async function connectDB() {
 
   await mongoose.connect(uri, {
     dbName,
-    // options modernes (Mongoose 6/7+ n’a plus besoin de useNewUrlParser/useUnifiedTopology)
     maxPoolSize: 10,
   });
 

@@ -1,17 +1,19 @@
-// backend/controllers/categoryController.js
 const Category = require('../models/Category');
 const Plat = require('../models/Plat');
 
-// utils
+// Fonction utilitaire : transforme une chaîne en slug lisible pour les URL
 const toSlug = (str) =>
   (str || '')
     .toString()
-    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    // Supprime les accents
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '') 
     .toLowerCase()
+    // Remplace les caractères spéciaux par des tirets
     .replace(/[^a-z0-9]+/g, '-')
+    // Retire les tirets de début/fin
     .replace(/(^-|-$)/g, '');
 
-// GET /api/categories (?public=1 pour ne renvoyer que les visibles)
+// Contrôleur : liste toutes les catégories (publiques ou non)
 exports.list = async (req, res) => {
   try {
     const publicOnly = String(req.query.public || '').trim() === '1';
@@ -24,7 +26,7 @@ exports.list = async (req, res) => {
   }
 };
 
-// POST /api/categories
+// Contrôleur : création d’une nouvelle catégorie
 exports.create = async (req, res) => {
   try {
     const { name, description = '', isActive = true } = req.body;
@@ -33,11 +35,13 @@ exports.create = async (req, res) => {
     const cleanName = name.trim();
     const slug = toSlug(cleanName);
 
+    // Vérifie si le nom ou le slug existe déjà
     const exists = await Category.findOne({
       $or: [{ name: cleanName }, { slug }]
     });
     if (exists) return res.status(400).json({ message: 'Catégorie déjà existante' });
 
+    // Crée la catégorie
     const cat = await Category.create({
       name: cleanName,
       description,
@@ -51,18 +55,19 @@ exports.create = async (req, res) => {
   }
 };
 
-// PUT /api/categories/:id
+// Contrôleur : mise à jour d’une catégorie
 exports.update = async (req, res) => {
   try {
     const { id } = req.params;
     const patch = {};
 
+    // Met à jour le nom et le slug si fournis
     if (typeof req.body.name === 'string' && req.body.name.trim()) {
       const newName = req.body.name.trim();
       patch.name = newName;
       patch.slug = toSlug(newName);
 
-      // vérifier doublon (autre doc)
+      // Vérifie doublon sur un autre document
       const duplicate = await Category.findOne({
         _id: { $ne: id },
         $or: [{ name: newName }, { slug: patch.slug }]
@@ -72,9 +77,11 @@ exports.update = async (req, res) => {
       }
     }
 
+    // Met à jour les autres champs
     if (typeof req.body.description === 'string') patch.description = req.body.description;
     if (typeof req.body.isActive === 'boolean') patch.isActive = !!req.body.isActive;
 
+    // Met à jour la catégorie
     const updated = await Category.findByIdAndUpdate(id, patch, { new: true });
     if (!updated) return res.status(404).json({ message: 'Catégorie introuvable' });
     res.json(updated);
@@ -84,12 +91,12 @@ exports.update = async (req, res) => {
   }
 };
 
-// DELETE /api/categories/:id
+// Contrôleur : suppression d’une catégorie
 exports.remove = async (req, res) => {
   try {
     const { id } = req.params;
 
-    // Empêcher la suppression si des plats y sont encore liés
+    // Vérifie si des plats y sont liés avant suppression
     const hasPlats = await Plat.exists({ category: id });
     if (hasPlats) {
       return res.status(400).json({ message: 'Catégorie utilisée par des plats. Détachez-les d’abord.' });
@@ -104,11 +111,11 @@ exports.remove = async (req, res) => {
   }
 };
 
-// POST /api/categories/:id/assign-plats
+// Contrôleur : associe plusieurs plats à une catégorie
 exports.assignPlats = async (req, res) => {
   try {
-    const { id } = req.params;            // id catégorie
-    const { platIds = [] } = req.body;    // liste d'ids de plats
+    const { id } = req.params;
+    const { platIds = [] } = req.body;
     await Plat.updateMany(
       { _id: { $in: platIds } },
       { $set: { category: id } }
@@ -120,7 +127,7 @@ exports.assignPlats = async (req, res) => {
   }
 };
 
-// POST /api/categories/unassign-plats
+// Contrôleur : détache plusieurs plats de leurs catégories
 exports.unassignPlats = async (req, res) => {
   try {
     const { platIds = [] } = req.body;
@@ -135,8 +142,7 @@ exports.unassignPlats = async (req, res) => {
   }
 };
 
-// GET /api/categories/:id/plats
-// Si tu veux que ce soit “public-friendly”, on ne renvoie que les plats disponibles :
+// Contrôleur : liste des plats appartenant à une catégorie donnée
 exports.listPlatsOfCategory = async (req, res) => {
   try {
     const { id } = req.params;
@@ -145,8 +151,9 @@ exports.listPlatsOfCategory = async (req, res) => {
     if (onlyAvailable) filter.isAvailable = true;
 
     const plats = await Plat.find(filter)
-    .sort({ createdAt: -1 })
-    .populate('category', 'name slug');
+      .sort({ createdAt: -1 })
+      // jointure pour récupérer le nom et slug de la catégorie
+      .populate('category', 'name slug'); 
     res.json(plats);
   } catch (e) {
     console.error('GET /categories/:id/plats error', e);
@@ -154,12 +161,13 @@ exports.listPlatsOfCategory = async (req, res) => {
   }
 };
 
+// Contrôleur : liste simple des catégories actives
 exports.listPublic = async (_req, res) => {
   const categories = await Category.find({ isActive: true }).sort({ createdAt: -1 });
   res.json(categories);
 };
 
-// ➤ PUBLIC : liste des catégories visibles (pour le front)
+// Contrôleur : liste des catégories publiques visibles côté front
 exports.publicList = async (req, res) => {
   try {
     const cats = await Category.find({ isPublic: true, isActive: true })

@@ -1,14 +1,14 @@
-// backend/routes/clientBackRoutes.js
 const express = require('express');
 const router = express.Router();
 
-const { adminProtect } = require('../middleware/adminAuthMiddleware');
-const { authorizeAdminRoles } = require('../middleware/roleMiddleware');
-const clientBack = require('../controllers/clientBackController');
+const { adminProtect } = require('../middleware/adminAuthMiddleware'); // Vérifie le token admin
+const { authorizeAdminRoles } = require('../middleware/roleMiddleware'); // Vérifie le rôle admin
+const clientBack = require('../controllers/clientBackController'); // Contrôleur de gestion des clients
 
-// Rôles autorisés au listing
+// Rôles autorisés pour voir la liste
 const allowList = ['superAdmin', 'admin', 'owner'];
 
+// Liste tous les clients
 router.get(
   '/',
   adminProtect,
@@ -16,6 +16,7 @@ router.get(
   clientBack.getAllClients
 );
 
+// Modifier un client
 router.put(
   '/:id',
   adminProtect,
@@ -23,6 +24,7 @@ router.put(
   clientBack.updateClient
 );
 
+// Réinitialiser le mot de passe d’un client
 router.post(
   '/:id/reset-password',
   adminProtect,
@@ -30,6 +32,7 @@ router.post(
   clientBack.resetPassword
 );
 
+// Supprimer un client
 router.delete(
   '/:id',
   adminProtect,
@@ -37,4 +40,5 @@ router.delete(
   clientBack.deleteClient
 );
 
+// Exporte le routeur pour utilisation dans server.js
 module.exports = router;

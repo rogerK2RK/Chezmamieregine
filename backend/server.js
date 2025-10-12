@@ -7,76 +7,70 @@ const connectDB = require('./config/db');
 dotenv.config();
 const app = express();
 
-/* Proxy (utile si cookies secure derrière Render/Reverse proxy) */
-app.set('trust proxy', 1);
+/* --- Configuration serveur --- */
+app.set('trust proxy', 1); // nécessaire derrière un proxy (ex: Render)
 
-/* CORS (dev + prod) */
+/* --- CORS --- */
 const DEFAULT_ALLOWED = [
   'http://localhost:5173',
   'http://localhost:3000',
-  'https://chezmamieregine.vercel.app' // adapte si ton domaine Vercel diffère
+  'https://chezmamieregine.vercel.app' // domaine du front en prod
 ];
-// Permets d’ajouter un origin via FRONT_ORIGIN (ex: preview Vercel)
 const EXTRA = process.env.FRONT_ORIGIN ? [process.env.FRONT_ORIGIN] : [];
 const ALLOWED_ORIGINS = Array.from(new Set([...DEFAULT_ALLOWED, ...EXTRA]));
 
 app.use(cors({
   origin: (origin, cb) => {
-    // autorise Postman/SSR (origin null) + origins connus
-    if (!origin || ALLOWED_ORIGINS.includes(origin)) return cb(null, true);
+    if (!origin || ALLOWED_ORIGINS.includes(origin)) return cb(null, true); // autorise origin connu ou null
     cb(new Error(`CORS: origin non autorisé -> ${origin}`));
   },
   credentials: true
 }));
 
-// Pré-requêtes (OPTIONS) pour tous
-app.options('*', cors());
+app.options('*', cors()); // gère les requêtes OPTIONS globales
 
-/* Parsers */
-app.use(express.json());
+/* --- Middlewares --- */
+app.use(express.json()); // parse le JSON
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // sert les fichiers uploadés
 
-/* Fichiers statiques uploadés (temporaire, en attendant Cloudinary) */
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
-/* Routes ADMIN */
+/* --- Routes principales --- */
+// Auth admin + clients
 app.use('/api/admin',          require('./routes/adminRoutes'));
 app.use('/api/admin/clients',  require('./routes/clientBackRoutes'));
-
-/* Auth client */
 app.use('/api/auth',           require('./routes/clientAuthRoutes'));
 
-/* Catégories / Plats / Commandes / Upload */
+// Gestion du contenu
 app.use('/api/categories',     require('./routes/categoryRoutes'));
 app.use('/api/plats',          require('./routes/platRoutes'));
 app.use('/api/commandes',      require('./routes/commandeRoutes'));
 app.use('/api/uploads',        require('./routes/uploadRoutes'));
 
-/* Commentaires — front + back */
+// Commentaires
 app.use('/api/comments',       require('./routes/commentFrontRoutes'));
 app.use('/api/admin/comments', require('./routes/commentBackRoutes'));
 
+// Routes publiques
 app.use('/api/public', require('./routes/publicRoutes'));
 
-/* Health */
+/* --- Healthcheck --- */
 app.get('/healthz', (_req, res) => res.json({ ok: true }));
 app.get('/api/health', (_req, res) => res.json({ ok: true }));
 
-/* 404 */
+/* --- Gestion des erreurs --- */
 app.use((req, res, _next) => {
   res.status(404).json({ message: `Route introuvable: ${req.method} ${req.originalUrl}` });
 });
 
-/* Handler erreurs */
 app.use((err, _req, res, _next) => {
   console.error('API error:', err);
   res.status(err.status || 500).json({ message: err.message || 'Erreur serveur' });
 });
 
-/* Boot */
+/* --- Démarrage du serveur --- */
 const { ensureSuperAdmin } = require('./utils/initAdmin');
 (async () => {
-  await connectDB();          // lit process.env.MONGO_URI
-  await ensureSuperAdmin();
+  await connectDB();          // connexion à MongoDB
+  await ensureSuperAdmin();   // crée un super admin si absent
   const PORT = process.env.PORT || 5000;
   app.listen(PORT, () => console.log(`🚀 API on http://localhost:${PORT}`));
 })();

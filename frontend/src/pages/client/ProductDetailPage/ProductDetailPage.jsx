@@ -21,7 +21,7 @@ export default function ProductDetailPage() {
         setPlat(data || null);
         setActiveIndex(0);
       } catch (e) {
-        setErr("Impossible de charger ce plat.");
+        setErr("Impossible de charger ce plat.", e);
       } finally {
         setLoading(false);
       }

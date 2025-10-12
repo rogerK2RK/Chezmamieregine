@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useCallback } from 'react';
 import apiAdmin from '../../../services/apiAdmin';
 import authHeaderAdmin from '../../../services/authHeaderAdmin';
 import './style.css';
@@ -11,7 +11,8 @@ export default function AdminComments() {
   const [replyOpen, setReplyOpen] = useState(null);
   const [replyText, setReplyText] = useState('');
 
-  const fetchComments = async () => {
+  // ✅ Mémoïsation de la fonction (évite le warning missing dependencies)
+  const fetchComments = useCallback(async () => {
     try {
       setLoading(true);
       const { data } = await apiAdmin.get('/admin/comments', { headers });
@@ -22,9 +23,11 @@ export default function AdminComments() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [headers]);
 
-  useEffect(() => { fetchComments(); /* eslint-disable-next-line */ }, []);
+  useEffect(() => {
+    fetchComments();
+  }, [fetchComments]);
 
   const filtered = items.filter(c => {
     const s = q.toLowerCase().trim();
@@ -52,7 +55,7 @@ export default function AdminComments() {
         { reply: replyText },
         { headers }
       );
-      setItems(prev => prev.map(c => c._id === replyOpen ? data : c));
+      setItems(prev => prev.map(c => (c._id === replyOpen ? data : c)));
       setReplyOpen(null);
       setReplyText('');
     } catch (e) {
@@ -64,7 +67,7 @@ export default function AdminComments() {
   const toggleVisible = async (id) => {
     try {
       const { data } = await apiAdmin.put(`/admin/comments/${id}/toggle-visible`, {}, { headers });
-      setItems(prev => prev.map(c => c._id === id ? data : c));
+      setItems(prev => prev.map(c => (c._id === id ? data : c)));
     } catch (e) {
       console.error('[PUT /admin/comments/:id/toggle-visible] error', e?.response?.data || e);
       alert('Action impossible');
@@ -141,7 +144,9 @@ export default function AdminComments() {
                 </tr>
               ))}
               {filtered.length === 0 && (
-                <tr><td className="cell" colSpan={8}>Aucun commentaire</td></tr>
+                <tr>
+                  <td className="cell" colSpan={8}>Aucun commentaire</td>
+                </tr>
               )}
             </tbody>
           </table>

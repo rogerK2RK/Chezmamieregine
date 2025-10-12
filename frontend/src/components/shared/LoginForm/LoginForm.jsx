@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../../services/api';
 import { useClientAuth } from '../../../context/ClientAuthContext.jsx'; // ⬅️ contexte client
-import './LoginForm.css';
+import './style.css';
 
 export default function LoginForm() {
   const [email, setEmail] = useState('');

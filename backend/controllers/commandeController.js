@@ -1,18 +1,22 @@
 const Commande = require("../models/Commande");
 
-// GET all commandes (admin/owner)
+// Récupère toutes les commandes (pour l’admin)
+// Inclut les infos de l’utilisateur et des plats via populate()
 exports.getAllCommandes = async (req, res) => {
-  const commandes = await Commande.find().populate("user").populate("plats.plat");
+  const commandes = await Commande.find()
+    .populate("user")          // Joint les infos de l’utilisateur
+    .populate("plats.plat");   // Joint les détails des plats commandés
   res.json(commandes);
 };
 
-// GET commandes d’un utilisateur (client)
+// Récupère uniquement les commandes de l’utilisateur connecté
 exports.getMesCommandes = async (req, res) => {
-  const commandes = await Commande.find({ user: req.user._id }).populate("plats.plat");
+  const commandes = await Commande.find({ user: req.user._id })
+    .populate("plats.plat");   // Ajoute les détails des plats
   res.json(commandes);
 };
 
-// POST créer une commande (client)
+// Crée une nouvelle commande pour l’utilisateur connecté
 exports.createCommande = async (req, res) => {
   const { plats, total } = req.body;
 
@@ -26,12 +30,18 @@ exports.createCommande = async (req, res) => {
   res.status(201).json(savedCommande);
 };
 
-// PUT mettre à jour le statut (admin/owner)
+// Met à jour le statut d’une commande (ex: en cours, livrée, annulée)
 exports.updateCommandeStatus = async (req, res) => {
   const { status } = req.body;
 
-  const updatedCommande = await Commande.findByIdAndUpdate(req.params.id, { status }, { new: true });
-  if (!updatedCommande) return res.status(404).json({ message: "Commande non trouvée" });
+  const updatedCommande = await Commande.findByIdAndUpdate(
+    req.params.id,
+    { status },
+    { new: true } // Retourne la version mise à jour
+  );
+
+  if (!updatedCommande)
+    return res.status(404).json({ message: "Commande non trouvée" });
 
   res.json(updatedCommande);
 };

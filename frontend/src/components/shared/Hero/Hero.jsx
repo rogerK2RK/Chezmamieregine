@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import React, { useEffect, useState } from "react";
-import './Hero.css';
+import './style.css';
 
 import haricot from './images/hero-haricot.png';
 import ravitoto from './images/hero-ravitoto.png';

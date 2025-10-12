@@ -2,11 +2,13 @@ import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import api from '../../services/api';
 import authHeaderAdmin from '../../services/authHeaderAdmin';
+import './style.css';
 
 export default function AdminImageUploader({ value = [], onChange }) {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
 
+  // Upload des fichiers sélectionnés
   const handleFiles = async (acceptedFiles) => {
     if (!acceptedFiles?.length) return;
     setUploading(true);
@@ -49,56 +51,42 @@ export default function AdminImageUploader({ value = [], onChange }) {
   };
 
   return (
-    <div>
+    <div className="uploader-container">
+      {/* Zone de drop */}
       <div
         {...getRootProps()}
-        style={{
-          border: '2px dashed rgba(255,255,255,0.2)',
-          borderRadius: 10,
-          padding: 16,
-          textAlign: 'center',
-          background: isDragActive ? 'rgba(79,70,229,0.15)' : 'transparent',
-          cursor: 'pointer',
-          color: '#e5e7eb'
-        }}
+        className={`dropzone ${isDragActive ? 'active' : ''}`}
       >
         <input {...getInputProps()} />
         {uploading ? 'Upload en cours…' : 'Glissez-déposez des images ici, ou cliquez pour importer'}
-        {error && <div style={{ color: '#fca5a5', marginTop: 8 }}>{error}</div>}
+        {error && <div className="error-text">{error}</div>}
       </div>
 
+      {/* Grille d’aperçus */}
       {!!(value?.length) && (
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))',
-          gap: 10, marginTop: 12
-        }}>
+        <div className="thumbs-grid">
           {value.map((url, idx) => (
-            <div key={url + idx} style={{
-              position: 'relative',
-              border: '1px solid rgba(255,255,255,0.12)',
-              borderRadius: 8, overflow: 'hidden'
-            }}>
-              <img src={url} alt="" style={{ width: '100%', height: 120, objectFit: 'cover' }} />
-              <div style={{ display: 'flex', gap: 6, position: 'absolute', bottom: 6, right: 6 }}>
+            <div key={url + idx} className="thumb-item">
+              <img src={url} alt="" className="thumb-img" />
+              <div className="thumb-actions">
                 <button
                   type="button"
                   onClick={() => move(idx, Math.max(0, idx - 1))}
-                  style={chipBtn}
+                  className="chip-btn"
                   disabled={idx === 0}
                   title="Monter"
                 >↑</button>
                 <button
                   type="button"
                   onClick={() => move(idx, Math.min(value.length - 1, idx + 1))}
-                  style={chipBtn}
+                  className="chip-btn"
                   disabled={idx === value.length - 1}
                   title="Descendre"
                 >↓</button>
                 <button
                   type="button"
                   onClick={() => removeAt(idx)}
-                  style={{ ...chipBtn, background: 'rgba(239,68,68,0.65)' }}
+                  className="chip-btn delete"
                   title="Supprimer"
                 >✕</button>
               </div>
@@ -109,12 +97,3 @@ export default function AdminImageUploader({ value = [], onChange }) {
     </div>
   );
 }
-
-const chipBtn = {
-  background: 'rgba(0,0,0,0.6)',
-  color: '#fff',
-  border: 'none',
-  padding: '6px 8px',
-  borderRadius: 6,
-  cursor: 'pointer'
-};

@@ -1,4 +1,4 @@
-import './Footer.css';
+import './style.css';
 import logo from '../../../assets/Logo CMR Blc.svg'
 import { Link } from 'react-router-dom';
 

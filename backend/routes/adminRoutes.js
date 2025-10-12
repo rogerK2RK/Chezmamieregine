@@ -2,25 +2,25 @@
 const express = require("express");
 const router = express.Router();
 
-const { adminProtect }   = require("../middleware/adminAuthMiddleware");
-const { authorizeRoles } = require("../middleware/roleMiddleware");
-const adminAuthController = require("../controllers/adminAuthController");
+const { adminProtect }   = require("../middleware/adminAuthMiddleware"); // Vérifie le token admin
+const { authorizeRoles } = require("../middleware/roleMiddleware"); // Contrôle d’accès par rôle
+const adminAuthController = require("../controllers/adminAuthController"); // Contrôleurs admin
 
-// Préflight spécifique pour /login (ceinture + bretelles)
+// Répond aux requêtes OPTIONS pour /login (préflight CORS)
 router.options("/login", (req, res) => res.sendStatus(204));
 
-// --- Login admin (PUBLIC) ---
+// Route publique — connexion admin
 router.post("/login", adminAuthController.loginAdmin);
 
-// --- Création d'utilisateur (protégée) ---
+// Route protégée — création d’un nouvel utilisateur admin
 router.post(
   "/create-user",
-  adminProtect,
-  authorizeRoles("admin", "superAdmin"),
+  adminProtect, // Vérifie le token admin
+  authorizeRoles("admin", "superAdmin"), // Autorise seulement certains rôles
   adminAuthController.createUserByAdmin
 );
 
-// --- Liste des utilisateurs (protégée) ---
+// Route protégée — liste des utilisateurs admin
 router.get(
   "/users",
   adminProtect,
@@ -28,4 +28,5 @@ router.get(
   adminAuthController.listAdmins
 );
 
+// Exporte le routeur pour utilisation dans server.js
 module.exports = router;

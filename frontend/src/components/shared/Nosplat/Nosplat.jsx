@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import './NosPlats.css';
+import './style.css';
 import imgbackground from './images/Nos Plats.png';
 
 const NosPlats = () => {

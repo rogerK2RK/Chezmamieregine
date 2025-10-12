@@ -14,7 +14,6 @@ export default function AdminMenu() {
           <p>Gérer les Clients</p>
         </Link>
       </div>
-      {/* <Link className='dashboard-link' to="/admin/commandes">Gérer les Commandes</Link> */}
     </div>
   );
 }

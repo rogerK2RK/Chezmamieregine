@@ -1,5 +1,5 @@
 import React from 'react';
-import './CommentCaMarche.css';
+import './style.css';
 import plat from './images/steak.png';
 import commande from './images/client.png';
 import livraison from './images/livraison-de-colis.png';

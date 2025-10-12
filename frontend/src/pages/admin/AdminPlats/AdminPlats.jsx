@@ -6,7 +6,6 @@ import './style.css';
 
 export default function AdminPlats() {
   const [plats, setPlats] = useState([]);
-  const [cats, setCats] = useState([]);
   const [catMap, setCatMap] = useState({});
   const [loading, setLoading] = useState(true);
   const [q, setQ] = useState('');
@@ -15,33 +14,31 @@ export default function AdminPlats() {
   const navigate = useNavigate();
   const headers = useMemo(() => ({ ...authHeaderAdmin() }), []);
 
-  const fetchPlats = async () => {
-    try {
-      setLoading(true);
-      const { data } = await apiAdmin.get('/plats', { headers });
-      setPlats(data || []);
-      setSelectedIds(new Set());
-    } catch (e) {
-      console.error(e);
-      alert('Erreur chargement plats');
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Chargement initial (plats + catégories) au montage
+  useEffect(() => {
+    const load = async () => {
+      try {
+        setLoading(true);
 
-  const fetchCats = async () => {
-    try {
-      const { data } = await apiAdmin.get('/categories', { headers });
-      setCats(Array.isArray(data) ? data : []);
-      const map = {};
-      (data || []).forEach(c => { map[c._id] = c.name; });
-      setCatMap(map);
-    } catch (e) {
-      console.error('Erreur chargement catégories', e?.response?.data || e);
-    }
-  };
+        const [{ data: platsData }, { data: catsData }] = await Promise.all([
+          apiAdmin.get('/plats', { headers }),
+          apiAdmin.get('/categories', { headers }),
+        ]);
 
-  useEffect(() => { fetchPlats(); fetchCats(); }, []);
+        setPlats(platsData || []);
+        const map = {};
+        (catsData || []).forEach(c => { map[c._id] = c.name; });
+        setCatMap(map);
+        setSelectedIds(new Set());
+      } catch (e) {
+        console.error(e);
+        alert('Erreur chargement données');
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
+  }, [headers]);
 
   // Helpers
   const getDisplayCategory = (c) => {
@@ -63,10 +60,10 @@ export default function AdminPlats() {
   // Liste filtrée + ids filtrés
   const filtered = plats.filter(p => {
     const s = q.toLowerCase();
-    const inName = (p.name || '').toLowerCase().includes(s);
-    const inAr   = (p.ar || '').toLowerCase().includes(s);
-    const inPid  = (p.platId || '').toLowerCase().includes(s);
-    const inCat  = getDisplayCategory(p.category).toLowerCase().includes(s);
+    const inName  = (p.name || '').toLowerCase().includes(s);
+    const inAr    = (p.ar || '').toLowerCase().includes(s);
+    const inPid   = (p.platId || '').toLowerCase().includes(s);
+    const inCat   = getDisplayCategory(p.category).toLowerCase().includes(s);
     const inPrice = String(p.price ?? '').includes(s);
     return inName || inAr || inPid || inCat || inPrice;
   });
@@ -109,12 +106,13 @@ export default function AdminPlats() {
     setBusyBulk(true);
     try {
       const ids = Array.from(selectedIds);
-      await Promise.all(ids.map(id => apiAdmin.delete(`/api/plats/${id}`, { headers })));
+      // ⚠️ gardez '/plats/${id}' si apiAdmin ajoute déjà le préfixe /api
+      await Promise.all(ids.map(id => apiAdmin.delete(`/plats/${id}`, { headers })));
       setPlats(prev => prev.filter(p => !selectedIds.has(p._id)));
       setSelectedIds(new Set());
     } catch (e) {
       console.error(e);
-      alert("Suppression groupée impossible");
+      alert('Suppression groupée impossible');
     } finally {
       setBusyBulk(false);
     }
@@ -134,7 +132,7 @@ export default function AdminPlats() {
       setSelectedIds(new Set());
     } catch (e) {
       console.error(e);
-      alert("Mise à jour groupée impossible");
+      alert('Mise à jour groupée impossible');
     } finally {
       setBusyBulk(false);
     }
@@ -150,7 +148,7 @@ export default function AdminPlats() {
           value={q}
           onChange={e => setQ(e.target.value)}
         />
-        <button onClick={() => navigate('/admin/plats/new')} className="btn-primary-back">
+        <button onClick={() => navigate('/admin/plats/new')} className="btn-primary">
           + Nouveau plat
         </button>
       </div>

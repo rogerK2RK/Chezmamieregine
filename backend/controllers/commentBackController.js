@@ -1,9 +1,11 @@
 const Comment = require('../models/Comment');
 
-/** Liste + recherche (BO) */
+// Liste tous les commentaires (filtrés si recherche "q" présente)
 exports.list = async (req, res) => {
   const { q } = req.query;
   const filter = {};
+
+  // Si un mot-clé est fourni, filtre sur le texte, l’auteur ou la réponse du staff
   if (q) {
     filter.$or = [
       { text:       { $regex: q, $options: 'i' } },
@@ -11,11 +13,13 @@ exports.list = async (req, res) => {
       { staffReply: { $regex: q, $options: 'i' } },
     ];
   }
+
+  // Récupère les commentaires triés du plus récent au plus ancien
   const items = await Comment.find(filter).sort({ createdAt: -1 }).lean();
   res.json(items);
 };
 
-/** Répondre (staff) */
+// Permet à un administrateur de répondre à un commentaire
 exports.reply = async (req, res) => {
   const { id } = req.params;
   const { reply } = req.body;
@@ -23,6 +27,7 @@ exports.reply = async (req, res) => {
   const c = await Comment.findById(id);
   if (!c) return res.status(404).json({ message: 'Commentaire introuvable' });
 
+  // Ajoute la réponse, la date et l’auteur (admin connecté)
   c.staffReply   = (reply || '').trim();
   c.staffReplyAt = new Date();
   c.staffReplyBy = req.admin?._id || null;
@@ -31,7 +36,7 @@ exports.reply = async (req, res) => {
   res.json(c);
 };
 
-/** Masquer / afficher */
+// Change la visibilité d’un commentaire (affiché ou masqué)
 exports.setVisibility = async (req, res) => {
   const { id } = req.params;
   const { isHidden } = req.body;
@@ -39,13 +44,14 @@ exports.setVisibility = async (req, res) => {
   const c = await Comment.findByIdAndUpdate(
     id,
     { $set: { isHidden: !!isHidden } },
-    { new: true }
+    { new: true } // Retourne le document mis à jour
   );
+
   if (!c) return res.status(404).json({ message: 'Commentaire introuvable' });
   res.json(c);
 };
 
-/** Supprimer (modération) */
+// Supprime définitivement un commentaire
 exports.remove = async (req, res) => {
   const { id } = req.params;
   const del = await Comment.findByIdAndDelete(id);
