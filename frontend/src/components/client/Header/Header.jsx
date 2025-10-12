@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useMemo } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './style.css';
 import logo from '../../../assets/Logo CMR Blc.svg';
@@ -7,11 +7,21 @@ export default function Header() {
   const navigate = useNavigate();
   const role  = localStorage.getItem('role');
   const name  = localStorage.getItem('name');
-  const token = localStorage.getItem('token');
 
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isLogged, setIsLogged] = useState(getLogged());
   const ddRef = useRef(null);
+
+  // calcule l'état de connexion via storage
+  function getLogged() {
+    return Boolean(
+      localStorage.getItem('clientToken') ||
+      localStorage.getItem('token') ||
+      sessionStorage.getItem('clientToken') ||
+      sessionStorage.getItem('token')
+    );
+  }
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
@@ -29,22 +39,26 @@ export default function Header() {
     return () => document.removeEventListener('click', onClick);
   }, []);
 
+  // synchronise l'état de connexion (autres onglets / retour focus)
+  useEffect(() => {
+    const sync = () => setIsLogged(getLogged());
+    window.addEventListener('storage', sync);
+    window.addEventListener('focus', sync);
+    return () => {
+      window.removeEventListener('storage', sync);
+      window.removeEventListener('focus', sync);
+    };
+  }, []);
+
   const handleLogout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('clientToken');
     localStorage.removeItem('role');
     localStorage.removeItem('name');
-    navigate('/login');
+    setIsLogged(false);
+    setMenuOpen(false);
+    navigate('/connexion');
   };
-
-  // Détecte si un client est connecté (token en local/session)
-  const isLogged = useMemo(() => {
-    return !!(
-      localStorage.getItem('clientToken') ||
-      localStorage.getItem('token') ||
-      sessionStorage.getItem('clientToken') ||
-      sessionStorage.getItem('token')
-    );
-  }, []);
 
   return (
     <header className={`header ${scrolled ? 'scrolled' : ''}`}>
@@ -64,9 +78,9 @@ export default function Header() {
             {/* Mon compte visible si connecté */}
             {isLogged && <Link className="nav-link menu-item" to="/account">Mon compte</Link>}
 
-            {token ? (
+            {isLogged ? (
               <>
-                <span> Connecté : {name} ({role}) </span>
+                {(name || role) && <span> Connecté : {name} {role ? `(${role})` : ''} </span>}
                 <button className="btn-inline" onClick={handleLogout}>Déconnexion</button>
               </>
             ) : (
@@ -106,11 +120,14 @@ export default function Header() {
               </Link>
             )}
 
-            {token ? (
+            {isLogged ? (
               <>
                 <div className="dropdown-sep" />
-                <div className="dropdown-user">Connecté : {name} ({role})</div>
-                <button className="dropdown-item danger" onClick={() => { setMenuOpen(false); handleLogout(); }}>
+                {(name || role) && <div className="dropdown-user">Connecté : {name} {role ? `(${role})` : ''}</div>}
+                <button
+                  className="dropdown-item danger"
+                  onClick={handleLogout}
+                >
                   Déconnexion
                 </button>
               </>

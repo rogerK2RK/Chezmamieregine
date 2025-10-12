@@ -9,6 +9,7 @@ import RegisterPage from '../pages/client/RegisterPage';
 import ContactPage from '../pages/client/ContactPage';
 import ProductsPage from '../pages/client/ProductsPage/ProductsPage';
 import ProductDetailPage from '../pages/client/ProductDetailPage/ProductDetailPage';
+import AccountPage from '../pages/client/AccountPage/AccountPage';
 
 import AdminLoginPage from '../pages/admin/AdminLoginPage/AdminLoginPage';
 import AdminDashboard from '../pages/admin/AdminDashboard/AdminDashboard';
@@ -35,6 +36,7 @@ export default function AppRouter() {
         <Route path="/produits" element={<ProductsPage />} />
         <Route path="/produits/:slug" element={<ProductsPage />} />
         <Route  path="/produit/:id" element={<ProductDetailPage />} />
+        <Route  path="/account" element={<AccountPage />} />
       </Route>
 
       {/* ===== ADMIN : login (sans sidebar) ===== */}
