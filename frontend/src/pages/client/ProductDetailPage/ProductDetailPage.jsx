@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../../../services/api";
+import SafeImage from "../../../components/common/SafeImage";
 import "./style.css";
 
 export default function ProductDetailPage() {
@@ -12,6 +13,7 @@ export default function ProductDetailPage() {
   const [err, setErr] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
 
+  // 🟡 Charger le plat depuis l’API publique
   useEffect(() => {
     (async () => {
       try {
@@ -21,17 +23,25 @@ export default function ProductDetailPage() {
         setPlat(data || null);
         setActiveIndex(0);
       } catch (e) {
-        setErr("Impossible de charger ce plat.", e);
+        console.error(e);
+        setErr("Impossible de charger ce plat.");
       } finally {
         setLoading(false);
       }
     })();
   }, [id]);
 
+  // 🟡 Gestion des images
   const images = useMemo(
-    () => (Array.isArray(plat?.images) && plat.images.length ? plat.images : []),
+    () => (Array.isArray(plat?.images) && plat.images.length ? plat.images.filter(Boolean) : []),
     [plat]
   );
+
+  // remet l’index dans les bornes si la liste change
+  useEffect(() => {
+    if (!images.length) { setActiveIndex(0); return; }
+    if (activeIndex >= images.length) setActiveIndex(0);
+  }, [images, activeIndex]);
 
   const mainImage = images[activeIndex] || null;
 
@@ -40,18 +50,21 @@ export default function ProductDetailPage() {
   const ingredients = plat?.ingredients || "";
   const sideDishes = plat?.sideDishes || "";
 
-  if (loading) return <div className="pd-container"><div className="pd-loading">Chargement…</div></div>;
-  if (err) return <div className="pd-container"><div className="pd-error">{err}</div></div>;
-  if (!plat) return null;
+  if (loading)
+    return <div className="pd-container"><div className="pd-loading">Chargement…</div></div>;
+  if (err)
+    return <div className="pd-container"><div className="pd-error">{err}</div></div>;
+  if (!plat)
+    return null;
 
   return (
     <div className="pd-container">
       <div className="pd-grid">
-        {/* Colonne image + vignettes */}
+        {/* ----------------- COLONNE GAUCHE : Image principale + vignettes ----------------- */}
         <div className="pd-left">
           <div className="pd-main-img">
             {mainImage ? (
-              <img src={mainImage} alt={plat.name} />
+              <SafeImage src={mainImage} alt={plat.name} className="pd-main-img-el" />
             ) : (
               <div className="pd-main-placeholder">🍽️</div>
             )}
@@ -66,6 +79,7 @@ export default function ProductDetailPage() {
               >
                 ‹
               </button>
+
               <div className="pd-thumb-row">
                 {images.map((src, i) => (
                   <button
@@ -78,11 +92,10 @@ export default function ProductDetailPage() {
                   </button>
                 ))}
               </div>
+
               <button
                 className="pd-thumb-nav"
-                onClick={() =>
-                  setActiveIndex(i => Math.min(images.length - 1, i + 1))
-                }
+                onClick={() => setActiveIndex(i => Math.min(images.length - 1, i + 1))}
                 aria-label="Suivant"
               >
                 ›
@@ -91,7 +104,7 @@ export default function ProductDetailPage() {
           )}
         </div>
 
-        {/* Colonne fiche */}
+        {/* ----------------- COLONNE DROITE : Fiche produit ----------------- */}
         <div className="pd-card">
           <div className="pd-header">
             <h1 className="pd-title">{plat.name}</h1>
@@ -103,7 +116,6 @@ export default function ProductDetailPage() {
             <span className="pd-rating-text">{rating}/5</span>
           </div>
 
-          {/* Description */}
           {plat.description && (
             <section className="pd-section">
               <h3>Description</h3>
@@ -111,7 +123,6 @@ export default function ProductDetailPage() {
             </section>
           )}
 
-          {/* Ingrédients (optionnel) */}
           {ingredients && (
             <section className="pd-section">
               <h3>Ingrédients</h3>
@@ -119,7 +130,6 @@ export default function ProductDetailPage() {
             </section>
           )}
 
-          {/* Accompagnement (optionnel) */}
           {sideDishes && (
             <section className="pd-section">
               <h3>Accompagnement</h3>
@@ -135,6 +145,7 @@ export default function ProductDetailPage() {
             >
               Commander
             </button>
+
             <button className="pd-btn-ghost" onClick={() => navigate(-1)}>
               ← Retour
             </button>
@@ -145,7 +156,7 @@ export default function ProductDetailPage() {
   );
 }
 
-/* ★★★ petit composant étoiles ★★★ */
+/* ------------------- COMPOSANT D'ÉTOILES ------------------- */
 function Stars({ value = 0, max = 5 }) {
   const full = Math.floor(value);
   const half = value - full >= 0.5;

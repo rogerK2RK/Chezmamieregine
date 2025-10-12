@@ -76,7 +76,7 @@ const NosPlats = () => {
             >
               {items.map((plat, idx) => (
                 <div className="slider-item" key={idx}>
-                  <div className="nosplats-card">
+                  <div className="nosplats-card glass-card">
                     <div className="nosplats-image-container">
                       <img
                         src={plat.image}
