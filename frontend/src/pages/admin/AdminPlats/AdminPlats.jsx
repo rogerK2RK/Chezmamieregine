@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import authHeaderAdmin from '../../../services/authHeaderAdmin';
 import apiAdmin from '../../../services/apiAdmin';
+import './style.css';
 
 export default function AdminPlats() {
   const [plats, setPlats] = useState([]);
@@ -17,7 +18,6 @@ export default function AdminPlats() {
   const fetchPlats = async () => {
     try {
       setLoading(true);
-      // ✅ bonne URL (préfixe /api) + bon client apiAdmin
       const { data } = await apiAdmin.get('/plats', { headers });
       setPlats(data || []);
       setSelectedIds(new Set());
@@ -30,29 +30,27 @@ export default function AdminPlats() {
   };
 
   const fetchCats = async () => {
-   try {
-     const { data } = await apiAdmin.get('/categories', { headers });
-     setCats(Array.isArray(data) ? data : []);
-     const map = {};
-     (data || []).forEach(c => { map[c._id] = c.name; });
-     setCatMap(map);
-   } catch (e) {
-     console.error('Erreur chargement catégories', e?.response?.data || e);
-   }
- };
+    try {
+      const { data } = await apiAdmin.get('/categories', { headers });
+      setCats(Array.isArray(data) ? data : []);
+      const map = {};
+      (data || []).forEach(c => { map[c._id] = c.name; });
+      setCatMap(map);
+    } catch (e) {
+      console.error('Erreur chargement catégories', e?.response?.data || e);
+    }
+  };
 
- useEffect(() => { fetchPlats(); fetchCats();}, []);
+  useEffect(() => { fetchPlats(); fetchCats(); }, []);
 
   // Helpers
-const getDisplayCategory = (c) => {
-   if (!c) return '-';
-   // populate OK → objet avec name
-   if (typeof c === 'object') return c.name || '-';
-   // sinon, c’est probablement un ObjectId en string : on tente la map
-   if (typeof c === 'string') return catMap[c] || '-';
-   return '-';
- };
- 
+  const getDisplayCategory = (c) => {
+    if (!c) return '-';
+    if (typeof c === 'object') return c.name || '-';
+    if (typeof c === 'string') return catMap[c] || '-';
+    return '-';
+  };
+
   // Sélection
   const toggleOne = (id) => {
     setSelectedIds(prev => {
@@ -92,7 +90,6 @@ const getDisplayCategory = (c) => {
   const handleDelete = async (id) => {
     if (!window.confirm('Supprimer ce plat ?')) return;
     try {
-      // ✅ /api/plats/:id et apiAdmin
       await apiAdmin.delete(`/plats/${id}`, { headers });
       setPlats(prev => prev.filter(p => p._id !== id));
       setSelectedIds(prev => {
@@ -112,7 +109,6 @@ const getDisplayCategory = (c) => {
     setBusyBulk(true);
     try {
       const ids = Array.from(selectedIds);
-      // ✅ /api/plats/:id et apiAdmin
       await Promise.all(ids.map(id => apiAdmin.delete(`/api/plats/${id}`, { headers })));
       setPlats(prev => prev.filter(p => !selectedIds.has(p._id)));
       setSelectedIds(new Set());
@@ -129,11 +125,9 @@ const getDisplayCategory = (c) => {
     setBusyBulk(true);
     try {
       const ids = Array.from(selectedIds);
-      // ✅ /api/plats/:id et apiAdmin
       await Promise.all(
         ids.map(id => apiAdmin.put(`/plats/${id}`, { isAvailable }, { headers }))
       );
-      // Mise à jour optimiste locale
       setPlats(prev =>
         prev.map(p => selectedIds.has(p._id) ? { ...p, isAvailable } : p)
       );
@@ -149,30 +143,30 @@ const getDisplayCategory = (c) => {
   return (
     <div className="admin-page">
       {/* Barre de recherche + bouton créer */}
-      <div style={{ display: 'flex', gap: 12, marginBottom: 12, alignItems: 'center' }}>
+      <div className="toolbar">
         <input
+          className="input"
           placeholder="Rechercher (nom, AR, ID, catégorie, prix)"
           value={q}
           onChange={e => setQ(e.target.value)}
-          style={input}
         />
-        <button onClick={() => navigate('/admin/plats/new')} style={btnPrimary}>
+        <button onClick={() => navigate('/admin/plats/new')} className="btn-primary-back">
           + Nouveau plat
         </button>
       </div>
 
-      {/* ✅ Barre d'actions groupées (s’affiche s’il y a une sélection) */}
+      {/* ✅ Barre d'actions groupées */}
       {selectedIds.size > 0 && (
-        <div style={bulkBar}>
+        <div className="bulk-bar">
           <div>{selectedIds.size} sélectionné(s)</div>
-          <div style={{ display: 'flex', gap: 8 }}>
-            <button disabled={busyBulk} onClick={() => bulkSetAvailability(true)} style={btnGhost}>
+          <div className="bulk-actions">
+            <button disabled={busyBulk} onClick={() => bulkSetAvailability(true)} className="btn-ghost">
               Marquer “Disponible”
             </button>
-            <button disabled={busyBulk} onClick={() => bulkSetAvailability(false)} style={btnGhost}>
+            <button disabled={busyBulk} onClick={() => bulkSetAvailability(false)} className="btn-ghost">
               Marquer “Indisponible”
             </button>
-            <button disabled={busyBulk} onClick={bulkDelete} style={btnDanger}>
+            <button disabled={busyBulk} onClick={bulkDelete} className="btn-danger">
               Supprimer la sélection
             </button>
           </div>
@@ -182,11 +176,11 @@ const getDisplayCategory = (c) => {
       {loading ? (
         <div>Chargement…</div>
       ) : (
-        <div style={{ overflowX: 'auto' }}>
-          <table style={table}>
+        <div className="table-container">
+          <table className="table">
             <thead>
               <tr>
-                <th style={thTd}>
+                <th className="cell cell-checkbox">
                   <input
                     type="checkbox"
                     checked={allSelected}
@@ -194,14 +188,14 @@ const getDisplayCategory = (c) => {
                     aria-label="Tout sélectionner"
                   />
                 </th>
-                <th style={thTd}>Image</th>
-                <th style={thTd}>ID</th>
-                <th style={thTd}>AR</th>
-                <th style={thTd}>Nom</th>
-                <th style={thTd}>Catégorie</th>
-                <th style={thTd}>Prix (€)</th>
-                <th style={thTd}>Statut</th>
-                <th style={thTd}>Actions</th>
+                <th className="cell">Image</th>
+                <th className="cell">ID</th>
+                <th className="cell">AR</th>
+                <th className="cell">Nom</th>
+                <th className="cell">Catégorie</th>
+                <th className="cell">Prix (€)</th>
+                <th className="cell">Statut</th>
+                <th className="cell">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -209,43 +203,43 @@ const getDisplayCategory = (c) => {
                 const checked = selectedIds.has(plat._id);
                 return (
                   <tr key={plat._id}>
-                    <td style={thTd}>
+                    <td className="cell">
                       <input
                         type="checkbox"
                         checked={checked}
                         onChange={() => toggleOne(plat._id)}
                       />
                     </td>
-                    <td style={thTd}>
+                    <td className="cell">
                       {Array.isArray(plat.images) && plat.images[0] ? (
                         <img
                           src={plat.images[0]}
                           alt={plat.name}
-                          style={{ width: 56, height: 56, objectFit: 'cover', borderRadius: 8 }}
+                          className="thumb"
                         />
                       ) : (
-                        <div style={thumbPlaceholder}>🍽️</div>
+                        <div className="thumb-placeholder">🍽️</div>
                       )}
                     </td>
-                    <td style={thTd}>{plat.platId}</td>
-                    <td style={thTd}>{plat.ar}</td>
-                    <td style={thTd}>{plat.name}</td>
-                    <td style={thTd}>{getDisplayCategory(plat.category)}</td>
-                    <td style={thTd}>{Number(plat.price).toFixed(2)}</td>
-                    <td style={thTd}>
-                      <span style={plat.isAvailable ? badgeOk : badgeOff}>
+                    <td className="cell">{plat.platId}</td>
+                    <td className="cell">{plat.ar}</td>
+                    <td className="cell">{plat.name}</td>
+                    <td className="cell">{getDisplayCategory(plat.category)}</td>
+                    <td className="cell">{Number(plat.price).toFixed(2)}</td>
+                    <td className="cell">
+                      <span className={plat.isAvailable ? 'badge-ok' : 'badge-off'}>
                         {plat.isAvailable ? 'Disponible' : 'Indisponible'}
                       </span>
                     </td>
-                    <td style={thTd}>
+                    <td className="cell">
                       <button
-                        style={btnGhost}
+                        className="btn-ghost"
                         onClick={() => navigate(`/admin/plats/${plat._id}/edit`)}
                       >
                         Éditer
                       </button>
                       <button
-                        style={btnDanger}
+                        className="btn-danger"
                         onClick={() => handleDelete(plat._id)}
                       >
                         Supprimer
@@ -256,7 +250,7 @@ const getDisplayCategory = (c) => {
               })}
               {filtered.length === 0 && (
                 <tr>
-                  <td style={thTd} colSpan={9}>Aucun plat trouvé</td>
+                  <td className="cell" colSpan={9}>Aucun plat trouvé</td>
                 </tr>
               )}
             </tbody>
@@ -266,91 +260,3 @@ const getDisplayCategory = (c) => {
     </div>
   );
 }
-
-/* 🎨 Styles */
-const table = {
-  width: '100%',
-  borderCollapse: 'collapse',
-  border: '1px solid rgba(255,255,255,0.12)',
-  borderRadius: 12,
-  overflow: 'hidden',
-  background: 'rgba(255,255,255,0.03)',
-};
-const thTd = {
-  padding: '12px 10px',
-  borderBottom: '1px solid rgba(255,255,255,0.08)',
-  textAlign: 'left',
-  color: '#e5e7eb',
-};
-const input = {
-  flex: 1,
-  padding: '10px 12px',
-  borderRadius: 8,
-  border: '1px solid rgba(255,255,255,0.18)',
-  background: 'rgba(255,255,255,0.06)',
-  color: '#fff',
-  minWidth: 240,
-};
-const bulkBar = {
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  gap: 12,
-  padding: '10px 12px',
-  border: '1px dashed rgba(255,255,255,0.18)',
-  borderRadius: 10,
-  marginBottom: 12,
-  background: 'rgba(255,255,255,0.04)',
-  color: '#e5e7eb',
-};
-const btnPrimary = {
-  background: 'linear-gradient(135deg, #4f46e5, #7c3aed)',
-  color: '#fff',
-  border: 'none',
-  padding: '10px 14px',
-  borderRadius: 10,
-  cursor: 'pointer',
-};
-const btnGhost = {
-  background: 'rgba(255,255,255,0.06)',
-  color: '#e5e7eb',
-  border: '1px solid rgba(255,255,255,0.18)',
-  padding: '8px 12px',
-  borderRadius: 10,
-  cursor: 'pointer',
-};
-const btnDanger = {
-  background: 'rgba(239,68,68,0.14)',
-  color: '#fecaca',
-  border: '1px solid rgba(239,68,68,0.35)',
-  padding: '8px 12px',
-  borderRadius: 10,
-  cursor: 'pointer',
-};
-const badgeOk = {
-  display: 'inline-block',
-  padding: '4px 10px',
-  borderRadius: 999,
-  fontSize: 12,
-  background: 'rgba(34,197,94,.18)',
-  color: '#86efac',
-  border: '1px solid rgba(34,197,94,.35)',
-};
-const badgeOff = {
-  display: 'inline-block',
-  padding: '4px 10px',
-  borderRadius: 999,
-  fontSize: 12,
-  background: 'rgba(239,68,68,.18)',
-  color: '#fecaca',
-  border: '1px solid rgba(239,68,68,.35)',
-};
-const thumbPlaceholder = {
-  width: 56,
-  height: 56,
-  borderRadius: 8,
-  display: 'grid',
-  placeItems: 'center',
-  background: 'rgba(255,255,255,0.06)',
-  color: '#ccc'
-};

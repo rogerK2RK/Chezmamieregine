@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import apiAdmin from '../../../services/apiAdmin';
 import authHeaderAdmin from '../../../services/authHeaderAdmin';
-import './AdminClients.css'; // ⬅️ nouveau CSS
+import './style.css';
 
 export default function AdminClients() {
   const [clients, setClients] = useState([]);
@@ -271,7 +271,7 @@ export default function AdminClients() {
 
               <div className="modal-actions">
                 <button type="button" className="btn-ghost" onClick={() => setEditing(null)}>Annuler</button>
-                <button type="submit" className="btn-primary">Enregistrer</button>
+                <button type="submit" className="btn-primary-back">Enregistrer</button>
               </div>
             </form>
           </div>

@@ -1,16 +1,16 @@
-// frontend/src/pages/admin/AdminPlatForm.jsx
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import apiAdmin from '../../../services/apiAdmin';
 import authHeaderAdmin from '../../../services/authHeaderAdmin';
 import AdminImageUploader from '../../../components/admin/AdminImageUploader';
+import './style.css';
 
 export default function AdminPlatForm() {
-  const { id } = useParams();               // si présent => édition
+  const { id } = useParams();
   const isEdit = Boolean(id);
   const navigate = useNavigate();
 
-  // ⚙️ Headers (mémoisés)
+  // Headers
   const headers = useMemo(() => ({ ...authHeaderAdmin() }), []);
 
   // Guards (évite doubles appels en dev/StrictMode)
@@ -21,8 +21,8 @@ export default function AdminPlatForm() {
   const [form, setForm] = useState({
     ar: '',
     name: '',
-    price: '',       // string pour l’input, on parse au submit
-    category: '',    // _id Category
+    price: '',
+    category: '',
     description: '',
     isAvailable: true,
   });
@@ -120,31 +120,17 @@ export default function AdminPlatForm() {
 
   if (loading) return <div>Chargement…</div>;
 
-  // Styles
-  const input = {
-    width: '100%', padding: '10px 12px', borderRadius: 8,
-    border: '1px solid rgba(255,255,255,0.18)', background: 'rgba(255,255,255,0.06)', color: '#fff'
-  };
-  const btnPrimary = {
-    background: 'linear-gradient(135deg, #4f46e5, #7c3aed)', color: '#fff',
-    border: 'none', padding: '10px 14px', borderRadius: 10, cursor: 'pointer'
-  };
-  const btnGhost = {
-    background: 'rgba(255,255,255,0.06)', color: '#e5e7eb',
-    border: '1px solid rgba(255,255,255,0.18)', padding: '10px 14px', borderRadius: 10, cursor: 'pointer'
-  };
-
   return (
     <div className="admin-page">
       <h1>{isEdit ? 'Éditer le plat' : 'Nouveau plat'}</h1>
 
-      <form onSubmit={handleSubmit} style={{ display: 'grid', gap: 14, maxWidth: 720 }}>
+      <form onSubmit={handleSubmit} className="form-grid">
         <div>
           <label>Référence (AR) *</label>
           <input
+            className="input"
             value={form.ar}
             onChange={e => setForm(f => ({ ...f, ar: e.target.value }))}
-            style={input}
             required
           />
         </div>
@@ -152,9 +138,9 @@ export default function AdminPlatForm() {
         <div>
           <label>Nom *</label>
           <input
+            className="input"
             value={form.name}
             onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-            style={input}
             required
           />
         </div>
@@ -162,13 +148,13 @@ export default function AdminPlatForm() {
         <div>
           <label>Prix (€) *</label>
           <input
+            className="input"
             type="number"
             inputMode="decimal"
             step="0.01"
             min="0"
             value={String(form.price ?? '')}
             onChange={e => setForm(f => ({ ...f, price: e.target.value }))}
-            style={input}
             required
           />
         </div>
@@ -176,9 +162,9 @@ export default function AdminPlatForm() {
         <div>
           <label>Catégorie</label>
           <select
+            className="input"
             value={form.category}
             onChange={e => setForm(f => ({ ...f, category: e.target.value }))}
-            style={input}
           >
             <option value="">— Aucune —</option>
             {categories.map(c => (
@@ -190,9 +176,9 @@ export default function AdminPlatForm() {
         <div>
           <label>Description</label>
           <textarea
+            className="input textarea"
             value={form.description}
             onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
-            style={{ ...input, minHeight: 90 }}
           />
         </div>
 
@@ -202,7 +188,7 @@ export default function AdminPlatForm() {
           <AdminImageUploader value={images} onChange={setImages} />
         </div>
 
-        <label style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+        <label className="inline-check">
           <input
             type="checkbox"
             checked={!!form.isAvailable}
@@ -211,11 +197,11 @@ export default function AdminPlatForm() {
           Disponible à la commande
         </label>
 
-        <div style={{ display: 'flex', gap: 10 }}>
-          <button type="submit" style={btnPrimary}>
+        <div className="row-actions">
+          <button type="submit" className="btn-primary-back">
             {isEdit ? 'Enregistrer' : 'Créer'}
           </button>
-          <button type="button" onClick={() => navigate('/admin/plats')} style={btnGhost}>
+          <button type="button" onClick={() => navigate('/admin/plats')} className="btn-ghost">
             Annuler
           </button>
         </div>

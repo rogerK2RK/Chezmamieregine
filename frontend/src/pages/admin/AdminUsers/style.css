@@ -1,0 +1,109 @@
+.title-spacing { margin-bottom: 16px; }
+
+.toolbar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.table-container { overflow-x: auto; }
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.cell {
+  padding: 12px 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  text-align: left;
+}
+
+/* Inputs & buttons */
+.input {
+  flex: 1;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+  min-width: 240px;
+}
+
+.btn-primary-back {
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  color: #fff;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.btn-ghost {
+  background: rgba(255,255,255,0.06);
+  color: #e5e7eb;
+  border: 1px solid rgba(255,255,255,0.18);
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+/* Modal */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: grid;
+  place-items: center;
+  z-index: 40;
+}
+
+.card {
+  width: min(720px, 92vw);
+  background: rgba(13,15,18, 0.98);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 14px;
+  padding: 18px;
+  color: #e5e7eb;
+}
+
+.no-top-margin { margin-top: 0; }
+
+.alert-err {
+  background: rgba(239,68,68,0.15);
+  color: #fecaca;
+  border: 1px solid rgba(239,68,68,0.35);
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin-bottom: 6px;
+}
+
+.form-grid {
+  display: grid;
+  gap: 12px;
+  max-width: 560px;
+}
+
+/* Password toggle */
+.relative { position: relative; }
+
+.eye-btn {
+  position: absolute;
+  right: 10px;
+  top: 34px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+}
+
+/* Actions row */
+.actions-right {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}

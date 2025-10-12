@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import apiAdmin from '../../../services/apiAdmin';
 import authHeaderAdmin from '../../../services/authHeaderAdmin';
-import './AdminCategories.css'; // ⬅️ nouveau CSS
+import './style.css'; // ⬅️ nouveau CSS
 
 export default function AdminCategories() {
   const headers = useMemo(() => ({ ...authHeaderAdmin() }), []);
@@ -216,7 +216,7 @@ export default function AdminCategories() {
 
               <div className="modal-actions">
                 <button type="button" className="btn-ghost" onClick={() => setCatModalOpen(false)}>Annuler</button>
-                <button type="submit" className="btn-primary">{editing ? 'Enregistrer' : 'Créer'}</button>
+                <button type="submit" className="btn-primary-back">{editing ? 'Enregistrer' : 'Créer'}</button>
               </div>
             </form>
           </div>
@@ -242,7 +242,7 @@ export default function AdminCategories() {
             </div>
             <div className="modal-actions">
               <button className="btn-ghost" onClick={() => setAssignOpen(null)}>Annuler</button>
-              <button className="btn-primary" onClick={assign}>Assigner</button>
+              <button className="btn-primary-back" onClick={assign}>Assigner</button>
             </div>
           </div>
         </div>

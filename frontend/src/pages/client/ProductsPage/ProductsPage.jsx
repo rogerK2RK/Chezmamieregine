@@ -1,7 +1,6 @@
-// frontend/src/pages/ProductsPage.jsx
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import api from '../../../services/api';                 // ✅ chemin corrigé (../services/api)
+import api from '../../../services/api'; 
 import './style.css';
 
 const PAGE_SIZE = 8;
@@ -24,7 +23,7 @@ export default function ProductsPage() {
       try {
         setLoadingCats(true);
         setErrMsg('');
-        // ✅ bon endpoint public
+        // bon endpoint public
         const { data } = await api.get('/public/categories');
         const list = Array.isArray(data) ? data : [];
         setCats(list);
@@ -56,7 +55,7 @@ export default function ProductsPage() {
         setErrMsg('');
         setPage(1);
 
-        // ✅ bon endpoint public
+        // bon endpoint public
         const url = activeCat
           ? `/public/plats?category=${activeCat}`
           : `/public/plats`;

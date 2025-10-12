@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../../services/api';
-import EyeToggle from '../../../components/shared/ui/EyeToggle'; // 👁️ bouton toggle
+import EyeToggle from '../../../components/shared/ui/EyeToggle';
 import './style.css';
 import { Link } from 'react-router-dom';
 import logoCmr from '../../../assets/Logo CMR Blc.svg';
@@ -32,11 +32,9 @@ export default function AdminLoginPage() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      // 🔐 Appel login
+      // Appel login
       const res = await api.post('/admin/login', { email, password });
 
-      // Selon ton controller, le payload peut être:
-      // { token, role, name } OU { token, user: { role, name } }
       const token = res?.data?.token;
       const role  = res?.data?.role  || res?.data?.user?.role;
       const name  = res?.data?.name  || res?.data?.user?.name;
@@ -52,18 +50,13 @@ export default function AdminLoginPage() {
         return;
       }
 
-      // 🗄️ Stockage selon "Se souvenir de moi"
+      // Stockage selon "Se souvenir de moi"
       const storage = rememberMe ? localStorage : sessionStorage;
       storage.setItem('adminToken', token);
       storage.setItem('adminRole',  role);
       if (name) storage.setItem('adminName', name);
 
-      // (Optionnel) garder une copie en localStorage "persistante" si tu le souhaites
-      // localStorage.setItem('adminToken', token);
-      // localStorage.setItem('adminRole',  role);
-      // if (name) localStorage.setItem('adminName', name);
-
-      // ✅ Redirection BO
+      // Redirection BO
       navigate('/admin/dashboard');
     } catch (err) {
       console.log('ADMIN LOGIN ERROR:', err.response?.status, err.response?.data);
@@ -77,7 +70,6 @@ export default function AdminLoginPage() {
 
       <form onSubmit={handleLogin} className="login-container">
         <img className='logo-back-connexion' src={logoCmr} alt="Logo de chez Mamie Regine" />
-        {/* <h2 className="login-title">Se connecter</h2> */}
 
         {/* Email */}
         <div className="form-group">
@@ -111,7 +103,7 @@ export default function AdminLoginPage() {
             required
           />
 
-          {/* 👁️ Icône SVG animé */}
+          {/* Icône SVG animé */}
           <EyeToggle open={showPassword} onToggle={() => setShowPassword((v) => !v)} />
         </div>
 

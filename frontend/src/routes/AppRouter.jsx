@@ -1,4 +1,3 @@
-// frontend/src/routes/AppRouter.jsx
 import { Routes, Route } from 'react-router-dom';
 import ClientLayout from '../layouts/ClientLayout';
 import AdminAuthLayout from '../layouts/AdminAuthLayout';

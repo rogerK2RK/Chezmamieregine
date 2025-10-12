@@ -1,4 +1,3 @@
-// src/routes/ClientRouter.jsx
 import { Routes, Route } from 'react-router-dom';
 import HomePage from '../pages/client/HomePage';
 import LoginPage from '../pages/client/LoginPage';

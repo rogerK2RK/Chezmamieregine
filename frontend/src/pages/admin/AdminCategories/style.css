@@ -1,6 +1,3 @@
-/* Conteneur générique de la page admin (déjà présent dans ton app normalement) */
-.admin-page {}
-
 /* Barre d’actions (recherche + bouton) */
 .admin-actions {
   display: flex;

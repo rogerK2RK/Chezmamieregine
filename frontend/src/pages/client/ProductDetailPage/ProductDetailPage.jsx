@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import api from "../../../services/api"; // ← adapte le chemin si besoin
-import "./ProductDetailPage.css";
+import api from "../../../services/api";
+import "./style.css";
 
 export default function ProductDetailPage() {
   const { id } = useParams();
@@ -35,10 +35,10 @@ export default function ProductDetailPage() {
 
   const mainImage = images[activeIndex] || null;
 
-  // Données optionnelles : si ton schéma ne les a pas, ça masque la section
-  const rating = Number(plat?.ratingAvg ?? 4); // valeur par défaut 4/5 pour l’exemple
-  const ingredients = plat?.ingredients || ""; // string ou array -> tu peux ajuster
-  const sideDishes = plat?.sideDishes || "";   // idem
+  // Données optionnelles
+  const rating = Number(plat?.ratingAvg ?? 4);
+  const ingredients = plat?.ingredients || "";
+  const sideDishes = plat?.sideDishes || "";
 
   if (loading) return <div className="pd-container"><div className="pd-loading">Chargement…</div></div>;
   if (err) return <div className="pd-container"><div className="pd-error">{err}</div></div>;

@@ -1,4 +1,3 @@
-// src/routes/AdminRouter.jsx
 import { Routes, Route } from 'react-router-dom';
 import AdminDashboard from '../pages/admin/AdminDashboard';
 import AdminPlats from '../pages/admin/AdminPlats';
