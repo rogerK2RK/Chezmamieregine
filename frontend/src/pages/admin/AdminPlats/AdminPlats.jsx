@@ -213,7 +213,7 @@ export default function AdminPlats() {
                         <img
                           src={plat.images[0]}
                           alt={plat.name}
-                          className="thumb"
+                          className="thumb-back"
                         />
                       ) : (
                         <div className="thumb-placeholder">🍽️</div>
