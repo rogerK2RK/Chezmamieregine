@@ -1,21 +1,38 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import api from '../../../services/api';
 import authHeaderClient from '../../../services/authHeaderClient';
 import './style.css';
 
 export default function AccountPage() {
-  const headers = useMemo(() => ({ ...authHeaderClient() }), []);
+  const getClientToken = () =>
+    localStorage.getItem('clientToken') ||
+    sessionStorage.getItem('clientToken');
+
+  const [token, setToken] = useState(getClientToken());
   const [form, setForm] = useState({ firstName: '', lastName: '', email: '', sex: 'other' });
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState('');
   const [ok, setOk] = useState('');
+
+  // Suit les changements éventuels du token (login depuis autre onglet, etc.)
+  useEffect(() => {
+    const id = setInterval(() => {
+      const t = getClientToken();
+      setToken(prev => (prev !== t ? t : prev));
+    }, 500);
+    return () => clearInterval(id);
+  }, []);
 
   useEffect(() => {
     (async () => {
       try {
         setLoading(true);
         setErr('');
+
+        // Headers client relus à chaque appel
+        const headers = authHeaderClient();
         const { data } = await api.get('/me', { headers });
+
         setForm({
           firstName: data?.firstName || '',
           lastName:  data?.lastName  || '',
@@ -23,18 +40,22 @@ export default function AccountPage() {
           sex:       data?.sex       || 'other',
         });
       } catch (e) {
-        setErr('Impossible de charger votre profil.');
+        const msg = e?.response?.status === 401
+          ? 'Veuillez vous connecter pour accéder à votre compte.'
+          : (e?.response?.data?.message || 'Impossible de charger votre profil.');
+        setErr(msg);
       } finally {
         setLoading(false);
       }
     })();
-  }, [headers]);
+  }, [token]);
 
   const submit = async (e) => {
     e.preventDefault();
     try {
       setOk('');
       setErr('');
+      const headers = authHeaderClient();
       const { data } = await api.put('/me', form, { headers });
       setForm({
         firstName: data?.firstName || '',
@@ -48,8 +69,21 @@ export default function AccountPage() {
     }
   };
 
-  if (loading) return <div className="acc-container"><div className="acc-loading">Chargement…</div></div>;
-  if (err && !ok)  return <div className="acc-container"><div className="acc-error">{err}</div></div>;
+  if (loading) {
+    return (
+      <div className="acc-container">
+        <div className="acc-loading">Chargement…</div>
+      </div>
+    );
+  }
+
+  if (err && !ok) {
+    return (
+      <div className="acc-container">
+        <div className="acc-error">{err}</div>
+      </div>
+    );
+  }
 
   return (
     <div className="acc-container">

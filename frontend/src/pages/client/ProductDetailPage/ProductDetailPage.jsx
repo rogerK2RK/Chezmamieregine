@@ -107,7 +107,7 @@ export default function ProductDetailPage() {
         {/* ----------------- COLONNE DROITE : Fiche produit ----------------- */}
         <div className="pd-card">
           <div className="pd-header">
-            <h1 className="pd-title">{plat.name}</h1>
+            <h3 className="pd-title">{plat.name}</h3>
             <div className="pd-price">{Number(plat.price ?? 0).toFixed(2)}€</div>
           </div>
 

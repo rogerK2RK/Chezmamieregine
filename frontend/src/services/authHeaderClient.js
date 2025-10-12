@@ -1,10 +1,8 @@
+// N’envoie QUE le token client. Surtout pas le token admin.
 export default function authHeaderClient() {
-  const token =
+  const t =
     localStorage.getItem('clientToken') ||
-    localStorage.getItem('token') ||
-    sessionStorage.getItem('clientToken') ||
-    sessionStorage.getItem('token') ||
-    '';
+    sessionStorage.getItem('clientToken');
 
-  return token ? { Authorization: `Bearer ${token}` } : {};
+  return t ? { Authorization: `Bearer ${t}` } : {};
 }
