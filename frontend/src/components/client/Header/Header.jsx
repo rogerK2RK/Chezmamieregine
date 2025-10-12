@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './style.css';
 import logo from '../../../assets/Logo CMR Blc.svg';
@@ -36,6 +36,16 @@ export default function Header() {
     navigate('/login');
   };
 
+  // Détecte si un client est connecté (token en local/session)
+  const isLogged = useMemo(() => {
+    return !!(
+      localStorage.getItem('clientToken') ||
+      localStorage.getItem('token') ||
+      sessionStorage.getItem('clientToken') ||
+      sessionStorage.getItem('token')
+    );
+  }, []);
+
   return (
     <header className={`header ${scrolled ? 'scrolled' : ''}`}>
       <div className="header-container">
@@ -50,6 +60,9 @@ export default function Header() {
           <nav className="nav">
             <Link className="nav-link menu-item" to="/produits">Nos plats</Link>
             <Link className="nav-link menu-item" to="/contact">Contact</Link>
+
+            {/* Mon compte visible si connecté */}
+            {isLogged && <Link className="nav-link menu-item" to="/account">Mon compte</Link>}
 
             {token ? (
               <>
@@ -85,6 +98,13 @@ export default function Header() {
           <div className={`dropdown ${menuOpen ? 'open' : ''}`} role="menu">
             <Link to="/produits"  className="dropdown-item" onClick={() => setMenuOpen(false)}>Nos plats</Link>
             <Link to="/contact"   className="dropdown-item" onClick={() => setMenuOpen(false)}>Contact</Link>
+
+            {/* Mon compte visible si connecté (mobile) */}
+            {isLogged && (
+              <Link to="/account" className="dropdown-item" onClick={() => setMenuOpen(false)}>
+                Mon compte
+              </Link>
+            )}
 
             {token ? (
               <>

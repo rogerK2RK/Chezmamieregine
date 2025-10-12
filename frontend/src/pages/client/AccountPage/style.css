@@ -1,0 +1,54 @@
+.acc-container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 16px;
+  color: #e5e7eb;
+}
+
+.acc-loading { opacity: 0.8; }
+.acc-error {
+  background: rgba(239,68,68,0.15);
+  color: #fecaca;
+  border: 1px solid rgba(239,68,68,0.35);
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+}
+.acc-success {
+  background: rgba(34,197,94,.18);
+  color: #86efac;
+  border: 1px solid rgba(34,197,94,.35);
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+}
+
+.acc-form {
+  display: grid;
+  gap: 12px;
+}
+
+.acc-input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+  min-width: 240px;
+}
+
+.acc-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 6px;
+}
+.acc-btn-primary {
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  color: #fff;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+}

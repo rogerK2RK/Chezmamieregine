@@ -59,7 +59,7 @@ export default function ProductDetailPage() {
 
   return (
     <div className="pd-container">
-      <div className="pd-grid">
+      <div className="pd-grid glass-card">
         {/* ----------------- COLONNE GAUCHE : Image principale + vignettes ----------------- */}
         <div className="pd-left">
           <div className="pd-main-img">

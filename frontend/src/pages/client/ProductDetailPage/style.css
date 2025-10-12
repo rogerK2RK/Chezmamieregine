@@ -1,5 +1,10 @@
 .pd-container {
-  padding: 24px;
+  padding: 7rem 1rem 3rem;
+  margin: 0 auto;
+  background: url(../../../assets/background.png) no-repeat;
+  background-size: cover;
+  background-position: 45%;
+  background-attachment: scroll;
 }
 
 .pd-loading,
@@ -13,6 +18,7 @@
 
 .pd-grid {
   display: grid;
+  padding: 1.2rem;
   grid-template-columns: 1.1fr 1fr;
   gap: 18px;
 }

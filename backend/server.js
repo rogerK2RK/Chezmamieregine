@@ -52,6 +52,9 @@ app.use('/api/admin/comments', require('./routes/commentBackRoutes'));
 // Routes publiques
 app.use('/api/public', require('./routes/publicRoutes'));
 
+// Routes user front
+app.use('/api/me', require('./routes/meRoutes'));
+
 /* --- Healthcheck --- */
 app.get('/healthz', (_req, res) => res.json({ ok: true }));
 app.get('/api/health', (_req, res) => res.json({ ok: true }));
