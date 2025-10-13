@@ -7,6 +7,7 @@ import logo from '../../../assets/Logo CMR Blc.svg';
 export default function Header() {
   const navigate = useNavigate();
   const { token, role, name, logout } = useClientAuth();
+
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const ddRef = useRef(null);
@@ -42,7 +43,7 @@ export default function Header() {
           </Link>
         </div>
 
-        {/* Menu Desktop */}
+        {/* Desktop */}
         <div className={`menu ${scrolled ? 'scrolled' : ''}`} id="Menu">
           <nav className="nav">
             <Link className="nav-link menu-item" to="/produits">Nos plats</Link>
@@ -66,7 +67,7 @@ export default function Header() {
           </nav>
         </div>
 
-        {/* Menu Mobile */}
+        {/* Mobile */}
         <div className="header-right" ref={ddRef}>
           <button
             className="menu-toggle"
