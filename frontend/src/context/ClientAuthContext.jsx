@@ -11,14 +11,18 @@ export function ClientAuthProvider({ children }) {
     localStorage.setItem('clientToken', token);
     localStorage.setItem('clientRole', role);
     localStorage.setItem('clientName', name);
-    setToken(token); setRole(role); setName(name);
+    setToken(token);
+    setRole(role);
+    setName(name);
   };
 
   const logout = () => {
     localStorage.removeItem('clientToken');
     localStorage.removeItem('clientRole');
     localStorage.removeItem('clientName');
-    setToken(null); setRole('client'); setName('');
+    setToken(null);
+    setRole('client');
+    setName('');
   };
 
   return (
@@ -30,9 +34,6 @@ export function ClientAuthProvider({ children }) {
 
 export function useClientAuth() {
   const ctx = useContext(ClientAuthContext);
-  if (!ctx) {
-    // Garde utile pour des erreurs plus claires pendant le dev
-    throw new Error('useClientAuth must be used within <ClientAuthProvider>');
-  }
+  if (!ctx) throw new Error('useClientAuth must be used within <ClientAuthProvider>');
   return ctx;
 }

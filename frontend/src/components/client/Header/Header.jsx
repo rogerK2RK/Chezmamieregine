@@ -1,27 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useClientAuth } from '../../../context/ClientAuthContext.jsx';
 import './style.css';
 import logo from '../../../assets/Logo CMR Blc.svg';
 
 export default function Header() {
   const navigate = useNavigate();
-  const role  = localStorage.getItem('role');
-  const name  = localStorage.getItem('name');
-
+  const { token, role, name, logout } = useClientAuth();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [isLogged, setIsLogged] = useState(getLogged());
   const ddRef = useRef(null);
-
-  // calcule l'état de connexion via storage
-  function getLogged() {
-    return Boolean(
-      localStorage.getItem('clientToken') ||
-      localStorage.getItem('token') ||
-      sessionStorage.getItem('clientToken') ||
-      sessionStorage.getItem('token')
-    );
-  }
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
@@ -29,7 +17,6 @@ export default function Header() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // ferme le menu mobile si clic à l'extérieur
   useEffect(() => {
     const onClick = (e) => {
       if (!ddRef.current) return;
@@ -39,26 +26,12 @@ export default function Header() {
     return () => document.removeEventListener('click', onClick);
   }, []);
 
-  // synchronise l'état de connexion (autres onglets / retour focus)
-  useEffect(() => {
-    const sync = () => setIsLogged(getLogged());
-    window.addEventListener('storage', sync);
-    window.addEventListener('focus', sync);
-    return () => {
-      window.removeEventListener('storage', sync);
-      window.removeEventListener('focus', sync);
-    };
-  }, []);
-
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('clientToken');
-    localStorage.removeItem('role');
-    localStorage.removeItem('name');
-    setIsLogged(false);
-    setMenuOpen(false);
+    logout();
     navigate('/connexion');
   };
+
+  const isLogged = !!token;
 
   return (
     <header className={`header ${scrolled ? 'scrolled' : ''}`}>
@@ -69,24 +42,22 @@ export default function Header() {
           </Link>
         </div>
 
-        {/* === MENU ACTUEL : visible tablette + desktop === */}
+        {/* Menu Desktop */}
         <div className={`menu ${scrolled ? 'scrolled' : ''}`} id="Menu">
           <nav className="nav">
             <Link className="nav-link menu-item" to="/produits">Nos plats</Link>
             <Link className="nav-link menu-item" to="/contact">Contact</Link>
 
-            {/* Mon compte visible si connecté */}
             {isLogged && <Link className="nav-link menu-item" to="/account">Mon compte</Link>}
 
             {isLogged ? (
               <>
-                {(name || role) && <span> Connecté : {name} {role ? `(${role})` : ''} </span>}
+                <span>Connecté : {name || 'client'} {role ? `(${role})` : ''}</span>
                 <button className="btn-inline" onClick={handleLogout}>Déconnexion</button>
               </>
             ) : (
               <div className="cnx-dcnx">
-                <Link className="nav-link menu-item" to="/connexion">Connexion</Link>
-                /
+                <Link className="nav-link menu-item" to="/connexion">Connexion</Link> /
                 <Link className="nav-link menu-item" to="/inscription">Inscription</Link>
               </div>
             )}
@@ -95,7 +66,7 @@ export default function Header() {
           </nav>
         </div>
 
-        {/* === BURGER MOBILE : visible UNIQUEMENT en mobile === */}
+        {/* Menu Mobile */}
         <div className="header-right" ref={ddRef}>
           <button
             className="menu-toggle"
@@ -110,39 +81,30 @@ export default function Header() {
           </button>
 
           <div className={`dropdown ${menuOpen ? 'open' : ''}`} role="menu">
-            <Link to="/produits"  className="dropdown-item" onClick={() => setMenuOpen(false)}>Nos plats</Link>
-            <Link to="/contact"   className="dropdown-item" onClick={() => setMenuOpen(false)}>Contact</Link>
+            <Link to="/produits" className="dropdown-item" onClick={() => setMenuOpen(false)}>Nos plats</Link>
+            <Link to="/contact"  className="dropdown-item" onClick={() => setMenuOpen(false)}>Contact</Link>
 
-            {/* Mon compte visible si connecté (mobile) */}
             {isLogged && (
-              <Link to="/account" className="dropdown-item" onClick={() => setMenuOpen(false)}>
-                Mon compte
-              </Link>
+              <Link to="/account" className="dropdown-item" onClick={() => setMenuOpen(false)}>Mon compte</Link>
             )}
 
+            <div className="dropdown-sep" />
             {isLogged ? (
               <>
-                <div className="dropdown-sep" />
-                {(name || role) && <div className="dropdown-user">Connecté : {name} {role ? `(${role})` : ''}</div>}
-                <button
-                  className="dropdown-item danger"
-                  onClick={handleLogout}
-                >
+                <div className="dropdown-user">Connecté : {name || 'client'} {role ? `(${role})` : ''}</div>
+                <button className="dropdown-item danger" onClick={() => { setMenuOpen(false); handleLogout(); }}>
                   Déconnexion
                 </button>
               </>
             ) : (
               <>
-                <div className="dropdown-sep" />
-                <Link to="/connexion"   className="dropdown-item" onClick={() => setMenuOpen(false)}>Connexion</Link>
+                <Link to="/connexion" className="dropdown-item" onClick={() => setMenuOpen(false)}>Connexion</Link>
                 <Link to="/inscription" className="dropdown-item" onClick={() => setMenuOpen(false)}>Inscription</Link>
               </>
             )}
 
             <div className="dropdown-sep" />
-            <Link to="/commande" className="dropdown-cta" onClick={() => setMenuOpen(false)}>
-              Commander
-            </Link>
+            <Link to="/commande" className="dropdown-cta" onClick={() => setMenuOpen(false)}>Commander</Link>
           </div>
         </div>
       </div>

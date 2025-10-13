@@ -8,16 +8,13 @@ const api = axios.create({
   withCredentials: true,
 });
 
-// injecte toujours le token CLIENT (jamais le token admin)
 api.interceptors.request.use((config) => {
-  if (!config.headers?.Authorization) {
-    const t =
-      localStorage.getItem('clientToken') ||
-      sessionStorage.getItem('clientToken');
-    if (t) {
-      config.headers = { ...(config.headers || {}), Authorization: `Bearer ${t}` };
-    }
-  }
+  const t =
+    localStorage.getItem('clientToken') ||
+    sessionStorage.getItem('clientToken') ||
+    localStorage.getItem('token') ||
+    sessionStorage.getItem('token');
+  if (t) config.headers.Authorization = `Bearer ${t}`;
   return config;
 });
 
