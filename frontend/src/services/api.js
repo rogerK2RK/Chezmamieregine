@@ -8,9 +8,8 @@ const api = axios.create({
   withCredentials: true,
 });
 
-// ⚙️ Intercepteur: injecte toujours le token CLIENT si présent
+// injecte toujours le token CLIENT (jamais le token admin)
 api.interceptors.request.use((config) => {
-  // si l'appelant n’a pas déjà mis un Authorization, on l’ajoute
   if (!config.headers?.Authorization) {
     const t =
       localStorage.getItem('clientToken') ||

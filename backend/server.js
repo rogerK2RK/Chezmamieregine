@@ -7,73 +7,75 @@ const connectDB = require('./config/db');
 dotenv.config();
 const app = express();
 
-/* --- Configuration serveur --- */
-app.set('trust proxy', 1); // nécessaire derrière un proxy (ex: Render)
+/* --- Proxy --- */
+app.set('trust proxy', 1);
 
-/* --- CORS --- */
+/* --- CORS (prod + dev) --- */
 const DEFAULT_ALLOWED = [
   'http://localhost:5173',
   'http://localhost:3000',
-  'https://chezmamieregine.vercel.app' // domaine du front en prod
+  'https://chezmamieregine.vercel.app',
 ];
 const EXTRA = process.env.FRONT_ORIGIN ? [process.env.FRONT_ORIGIN] : [];
-const ALLOWED_ORIGINS = Array.from(new Set([...DEFAULT_ALLOWED, ...EXTRA]));
+const ALLOWED = new Set([...DEFAULT_ALLOWED, ...EXTRA]);
 
-app.use(cors({
-  origin: (origin, cb) => {
-    if (!origin || ALLOWED_ORIGINS.includes(origin)) return cb(null, true); // autorise origin connu ou null
-    cb(new Error(`CORS: origin non autorisé -> ${origin}`));
+const corsMw = cors({
+  origin(origin, cb) {
+    // autorise SSR/postman (origin null) + domaines listés
+    if (!origin || ALLOWED.has(origin)) return cb(null, true);
+    return cb(new Error(`CORS: origin non autorisé -> ${origin}`));
   },
-  credentials: true
-}));
+  credentials: true,
+  methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Authorization', 'Content-Type'],
+  optionsSuccessStatus: 204,
+});
 
-app.options('*', cors()); // gère les requêtes OPTIONS globales
+// applique CORS partout + fait varier sur Origin (cache)
+app.use((req, res, next) => { res.header('Vary', 'Origin'); next(); });
+app.use(corsMw);
 
-/* --- Middlewares --- */
-app.use(express.json()); // parse le JSON
-app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // sert les fichiers uploadés
+// répond explicitement aux preflight (important pour Render)
+app.options('*', corsMw);
+app.options('/api/*', corsMw, (_req, res) => res.sendStatus(204));
 
-/* --- Routes principales --- */
-// Auth admin + clients
+/* --- Parsers/Static --- */
+app.use(express.json());
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+/* --- Routes --- */
 app.use('/api/admin',          require('./routes/adminRoutes'));
 app.use('/api/admin/clients',  require('./routes/clientBackRoutes'));
 app.use('/api/auth',           require('./routes/clientAuthRoutes'));
-
-// Gestion du contenu
 app.use('/api/categories',     require('./routes/categoryRoutes'));
 app.use('/api/plats',          require('./routes/platRoutes'));
 app.use('/api/commandes',      require('./routes/commandeRoutes'));
 app.use('/api/uploads',        require('./routes/uploadRoutes'));
-
-// Commentaires
 app.use('/api/comments',       require('./routes/commentFrontRoutes'));
 app.use('/api/admin/comments', require('./routes/commentBackRoutes'));
+app.use('/api/public',         require('./routes/publicRoutes'));
 
-// Routes publiques
-app.use('/api/public', require('./routes/publicRoutes'));
+// ⚠️ place /api/me après CORS (déjà le cas) – ça marche aussi avec l’intercepteur Axios
+app.use('/api/me',             require('./routes/meRoutes'));
 
-// Routes user front
-app.use('/api/me', require('./routes/meRoutes'));
-
-/* --- Healthcheck --- */
+/* --- Health --- */
 app.get('/healthz', (_req, res) => res.json({ ok: true }));
 app.get('/api/health', (_req, res) => res.json({ ok: true }));
 
-/* --- Gestion des erreurs --- */
+/* --- 404 & erreurs --- */
 app.use((req, res, _next) => {
   res.status(404).json({ message: `Route introuvable: ${req.method} ${req.originalUrl}` });
 });
-
 app.use((err, _req, res, _next) => {
   console.error('API error:', err);
   res.status(err.status || 500).json({ message: err.message || 'Erreur serveur' });
 });
 
-/* --- Démarrage du serveur --- */
+/* --- Boot --- */
 const { ensureSuperAdmin } = require('./utils/initAdmin');
 (async () => {
-  await connectDB();          // connexion à MongoDB
-  await ensureSuperAdmin();   // crée un super admin si absent
+  await connectDB();
+  await ensureSuperAdmin();
   const PORT = process.env.PORT || 5000;
   app.listen(PORT, () => console.log(`🚀 API on http://localhost:${PORT}`));
 })();

@@ -148,12 +148,12 @@ export default function AdminPlats() {
           value={q}
           onChange={e => setQ(e.target.value)}
         />
-        <button onClick={() => navigate('/admin/plats/new')} className="btn-primary">
+        <button onClick={() => navigate('/admin/plats/new')} className="btn-primary-back">
           + Nouveau plat
         </button>
       </div>
 
-      {/* ✅ Barre d'actions groupées */}
+      {/* Barre d'actions groupées */}
       {selectedIds.size > 0 && (
         <div className="bulk-bar">
           <div>{selectedIds.size} sélectionné(s)</div>
