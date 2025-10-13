@@ -1,35 +1,24 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import api from '../../../services/api';
-import { useClientAuth } from '../../../context/ClientAuthContext.jsx';
 import './style.css';
 
 export default function AccountPage() {
-  const { token } = useClientAuth();
-  const headers = useMemo(
-    () => (token ? { Authorization: `Bearer ${token}` } : {}),
-    [token]
-  );
-
   const [form, setForm] = useState({ firstName: '', lastName: '', email: '', sex: 'other' });
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState('');
   const [ok, setOk] = useState('');
 
   useEffect(() => {
-    if (!token) {
-      setErr('Veuillez vous connecter pour accéder à votre compte.');
-      setLoading(false);
-      return;
-    }
     (async () => {
       try {
         setLoading(true);
-        const { data } = await api.get('/me', { headers });
+        setErr('');
+        const { data } = await api.get('/me'); // Authorization ajouté par l'intercepteur
         setForm({
-          firstName: data.firstName || '',
-          lastName: data.lastName || '',
-          email: data.email || '',
-          sex: data.sex || 'other',
+          firstName: data?.firstName || '',
+          lastName:  data?.lastName  || '',
+          email:     data?.email     || '',
+          sex:       data?.sex       || 'other',
         });
       } catch (e) {
         const msg = e?.response?.status === 401
@@ -40,19 +29,19 @@ export default function AccountPage() {
         setLoading(false);
       }
     })();
-  }, [token, headers]);
+  }, []);
 
   const submit = async (e) => {
     e.preventDefault();
     try {
       setOk('');
       setErr('');
-      const { data } = await api.put('/me', form, { headers });
+      const { data } = await api.put('/me', form); // Authorization ajouté par l’intercepteur
       setForm({
-        firstName: data.firstName || '',
-        lastName: data.lastName || '',
-        email: data.email || '',
-        sex: data.sex || 'other',
+        firstName: data?.firstName || '',
+        lastName:  data?.lastName  || '',
+        email:     data?.email     || '',
+        sex:       data?.sex       || 'other',
       });
       setOk('Profil mis à jour.');
     } catch (e) {

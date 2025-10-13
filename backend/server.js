@@ -1,28 +1,17 @@
-const express  = require('express');
-const cors     = require('cors');
-const dotenv   = require('dotenv');
-const path     = require('path');
+// server.js
+const express   = require('express');
+const cors      = require('cors');
+const dotenv    = require('dotenv');
+const path      = require('path');
 const connectDB = require('./config/db');
 
 dotenv.config();
 const app = express();
 
-/* --- Proxy --- */
+/* Proxy (Render/NGINX) */
 app.set('trust proxy', 1);
 
-// --- CORS global (sécurisé + tolérant) ---
-app.use((req, res, next) => {
-  const origin = req.headers.origin || '*';
-  res.header('Access-Control-Allow-Origin', origin);
-  res.header('Access-Control-Allow-Credentials', 'true');
-  res.header('Access-Control-Allow-Headers', 'Authorization, authorization, Content-Type');
-  res.header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
-  if (req.method === 'OPTIONS') return res.sendStatus(204); // préflight OK direct
-  next();
-});
-
-
-/* --- CORS (prod + dev) --- */
+/* --- CORS (dev + prod) --- */
 const DEFAULT_ALLOWED = [
   'http://localhost:5173',
   'http://localhost:3000',
@@ -33,41 +22,43 @@ const ALLOWED = new Set([...DEFAULT_ALLOWED, ...EXTRA]);
 
 const corsMw = cors({
   origin(origin, cb) {
-    // autorise SSR/postman (origin null) + domaines listés
+    // Autorise Postman/SSR (origin null) + domaines listés
     if (!origin || ALLOWED.has(origin)) return cb(null, true);
     return cb(new Error(`CORS: origin non autorisé -> ${origin}`));
   },
   credentials: true,
-  methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Authorization', 'authorization', 'Content-Type'],
+  methods: ['GET','HEAD','PUT','PATCH','POST','DELETE','OPTIONS'],
+  allowedHeaders: ['Authorization','authorization','Content-Type'],
   optionsSuccessStatus: 204,
 });
 
-// applique CORS partout + fait varier sur Origin (cache)
+// Important pour caches/proxies (Vary: Origin)
 app.use((req, res, next) => { res.header('Vary', 'Origin'); next(); });
 app.use(corsMw);
-
-// répond explicitement aux preflight (important pour Render)
+// Préflight explicite
 app.options('*', corsMw);
-app.options('/api/*', corsMw, (_req, res) => res.sendStatus(204));
 
 /* --- Parsers/Static --- */
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 /* --- Routes --- */
+// Admin
 app.use('/api/admin',          require('./routes/adminRoutes'));
 app.use('/api/admin/clients',  require('./routes/clientBackRoutes'));
+// Auth client
 app.use('/api/auth',           require('./routes/clientAuthRoutes'));
+// Métier
 app.use('/api/categories',     require('./routes/categoryRoutes'));
 app.use('/api/plats',          require('./routes/platRoutes'));
 app.use('/api/commandes',      require('./routes/commandeRoutes'));
 app.use('/api/uploads',        require('./routes/uploadRoutes'));
+// Commentaires
 app.use('/api/comments',       require('./routes/commentFrontRoutes'));
 app.use('/api/admin/comments', require('./routes/commentBackRoutes'));
+// Public
 app.use('/api/public',         require('./routes/publicRoutes'));
-
-// ⚠️ place /api/me après CORS (déjà le cas) – ça marche aussi avec l’intercepteur Axios
+// Profil client (/api/me)
 app.use('/api/me',             require('./routes/meRoutes'));
 
 /* --- Health --- */
