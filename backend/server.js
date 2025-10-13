@@ -10,6 +10,18 @@ const app = express();
 /* --- Proxy --- */
 app.set('trust proxy', 1);
 
+// --- CORS global (sécurisé + tolérant) ---
+app.use((req, res, next) => {
+  const origin = req.headers.origin || '*';
+  res.header('Access-Control-Allow-Origin', origin);
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Headers', 'Authorization, authorization, Content-Type');
+  res.header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
+  if (req.method === 'OPTIONS') return res.sendStatus(204); // préflight OK direct
+  next();
+});
+
+
 /* --- CORS (prod + dev) --- */
 const DEFAULT_ALLOWED = [
   'http://localhost:5173',
@@ -27,7 +39,7 @@ const corsMw = cors({
   },
   credentials: true,
   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Authorization', 'Content-Type'],
+  allowedHeaders: ['Authorization', 'authorization', 'Content-Type'],
   optionsSuccessStatus: 204,
 });
 
