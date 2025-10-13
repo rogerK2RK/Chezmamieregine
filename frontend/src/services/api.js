@@ -1,26 +1,11 @@
-// frontend/src/services/api.js
 import axios from 'axios';
 
 const root = (import.meta.env.VITE_API_URL || 'http://localhost:5000').replace(/\/$/, '');
-const baseURL = root.endsWith('/api') ? root : `${root}/api`;
+const baseURL = root.endsWith('/api') ? root : `${root}/api`; // <-- évite le /api en double
 
 const api = axios.create({
   baseURL,
-  withCredentials: false, // pas de cookie cross-site
-});
-
-// === Intercepteur: ajoute Authorization si token client présent ===
-api.interceptors.request.use((config) => {
-  const t =
-    localStorage.getItem('clientToken') ||
-    sessionStorage.getItem('clientToken');
-  if (t) {
-    config.headers = config.headers || {};
-    config.headers.Authorization = `Bearer ${t}`;
-  } else if (config.headers?.Authorization) {
-    delete config.headers.Authorization;
-  }
-  return config;
+  withCredentials: true,
 });
 
 export default api;
