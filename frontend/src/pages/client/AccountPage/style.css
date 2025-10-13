@@ -1,8 +1,7 @@
 .acc-container {
   max-width: 720px;
-  margin: 0 auto;
   padding: 15rem 16px 16px;
-  padding: 16px;
+  background-color: #73230d;
   color: #e5e7eb;
 }
 
