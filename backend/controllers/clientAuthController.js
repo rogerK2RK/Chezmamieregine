@@ -11,9 +11,10 @@ const Client = require('../models/Client');
  * - Ajoute { type: 'client' } pour distinguer des tokens admin
  */
 function signClientToken(id) {
-  const secret = process.env.JWT_CLIENT_SECRET || process.env.JWT_SECRET || 'dev_secret';
+  const secret = process.env.JWT_CLIENT_SECRET || process.env.JWT_SECRET;
   return jwt.sign({ id, type: 'client' }, secret, { expiresIn: '30d' });
 }
+
 
 // Inscription client
 exports.register = async (req, res) => {
