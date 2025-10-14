@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import api from "../../../services/api";
 import SafeImage from "../../../components/common/SafeImage";
 import "./style.css";
+import CommentSection from '../../../features/comments/CommentSection';
 
 export default function ProductDetailPage() {
   const { id } = useParams();
@@ -152,6 +153,7 @@ export default function ProductDetailPage() {
           </div>
         </div>
       </div>
+      <CommentSection platId={id} />
     </div>
   );
 }
