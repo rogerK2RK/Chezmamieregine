@@ -13,7 +13,7 @@ export default function AccountPage() {
       try {
         setLoading(true);
         setErr('');
-        const { data } = await api.get('/me'); // Authorization ajouté par l'intercepteur
+        const { data } = await api.get('/me');// Authorization ajouté par l'intercepteur
         setForm({
           firstName: data?.firstName || '',
           lastName:  data?.lastName  || '',

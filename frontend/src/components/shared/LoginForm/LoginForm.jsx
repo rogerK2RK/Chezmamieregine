@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../../services/api';
-import { useClientAuth } from '../../../context/ClientAuthContext.jsx'; // ⬅️ contexte client
+import { useClientAuth } from '../../../context/ClientAuthContext.jsx';
 import './style.css';
 
 export default function LoginForm() {
@@ -15,20 +15,26 @@ export default function LoginForm() {
     try {
       const res = await api.post('/auth/login', { email, password });
 
-      // 🚫 Empêche les comptes admin/superAdmin d’utiliser ce formulaire
+      // indispensable pour l'Authorization auto par l'intercepteur
+      localStorage.setItem('clientToken', res.data.token)
+
       if (['admin', 'superAdmin'].includes(res.data.role)) {
         alert('Accès refusé : utilisez /admin/login pour les comptes administrateurs.');
         return;
       }
 
-      // ✅ Session client (via contexte)
+      // construit un "name" lisible à partir du retour backend
+      const displayName = [res.data.firstName, res.data.lastName].filter(Boolean).join(' ');
+
+      ;
+
       login({
         token: res.data.token,
-        role: 'client',           // on force client côté front
-        name: res.data.name || ''
+        role: 'client',
+        name: displayName || res.data.email || '',
       });
 
-      navigate('/'); // redirection vers l'accueil
+      navigate('/');
     } catch (err) {
       alert('Erreur de connexion');
     }
@@ -38,7 +44,6 @@ export default function LoginForm() {
     <div className="connexion-container-content">
       <form className="form-connexion" onSubmit={handleLogin}>
         <h2>Connexion</h2>
-
         <div className="form-group">
           <label>Identifiant</label>
           <input
@@ -49,7 +54,6 @@ export default function LoginForm() {
             required
           />
         </div>
-
         <div className="form-group">
           <label>Mot de passe</label>
           <input
@@ -60,7 +64,6 @@ export default function LoginForm() {
             required
           />
         </div>
-
         <button className="btn-primary" type="submit">Se connecter</button>
       </form>
     </div>

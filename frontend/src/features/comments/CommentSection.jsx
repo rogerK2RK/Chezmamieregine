@@ -12,15 +12,15 @@ export default function CommentSection({ platId }) {
   const [rating, setRating] = useState(5);
   const [submitting, setSubmitting] = useState(false);
 
-  // connecté si clientToken présent (l’intercepteur mettra l’Authorization)
+  // connecté si clientToken présent (réactif)
   const isLogged = useMemo(() => {
-    return !!(
+    return Boolean(
       localStorage.getItem('clientToken') ||
       sessionStorage.getItem('clientToken')
     );
-  }, []);
+  }, [localStorage.getItem('clientToken'), sessionStorage.getItem('clientToken')]); // eslint-disable-line
 
-  // charge les commentaires du plat
+  // charge les commentaires du plat (public)
   useEffect(() => {
     let stop = false;
     (async () => {
@@ -29,7 +29,7 @@ export default function CommentSection({ platId }) {
         setErr('');
         const { data } = await api.get(`/comments/plat/${platId}`);
         if (!stop) setItems(Array.isArray(data) ? data : []);
-      } catch (e) {
+      } catch (_e) {
         if (!stop) setErr('Impossible de charger les commentaires.');
       } finally {
         if (!stop) setLoading(false);
@@ -41,16 +41,27 @@ export default function CommentSection({ platId }) {
   const submit = async (e) => {
     e.preventDefault();
     if (!text.trim()) return;
+
+    // 🔑 on lit le token ici pour être sûr d’avoir la dernière valeur
+    const t =
+      localStorage.getItem('clientToken') ||
+      sessionStorage.getItem('clientToken');
+
+    if (!t) {
+      setErr('Veuillez vous connecter pour commenter.');
+      return;
+    }
+
     try {
       setSubmitting(true);
       setErr('');
 
-      // POST /api/comments  (body: { platId, text, rating })
-      const { data } = await api.post('/comments', {
-        platId,
-        text: text.trim(),
-        rating: Number(rating) || 5,
-      });
+      // POST /api/comments (protégé)
+      const { data } = await api.post(
+        '/comments',
+        { platId, text: text.trim(), rating: Number(rating) || 5 },
+        { headers: { Authorization: `Bearer ${t}` } } // 👈 force l’en-tête
+      );
 
       // ajout optimiste en tête
       setItems(prev => [data, ...prev]);

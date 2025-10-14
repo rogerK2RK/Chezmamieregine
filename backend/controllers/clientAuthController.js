@@ -101,3 +101,62 @@ exports.login = async (req, res) => {
     res.status(500).json({ message: 'Erreur serveur' });
   }
 };
+
+// Récupérer le profil du client connecté
+exports.me = async (req, res) => {
+  try {
+    if (!req.client) return res.status(401).json({ message: 'Non autorisé' });
+
+    const c = req.client;
+    return res.json({
+      _id: c._id,
+      clientId: c.clientId,
+      firstName: c.firstName,
+      lastName: c.lastName,
+      sex: c.sex,
+      email: c.email,
+    });
+  } catch (e) {
+    console.error('ME client ERROR:', e);
+    return res.status(500).json({ message: 'Erreur serveur' });
+  }
+};
+
+// Mettre à jour le profil du client connecté
+exports.updateMe = async (req, res) => {
+  try {
+    if (!req.client) return res.status(401).json({ message: 'Non autorisé' });
+
+    const allowed = ['firstName', 'lastName', 'sex', 'email']; // champs éditables
+    for (const k of allowed) {
+      if (k in req.body) {
+        if (k === 'email') {
+          req.client.email = String(req.body.email).toLowerCase().trim();
+        } else {
+          req.client[k] = String(req.body[k]).trim();
+        }
+      }
+    }
+
+    // petite validation du sexe
+    if (req.body.sex && !['H', 'F', 'other'].includes(req.body.sex)) {
+      return res.status(400).json({ message: "Sexe invalide (H, F ou other)" });
+    }
+
+    const saved = await req.client.save();
+    return res.json({
+      _id: saved._id,
+      clientId: saved.clientId,
+      firstName: saved.firstName,
+      lastName: saved.lastName,
+      sex: saved.sex,
+      email: saved.email,
+    });
+  } catch (e) {
+    console.error('UPDATE ME client ERROR:', e);
+    if (e?.code === 11000 && e?.keyPattern?.email) {
+      return res.status(400).json({ message: 'Email déjà utilisé' });
+    }
+    return res.status(500).json({ message: 'Erreur serveur' });
+  }
+};
