@@ -140,7 +140,6 @@ hr {
 @media (min-width: 1024px) {
   .footer {
     padding: 6rem 13rem 13rem 13rem;
-    background-attachment: fixed;
     font-size: 1.2rem;
   }
 
