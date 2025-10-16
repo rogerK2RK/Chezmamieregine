@@ -15,7 +15,7 @@ export default function RegisterForm() {
       await api.post('/auth/register', {
         firstName,
         lastName,
-        sex,        // ⚠️ on envoie 'other' (pas 'A')
+        sex,
         email,
         password,
       });
@@ -37,7 +37,7 @@ export default function RegisterForm() {
   return (
     <div className="connexion-container-content">
       <form className="register-form" onSubmit={handleRegister}>
-        <h2>Inscription</h2>
+        <h1>Inscription</h1>
 
         <div className="form-group">
           <label>Sexe</label>

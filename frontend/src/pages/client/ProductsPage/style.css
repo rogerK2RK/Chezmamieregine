@@ -9,6 +9,12 @@
   text-align: center;
 }
 
+.products-container h1{
+  font-family: var(--font-body);
+  font-size: 2rem;
+  font-weight: 600;
+}
+
 .products-title {
   font-size: 2rem;
   font-weight: 700;

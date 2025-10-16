@@ -43,7 +43,7 @@ export default function LoginForm() {
   return (
     <div className="connexion-container-content">
       <form className="form-connexion" onSubmit={handleLogin}>
-        <h2>Connexion</h2>
+        <h1>Connexion</h1>
         <div className="form-group">
           <label>Identifiant</label>
           <input
