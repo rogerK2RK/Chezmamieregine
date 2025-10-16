@@ -39,7 +39,7 @@ export default function Header() {
       <div className="header-container">
         <div className="logo">
           <Link to="/">
-            <img src={logo} alt="Logo" className="logo-image" />
+            <img src={logo} alt="Logo chez mamie Régine" className="logo-image" />
           </Link>
         </div>
 

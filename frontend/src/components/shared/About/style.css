@@ -95,7 +95,7 @@
   }
 
   .section-text .btn-primary {
-    width: auto;
+    width: fit-content;
     margin: 1rem 0 0 0;
     font-size: 1.05rem;
     padding-inline: 22px;
@@ -135,6 +135,6 @@
   }
 
   .section-text .btn-primary {
-    width: 36%;
+    width: fit-content;
   }
 }

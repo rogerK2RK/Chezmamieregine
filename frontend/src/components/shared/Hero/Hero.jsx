@@ -28,17 +28,6 @@ export default function Hero() {
         }}>
       </div>
 
-      {/* <div className="bkgrd-carousel">
-        {images.map((src, i) => (
-          <img
-            key={i}
-            src={src}
-            alt={`plat ${i}`}
-            className={i === index ? "active" : ""}
-          />
-        ))}
-      </div> */}
-
       <div className="hero-content">
           <h1 className="title">Chez<br/> 
             Mamie Régine</h1>
@@ -48,8 +37,6 @@ export default function Hero() {
           </div>
       </div>
 
-      {/* <button onClick={prevSlide} className="prev">‹</button>
-      <button onClick={nextSlide} className="next">›</button> */}
     </div>
   );
 }

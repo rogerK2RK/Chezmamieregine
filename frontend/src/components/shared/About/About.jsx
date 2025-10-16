@@ -10,7 +10,7 @@ export default function ImageTextSlider() {
         <div className="section-image">
           <img
             src={imageapropos}
-            alt="Illustration"
+            alt="Lola et Régine à la RNS 2025"
           />
         </div>
 
