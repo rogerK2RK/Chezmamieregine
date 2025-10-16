@@ -299,9 +299,6 @@ button, a {
     }
 
     /* ta mise en page tablette/desktop existante */
-    .header { 
-        padding: 0.8rem 1rem; 
-    }
 
     .header-container { 
         flex-direction: row; 
@@ -336,10 +333,6 @@ button, a {
 /* Desktop (≥1024px) — tes valeurs d’origine */
 @media (min-width: 1024px) {
 
-    .header { 
-        padding: 1rem 0rem; 
-    }
-
     .header-container { 
         justify-content: space-around; 
     }
@@ -349,7 +342,7 @@ button, a {
     }
 
     .nav { 
-        gap: 2rem; 
+        gap: 5px; 
     }
 
     .menu {
