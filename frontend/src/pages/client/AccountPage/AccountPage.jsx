@@ -53,7 +53,7 @@ export default function AccountPage() {
   if (err && !ok)  return <div className="acc-container"><div className="acc-error">{err}</div></div>;
 
   return (
-    <div className="acc-container">
+    <main className="acc-container">
       <h1>Mon compte</h1>
 
       {ok && <div className="acc-success">{ok}</div>}
@@ -61,8 +61,9 @@ export default function AccountPage() {
 
       <form onSubmit={submit} className="acc-form">
         <div>
-          <label>Prénom</label>
+          <label htmlFor='prenom'>Prénom</label>
           <input
+            id='prenom'
             value={form.firstName}
             onChange={e => setForm(f => ({ ...f, firstName: e.target.value }))}
             className="acc-input"
@@ -71,8 +72,9 @@ export default function AccountPage() {
         </div>
 
         <div>
-          <label>Nom</label>
+          <label htmlFor='nom'>Nom</label>
           <input
+            id='nom'
             value={form.lastName}
             onChange={e => setForm(f => ({ ...f, lastName: e.target.value }))}
             className="acc-input"
@@ -81,8 +83,9 @@ export default function AccountPage() {
         </div>
 
         <div>
-          <label>Email</label>
+          <label htmlFor='email'>Email</label>
           <input
+            id='email'
             type="email"
             value={form.email}
             onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
@@ -92,8 +95,9 @@ export default function AccountPage() {
         </div>
 
         <div>
-          <label>Sexe</label>
+          <label htmlFor='sex'>Sexe</label>
           <select
+            id='sex'
             value={form.sex}
             onChange={e => setForm(f => ({ ...f, sex: e.target.value }))}
             className="acc-input"
@@ -108,6 +112,6 @@ export default function AccountPage() {
           <button type="submit" className="acc-btn-primary">Enregistrer</button>
         </div>
       </form>
-    </div>
+    </main>
   );
 }

@@ -139,7 +139,7 @@ export default function AdminPlats() {
   };
 
   return (
-    <div className="admin-page">
+    <main className="admin-page">
       {/* Barre de recherche + bouton créer */}
       <div className="toolbar">
         <input
@@ -255,6 +255,6 @@ export default function AdminPlats() {
           </table>
         </div>
       )}
-    </div>
+    </main>
   );
 }

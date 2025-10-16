@@ -93,7 +93,7 @@ export default function AdminUsers() {
   };
 
   return (
-    <div className="admin-page">
+    <main className="admin-page">
       <h1 className="title-spacing">Utilisateurs (back-office)</h1>
 
       {/* Barre d'action */}
@@ -221,6 +221,6 @@ export default function AdminUsers() {
           </div>
         </div>
       )}
-    </div>
+    </main>
   );
 }

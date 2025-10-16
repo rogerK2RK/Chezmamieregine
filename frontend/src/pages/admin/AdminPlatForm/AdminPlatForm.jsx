@@ -121,7 +121,7 @@ export default function AdminPlatForm() {
   if (loading) return <div>Chargement…</div>;
 
   return (
-    <div className="admin-page">
+    <main className="admin-page">
       <h1>{isEdit ? 'Éditer le plat' : 'Nouveau plat'}</h1>
 
       <form onSubmit={handleSubmit} className="form-grid">
@@ -206,6 +206,6 @@ export default function AdminPlatForm() {
           </button>
         </div>
       </form>
-    </div>
+    </main>
   );
 }

@@ -65,7 +65,7 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="login-box-all">
+    <main className="login-box-all">
       <div className="particles"></div>
 
       <form onSubmit={handleLogin} className="login-container">
@@ -124,6 +124,6 @@ export default function AdminLoginPage() {
           <Link className='link-back'>Mot de passe oublié</Link>
         </div>
       </form>
-    </div>
+    </main>
   );
 }

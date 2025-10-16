@@ -17,13 +17,13 @@ export default function AdminCommandes() {
   }, []);
 
   return (
-    <div>
+    <main>
       <h2>Gestion des Commandes</h2>
       <ul>
         {commandes.map((commande) => (
           <li key={commande._id}>Commande de {commande.user.name}</li>
         ))}
       </ul>
-    </div>
+    </main>
   );
 }

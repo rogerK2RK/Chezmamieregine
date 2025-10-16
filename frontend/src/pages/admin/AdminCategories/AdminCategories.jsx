@@ -125,7 +125,7 @@ export default function AdminCategories() {
   };
 
   return (
-    <div className="admin-page">
+    <main className="admin-page">
       <h1 className="h1-mb16">Catégories</h1>
 
       {/* Barre d’actions */}
@@ -247,6 +247,6 @@ export default function AdminCategories() {
           </div>
         </div>
       )}
-    </div>
+    </main>
   );
 }

@@ -7,12 +7,12 @@ import Cta from '../../components/shared/CTA/cta.jsx';
 import ContactForm from '../../components/shared/ContactForm/ContactForm.jsx';
 
 export default function HomePage() {
-  return <>
+  return <main>
     <Hero />
     <Apropos />
     <NosPlats />
     <CommentCaMarche />
     <Cta />
     <ContactForm />
-  </>;
+  </main>;
 }

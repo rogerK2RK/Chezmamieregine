@@ -86,7 +86,7 @@ export default function AdminComments() {
   };
 
   return (
-    <div className="admin-page">
+    <main className="admin-page">
       <h1>Commentaires</h1>
 
       <div className="filter-bar">
@@ -170,6 +170,6 @@ export default function AdminComments() {
           </div>
         </div>
       )}
-    </div>
+    </main>
   );
 }

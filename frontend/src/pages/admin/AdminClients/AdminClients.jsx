@@ -135,7 +135,7 @@ export default function AdminClients() {
   };
 
   return (
-    <div className="admin-page">
+    <main className="admin-page">
       {/* Barre d’actions */}
       <div className="admin-actions">
         <input
@@ -277,6 +277,6 @@ export default function AdminClients() {
           </div>
         </div>
       )}
-    </div>
+    </main>
   );
 }

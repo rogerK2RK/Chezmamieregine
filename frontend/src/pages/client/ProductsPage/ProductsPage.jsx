@@ -86,7 +86,7 @@ export default function ProductsPage() {
   };
 
   return (
-    <div className="products-container">
+    <main className="products-container">
       <h2>Nos plats</h2>
 
       {/* Boutons catégories */}
@@ -174,6 +174,6 @@ export default function ProductsPage() {
           )}
         </>
       )}
-    </div>
+    </main>
   );
 }

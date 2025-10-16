@@ -59,102 +59,104 @@ export default function ProductDetailPage() {
     return null;
 
   return (
-    <div className="pd-container">
-      <div className="pd-grid glass-card">
-        {/* ----------------- COLONNE GAUCHE : Image principale + vignettes ----------------- */}
-        <div className="pd-left">
-          <div className="pd-main-img">
-            {mainImage ? (
-              <SafeImage src={mainImage} alt={plat.name} className="pd-main-img-el" />
-            ) : (
-              <div className="pd-main-placeholder">🍽️</div>
+    <main>
+        <div className="pd-container">
+        <div className="pd-grid glass-card">
+          {/* ----------------- COLONNE GAUCHE : Image principale + vignettes ----------------- */}
+          <div className="pd-left">
+            <div className="pd-main-img">
+              {mainImage ? (
+                <SafeImage src={mainImage} alt={plat.name} className="pd-main-img-el" />
+              ) : (
+                <div className="pd-main-placeholder">🍽️</div>
+              )}
+            </div>
+
+            {images.length > 1 && (
+              <div className="pd-thumbs">
+                <button
+                  className="pd-thumb-nav"
+                  onClick={() => setActiveIndex(i => Math.max(0, i - 1))}
+                  aria-label="Précédent"
+                >
+                  ‹
+                </button>
+
+                <div className="pd-thumb-row">
+                  {images.map((src, i) => (
+                    <button
+                      key={src + i}
+                      className={`pd-thumb ${i === activeIndex ? "active" : ""}`}
+                      onClick={() => setActiveIndex(i)}
+                      aria-label={`Image ${i + 1}`}
+                    >
+                      <img src={src} alt={`${plat.name} ${i + 1}`} />
+                    </button>
+                  ))}
+                </div>
+
+                <button
+                  className="pd-thumb-nav"
+                  onClick={() => setActiveIndex(i => Math.min(images.length - 1, i + 1))}
+                  aria-label="Suivant"
+                >
+                  ›
+                </button>
+              </div>
             )}
           </div>
 
-          {images.length > 1 && (
-            <div className="pd-thumbs">
+          {/* ----------------- COLONNE DROITE : Fiche produit ----------------- */}
+          <div className="pd-card">
+            <div className="pd-header">
+              <h3 className="pd-title">{plat.name}</h3>
+              <div className="pd-price">{Number(plat.price ?? 0).toFixed(2)}€</div>
+            </div>
+
+            <div className="pd-rating">
+              <Stars value={rating} />
+              <span className="pd-rating-text">{rating}/5</span>
+            </div>
+
+            {plat.description && (
+              <section className="pd-section">
+                <h3>Description</h3>
+                <p>{plat.description}</p>
+              </section>
+            )}
+
+            {ingredients && (
+              <section className="pd-section">
+                <h3>Ingrédients</h3>
+                <p>{ingredients}</p>
+              </section>
+            )}
+
+            {sideDishes && (
+              <section className="pd-section">
+                <h3>Accompagnement</h3>
+                <p>{sideDishes}</p>
+              </section>
+            )}
+
+            <div className="pd-actions">
               <button
-                className="pd-thumb-nav"
-                onClick={() => setActiveIndex(i => Math.max(0, i - 1))}
-                aria-label="Précédent"
+                className="pd-btn-order"
+                disabled={plat.isAvailable === false}
+                title={plat.isAvailable === false ? "Indisponible" : "Commander"}
               >
-                ‹
+                Commander
               </button>
 
-              <div className="pd-thumb-row">
-                {images.map((src, i) => (
-                  <button
-                    key={src + i}
-                    className={`pd-thumb ${i === activeIndex ? "active" : ""}`}
-                    onClick={() => setActiveIndex(i)}
-                    aria-label={`Image ${i + 1}`}
-                  >
-                    <img src={src} alt={`${plat.name} ${i + 1}`} />
-                  </button>
-                ))}
-              </div>
-
-              <button
-                className="pd-thumb-nav"
-                onClick={() => setActiveIndex(i => Math.min(images.length - 1, i + 1))}
-                aria-label="Suivant"
-              >
-                ›
+              <button className="pd-btn-ghost" onClick={() => navigate(-1)}>
+                ← Retour
               </button>
             </div>
-          )}
-        </div>
-
-        {/* ----------------- COLONNE DROITE : Fiche produit ----------------- */}
-        <div className="pd-card">
-          <div className="pd-header">
-            <h3 className="pd-title">{plat.name}</h3>
-            <div className="pd-price">{Number(plat.price ?? 0).toFixed(2)}€</div>
-          </div>
-
-          <div className="pd-rating">
-            <Stars value={rating} />
-            <span className="pd-rating-text">{rating}/5</span>
-          </div>
-
-          {plat.description && (
-            <section className="pd-section">
-              <h3>Description</h3>
-              <p>{plat.description}</p>
-            </section>
-          )}
-
-          {ingredients && (
-            <section className="pd-section">
-              <h3>Ingrédients</h3>
-              <p>{ingredients}</p>
-            </section>
-          )}
-
-          {sideDishes && (
-            <section className="pd-section">
-              <h3>Accompagnement</h3>
-              <p>{sideDishes}</p>
-            </section>
-          )}
-
-          <div className="pd-actions">
-            <button
-              className="pd-btn-order"
-              disabled={plat.isAvailable === false}
-              title={plat.isAvailable === false ? "Indisponible" : "Commander"}
-            >
-              Commander
-            </button>
-
-            <button className="pd-btn-ghost" onClick={() => navigate(-1)}>
-              ← Retour
-            </button>
           </div>
         </div>
+        <CommentSection platId={id} />
       </div>
-      <CommentSection platId={id} />
-    </div>
+    </main>
   );
 }
 
