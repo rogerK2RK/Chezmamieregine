@@ -117,9 +117,15 @@
 
   .hero-content {
     position: relative;
-    top: 25%;
-    left: 10%;
-    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    height: 100%;
+    padding: 0 5rem;
     align-items: flex-start;
     text-align: left;
   }
