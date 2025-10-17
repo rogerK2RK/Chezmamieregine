@@ -1,36 +1,47 @@
 const express = require('express');
 const router = express.Router();
-const { adminProtect } = require('../middleware/adminAuthMiddleware'); // Vérifie le token admin
-const { authorizeRoles } = require('../middleware/roleMiddleware'); // Vérifie les rôles autorisés
-const ctrl = require('../controllers/commentBackController'); // Contrôleur des commentaires côté admin
+const { adminProtect } = require('../middleware/adminAuthMiddleware');
+const { authorizeRoles } = require('../middleware/roleMiddleware');
+const ctrl = require('../controllers/commentBackController');
 
-// Liste ou recherche des commentaires (back-office)
-router.get('/',
+// ✅ Liste des commentaires (admin)
+router.get(
+  '/',
   adminProtect,
   authorizeRoles('admin', 'superAdmin', 'owner'),
   ctrl.list
 );
 
-// Répondre à un commentaire (staff/admin)
-router.post('/:id/reply',
+// ✅ Répondre à un commentaire (staff/admin)
+router.patch(
+  '/:id/reply',
   adminProtect,
   authorizeRoles('admin', 'superAdmin', 'owner'),
   ctrl.reply
 );
 
-// Modifier la visibilité d’un commentaire (masquer/afficher)
-router.patch('/:id/visibility',
+// ✅ Masquer un commentaire
+router.patch(
+  '/:id/hide',
   adminProtect,
   authorizeRoles('admin', 'superAdmin', 'owner'),
-  ctrl.setVisibility
+  ctrl.hide
 );
 
-// Supprimer un commentaire (modération)
-router.delete('/:id',
+// ✅ Afficher (démasquer) un commentaire
+router.patch(
+  '/:id/unhide',
+  adminProtect,
+  authorizeRoles('admin', 'superAdmin', 'owner'),
+  ctrl.unhide
+);
+
+// ✅ Supprimer un commentaire
+router.delete(
+  '/:id',
   adminProtect,
   authorizeRoles('admin', 'superAdmin', 'owner'),
   ctrl.remove
 );
 
-// Exporte le routeur
 module.exports = router;
