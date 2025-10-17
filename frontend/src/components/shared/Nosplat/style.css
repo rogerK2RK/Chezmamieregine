@@ -204,7 +204,7 @@
    =========================== */
 @media (min-width: 1024px) {
   .nosplats-container {
-    padding: 3rem 13rem;
+    padding: 3rem 5rem;
   }
 
   .nosplats-container::before {

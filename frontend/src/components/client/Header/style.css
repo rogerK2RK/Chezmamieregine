@@ -41,7 +41,7 @@ button, a {
     justify-content: space-between;
     align-items: center;
     gap: 0.6rem;
-    margin: 15px;
+    margin: 15px 5%;
 }
 
 .logo-image {
