@@ -140,16 +140,16 @@ export default function ProductDetailPage() {
             )}
 
             <div className="pd-actions">
+              <button className="pd-btn-ghost" onClick={() => navigate(-1)}>
+                ← Retour
+              </button>
+
               <button
                 className="pd-btn-order"
                 disabled={plat.isAvailable === false}
                 title={plat.isAvailable === false ? "Indisponible" : "Commander"}
               >
                 Commander
-              </button>
-
-              <button className="pd-btn-ghost" onClick={() => navigate(-1)}>
-                ← Retour
               </button>
             </div>
           </div>
