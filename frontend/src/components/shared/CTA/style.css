@@ -57,7 +57,7 @@
    =========================== */
 @media (min-width: 768px) {
   .cta-container {
-    padding: 4rem 3rem;
+    padding: 4rem 5%;
   }
 
   .box {
@@ -94,7 +94,7 @@
    =========================== */
 @media (min-width: 1024px) {
   .cta-container {
-    padding: 6rem 13rem;
+    padding: 6rem 5%;
   }
 
   .box {

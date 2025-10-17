@@ -100,7 +100,7 @@ hr {
    =========================== */
 @media (min-width: 768px) {
   .footer {
-    padding: 4rem 3rem 6rem 3rem;
+    padding: 4rem 5% 6rem 5%;
     font-size: 1.05rem;
   }
 
@@ -139,7 +139,7 @@ hr {
    =========================== */
 @media (min-width: 1024px) {
   .footer {
-    padding: 6rem 13rem 13rem 13rem;
+    padding: 6rem 5% 13rem 5%;
     font-size: 1.2rem;
   }
 

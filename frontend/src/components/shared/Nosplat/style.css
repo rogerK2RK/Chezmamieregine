@@ -170,7 +170,7 @@
    =========================== */
 @media (min-width: 768px) {
   .nosplats-container { 
-    padding: 3rem 3rem; 
+    padding: 3rem 5%; 
   }
 
   .nosplats-title { 
@@ -204,7 +204,7 @@
    =========================== */
 @media (min-width: 1024px) {
   .nosplats-container {
-    padding: 3rem 5rem;
+    padding: 3rem 5%;
   }
 
   .nosplats-container::before {

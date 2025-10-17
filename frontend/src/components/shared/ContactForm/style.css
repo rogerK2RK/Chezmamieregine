@@ -110,7 +110,7 @@
    =========================== */
 @media (min-width: 768px) {
   .contact-container {
-    padding: 5rem 3rem;
+    padding: 5rem 5%;
   }
 
   .contact-container h2 {
@@ -142,7 +142,7 @@
    =========================== */
 @media (min-width: 1024px) {
   .contact-container {
-    padding: 8rem 13rem;
+    padding: 8rem 5%;
     background-attachment: fixed;
   }
 
