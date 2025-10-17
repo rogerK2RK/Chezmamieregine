@@ -125,7 +125,7 @@
     bottom: 0;
     right: 0;
     height: 100%;
-    padding: 0 10%;
+    padding: 0 5%;
     align-items: flex-start;
     text-align: left;
   }
@@ -144,7 +144,7 @@
   }
 
   .hero-content-scd {
-    width: 50%;
+    width: 100%;
   }
 
   .hero-content-scd .btn-primary {
