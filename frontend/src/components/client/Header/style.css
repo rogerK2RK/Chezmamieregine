@@ -334,7 +334,7 @@ button, a {
 @media (min-width: 1024px) {
 
     .header-container { 
-        justify-content: space-around; 
+        justify-content: space-between; 
     }
 
     .logo-image { 
