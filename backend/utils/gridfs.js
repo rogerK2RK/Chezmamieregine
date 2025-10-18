@@ -8,7 +8,7 @@ mongoose.connection.once('open', () => {
   bucket = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
     bucketName: 'uploads', // collections: uploads.files & uploads.chunks
   });
-  console.log('✅ GridFS bucket prêt:', bucket.s.namespace);
+  console.log('✅ GridFS bucket prêt:', mongoose.connection.db.databaseName + '.uploads');
 });
 
 /**

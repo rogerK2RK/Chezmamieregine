@@ -13,6 +13,9 @@ apiAdmin.interceptors.request.use((config) => {
   const headers = authHeaderAdmin();
   if (headers?.Authorization) {
     config.headers = { ...(config.headers || {}), ...headers };
+    if(import.meta.env.DEV){
+      console.log('[REQ] POST/GET', config.url, 'Auth?', !!headers.Authorization);
+    }
   }
   return config;
 });
