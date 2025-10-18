@@ -17,7 +17,7 @@ export default function AdminImageUploader({ value = [], onChange }) {
       const fd = new FormData();
       acceptedFiles.forEach(f => fd.append('files', f));
       const { data } = await apiAdmin.post('/uploads', fd, {
-        headers: { ...authHeaderAdmin(), 'Content-Type': 'multipart/form-data' }
+        headers: { ...authHeaderAdmin() }
       });
       const newUrls = (data.files || []).map(f => f.url);
       onChange?.([...(value || []), ...newUrls]);
