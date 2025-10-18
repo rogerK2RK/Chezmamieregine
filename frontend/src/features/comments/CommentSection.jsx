@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import api from '../../services/api';
 import './style.css';
 
@@ -12,15 +12,31 @@ export default function CommentSection({ platId }) {
   const [rating, setRating] = useState(5);
   const [submitting, setSubmitting] = useState(false);
 
-  // connecté si clientToken présent (réactif)
-  const isLogged = useMemo(() => {
-    return Boolean(
-      localStorage.getItem('clientToken') ||
-      sessionStorage.getItem('clientToken')
-    );
-  }, [localStorage.getItem('clientToken'), sessionStorage.getItem('clientToken')]); // eslint-disable-line
+  // connecté si clientToken présent (réactif via l’événement 'storage')
+  const [isLogged, setIsLogged] = useState(
+    !!(localStorage.getItem('clientToken') || sessionStorage.getItem('clientToken'))
+  );
+  useEffect(() => {
+    const onStorage = () =>
+      setIsLogged(!!(localStorage.getItem('clientToken') || sessionStorage.getItem('clientToken')));
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
+  }, []);
 
-  // charge les commentaires du plat (public)
+  // util: (re)charger les commentaires du plat (public)
+  const load = async () => {
+    try {
+      setLoading(true);
+      setErr('');
+      const { data } = await api.get(`/comments/plat/${platId}`);
+      setItems(Array.isArray(data) ? data : []);
+    } catch (_e) {
+      setErr('Impossible de charger les commentaires.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     let stop = false;
     (async () => {
@@ -35,17 +51,18 @@ export default function CommentSection({ platId }) {
         if (!stop) setLoading(false);
       }
     })();
-    return () => { stop = true; };
+    return () => {
+      stop = true;
+    };
   }, [platId]);
 
   const submit = async (e) => {
     e.preventDefault();
     if (!text.trim()) return;
 
-    // 🔑 on lit le token ici pour être sûr d’avoir la dernière valeur
+    // 🔑 lire le token au moment du submit
     const t =
-      localStorage.getItem('clientToken') ||
-      sessionStorage.getItem('clientToken');
+      localStorage.getItem('clientToken') || sessionStorage.getItem('clientToken');
 
     if (!t) {
       setErr('Veuillez vous connecter pour commenter.');
@@ -60,22 +77,44 @@ export default function CommentSection({ platId }) {
       const { data } = await api.post(
         '/comments',
         { platId, text: text.trim(), rating: Number(rating) || 5 },
-        { headers: { Authorization: `Bearer ${t}` } } // 👈 force l’en-tête
+        { headers: { Authorization: `Bearer ${t}` } }
       );
 
-      // ajout optimiste en tête
-      setItems(prev => [data, ...prev]);
+      // ajout optimiste en tête (staffReply vide au départ)
+      setItems((prev) => [
+        {
+          ...data,
+          staffReply: data?.staffReply || '',
+          createdAt: data?.createdAt || new Date().toISOString(),
+        },
+        ...prev,
+      ]);
+
       setText('');
       setRating(5);
+
+      // (optionnel mais conseillé) — refetch pour aligner avec le back (populate, tri, etc.)
+      load();
     } catch (e) {
-      const msg = e?.response?.status === 401
-        ? 'Veuillez vous connecter pour commenter.'
-        : (e?.response?.data?.message || 'Commentaire impossible.');
+      const msg =
+        e?.response?.status === 401
+          ? 'Veuillez vous connecter pour commenter.'
+          : e?.response?.data?.message || 'Commentaire impossible.';
       setErr(msg);
     } finally {
       setSubmitting(false);
     }
   };
+
+  // helpers d’affichage
+  const fmtDate = (d) => {
+    try {
+      return new Date(d || Date.now()).toLocaleString();
+    } catch {
+      return '';
+    }
+  };
+  const stars = (n) => '★'.repeat(Math.max(1, Math.min(5, Number(n) || 5)));
 
   return (
     <section className="cmt-section">
@@ -131,18 +170,43 @@ export default function CommentSection({ platId }) {
 
           {/* Liste */}
           <ul className="cmt-list">
-            {items.map((c) => (
-              <li key={c._id} className="cmt-item">
-                <div className="cmt-head">
-                  <strong className="cmt-author">{c.authorName || 'Client'}</strong>
-                  <span className="cmt-rating">{'★'.repeat(c.rating || 5)}</span>
-                </div>
-                <p className="cmt-text">{c.text}</p>
-                <div className="cmt-meta">
-                  {new Date(c.createdAt || Date.now()).toLocaleString()}
-                </div>
-              </li>
-            ))}
+            {items.map((c) => {
+              const reply = c.staffReply || c.adminReply || ''; // compat
+              const replyAt = c.staffReplyAt;
+              const replyBy =
+                typeof c.staffReplyBy === 'object' && c.staffReplyBy !== null
+                  ? `${c.staffReplyBy.firstName || ''} ${c.staffReplyBy.lastName || ''}`.trim() ||
+                    c.staffReplyBy.email ||
+                    ''
+                  : '';
+
+              return (
+                <li key={c._id} className="cmt-item">
+                  <div className="cmt-head">
+                    <strong className="cmt-author">
+                      {c.authorName || 'Client'}
+                    </strong>
+                    <span className="cmt-rating">{stars(c.rating)}</span>
+                  </div>
+
+                  <p className="cmt-text">{c.text}</p>
+
+                  <div className="cmt-meta">{fmtDate(c.createdAt)}</div>
+
+                  {/* Réponse de l’équipe si disponible */}
+                  {!!reply && (
+                    <div className="cmt-reply">
+                      <div className="cmt-reply-head">
+                        Réponse de l’équipe
+                        {replyBy ? ` — ${replyBy}` : ''}
+                        {replyAt ? ` · ${fmtDate(replyAt)}` : ''}
+                      </div>
+                      <p className="cmt-reply-text">{reply}</p>
+                    </div>
+                  )}
+                </li>
+              );
+            })}
             {items.length === 0 && (
               <li className="cmt-empty">Aucun commentaire pour l’instant.</li>
             )}
