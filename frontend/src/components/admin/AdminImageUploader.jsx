@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import api from '../../services/api';
+import apiAdmin from '../../services/apiAdmin';
 import authHeaderAdmin from '../../services/authHeaderAdmin';
 import './style.css';
 
@@ -16,7 +16,7 @@ export default function AdminImageUploader({ value = [], onChange }) {
     try {
       const fd = new FormData();
       acceptedFiles.forEach(f => fd.append('files', f));
-      const { data } = await api.post('/uploads', fd, {
+      const { data } = await apiAdmin.post('/uploads', fd, {
         headers: { ...authHeaderAdmin(), 'Content-Type': 'multipart/form-data' }
       });
       const newUrls = (data.files || []).map(f => f.url);
