@@ -54,20 +54,22 @@ router.post(
               },
             });
 
+            // Si erreur pendant le stream
             uploadStream.on('error', reject);
-            uploadStream.on('finish', (file) => {
-              // file contient _id, length, chunkSize, uploadDate, filename, metadata, contentType
+
+            // ✅ Correction ici : plus de paramètre (file), on lit uploadStream.id
+            uploadStream.on('finish', () => {
+              const fileId = uploadStream.id; // _id du fichier GridFS
               resolve({
-                id: file._id.toString(),
-                filename: file.filename,
-                size: file.length,
-                mimetype: file.contentType,
-                // URL pour afficher/télécharger
-                url: `${req.protocol}://${req.get('host')}/api/uploads/${file._id.toString()}`,
+                id: fileId.toString(),
+                filename,
+                size: f.size,
+                mimetype: f.mimetype,
+                url: `${req.protocol}://${req.get('host')}/api/uploads/${fileId.toString()}`,
               });
             });
 
-            // on envoie le buffer en une fois
+            // On écrit le buffer directement
             uploadStream.end(f.buffer);
           });
         })
