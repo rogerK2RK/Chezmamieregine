@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import api from '../../../services/api'; 
+import api from '../../../services/api';
 import './style.css';
 
 const PAGE_SIZE = 8;
@@ -17,19 +17,24 @@ export default function ProductsPage() {
   const [page, setPage] = useState(1);
   const [errMsg, setErrMsg] = useState('');
 
+  // 👇 catégorie courante (objet complet) en fonction du slug
+  const currentCat = useMemo(
+    () => (slug ? cats.find((c) => c.slug === slug) || null : null),
+    [slug, cats]
+  );
+
   // 1) Catégories publiques
   useEffect(() => {
     (async () => {
       try {
         setLoadingCats(true);
         setErrMsg('');
-        // bon endpoint public
         const { data } = await api.get('/public/categories');
         const list = Array.isArray(data) ? data : [];
         setCats(list);
 
         if (slug) {
-          const found = list.find(c => c.slug === slug);
+          const found = list.find((c) => c.slug === slug);
           if (found) setActiveCat(found._id);
           else {
             setActiveCat(null);
@@ -55,7 +60,6 @@ export default function ProductsPage() {
         setErrMsg('');
         setPage(1);
 
-        // bon endpoint public
         const url = activeCat
           ? `/public/plats?category=${activeCat}`
           : `/public/plats`;
@@ -72,14 +76,39 @@ export default function ProductsPage() {
     })();
   }, [activeCat]);
 
-  // 3) pagination front
+  // 3) META SEO dynamiques (titre + description)
+  useEffect(() => {
+    const baseTitle = 'Nos plats malgaches – Chez Mamie Régine';
+    const baseDesc =
+      'Découvrez tous nos plats malgaches faits maison, disponibles à la commande chez Mamie Régine.';
+
+    const title = currentCat
+      ? `${currentCat.name} – Plats malgaches | Chez Mamie Régine`
+      : baseTitle;
+
+    const desc = currentCat
+      ? `Découvrez les plats de la catégorie "${currentCat.name}" chez Mamie Régine : spécialités malgaches faites maison.`
+      : baseDesc;
+
+    document.title = title;
+
+    let metaDesc = document.querySelector("meta[name='description']");
+    if (!metaDesc) {
+      metaDesc = document.createElement('meta');
+      metaDesc.setAttribute('name', 'description');
+      document.head.appendChild(metaDesc);
+    }
+    metaDesc.setAttribute('content', desc);
+  }, [currentCat]);
+
+  // 4) pagination front
   const pageCount = Math.max(1, Math.ceil(plats.length / PAGE_SIZE));
   const currentPageItems = useMemo(() => {
     const start = (page - 1) * PAGE_SIZE;
     return plats.slice(start, start + PAGE_SIZE);
   }, [plats, page]);
 
-  // 4) navigation catégorie
+  // 5) navigation catégorie
   const goCat = (c) => {
     if (!c) navigate('/produits');
     else navigate(`/produits/${c.slug}`);
@@ -97,15 +126,16 @@ export default function ProductsPage() {
         >
           Tous
         </button>
-        {!loadingCats && cats.map(c => (
-          <button
-            key={c._id}
-            onClick={() => goCat(c)}
-            className={`cat-btn ${slug === c.slug ? 'active' : ''}`}
-          >
-            {c.name}
-          </button>
-        ))}
+        {!loadingCats &&
+          cats.map((c) => (
+            <button
+              key={c._id}
+              onClick={() => goCat(c)}
+              className={`cat-btn ${slug === c.slug ? 'active' : ''}`}
+            >
+              {c.name}
+            </button>
+          ))}
       </div>
 
       {/* Erreur globale éventuelle */}
@@ -120,13 +150,16 @@ export default function ProductsPage() {
             <div className="no-results">Aucun plat dans cette catégorie.</div>
           ) : (
             <div className="products-grid">
-             {currentPageItems.map(p => (
+              {currentPageItems.map((p) => (
                 <article
                   key={p._id}
                   className="product-card is-clickable"
                   onClick={() => navigate(`/produit/${p._id}`)}
                   tabIndex={0}
-                  onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && navigate(`/produit/${p._id}`)}
+                  onKeyDown={(e) =>
+                    (e.key === 'Enter' || e.key === ' ') &&
+                    navigate(`/produit/${p._id}`)
+                  }
                   role="button"
                   aria-label={`Ouvrir ${p.name}`}
                 >
@@ -139,8 +172,18 @@ export default function ProductsPage() {
                   </div>
                   <h3>{p.name}</h3>
                   <p className="desc">{p.description || ''}</p>
-                  <p className="price">{Number(p.price ?? 0).toFixed(2)} €</p>
-                  <button className='btn-primary' onClick={(e) => { e.stopPropagation(); navigate(`/produit/${p._id}`); }}>Voir le plat</button>
+                  <p className="price">
+                    {Number(p.price ?? 0).toFixed(2)} €
+                  </p>
+                  <button
+                    className="btn-primary"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigate(`/produit/${p._id}`);
+                    }}
+                  >
+                    Voir le plat
+                  </button>
                 </article>
               ))}
             </div>
@@ -151,7 +194,7 @@ export default function ProductsPage() {
             <div className="pagination">
               <button
                 disabled={page === 1}
-                onClick={() => setPage(p => Math.max(1, p - 1))}
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
               >
                 ‹
               </button>
@@ -166,7 +209,7 @@ export default function ProductsPage() {
               ))}
               <button
                 disabled={page === pageCount}
-                onClick={() => setPage(p => Math.min(pageCount, p + 1))}
+                onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
               >
                 ›
               </button>

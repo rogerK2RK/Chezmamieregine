@@ -1,37 +1,34 @@
+// frontend/src/pages/LoginPage/LoginPage.jsx (ou équivalent)
 import React, { useEffect } from 'react';
 import LoginForm from '../../components/shared/LoginForm/LoginForm.jsx';
 
 export default function LoginPage() {
-
   useEffect(() => {
-    // ---- MÉTADONNÉES ----
-    document.title = "Connexion | Chez Mamie Régine";
+    console.log('LoginPage useEffect META'); // 🔍 pour vérifier que ça se déclenche
 
-    // Meta description
-    const metaDesc = document.querySelector('meta[name="description"]');
-    if (metaDesc) {
-      metaDesc.setAttribute(
-        "content",
-        "Connectez-vous à votre espace client Chez Mamie Régine pour suivre vos commandes et profiter d’une expérience personnalisée."
-      );
-    } else {
-      const m = document.createElement('meta');
-      m.name = "description";
-      m.content =
-        "Connectez-vous à votre espace client Chez Mamie Régine pour suivre vos commandes et profiter d’une expérience personnalisée.";
-      document.head.appendChild(m);
-    }
+    // Title
+    document.title = 'Connexion | Chez Mamie Régine';
 
-    // Meta robots
-    const metaRobots = document.querySelector('meta[name="robots"]');
-    if (metaRobots) {
-      metaRobots.setAttribute("content", "index, follow");
-    } else {
-      const r = document.createElement('meta');
-      r.name = "robots";
-      r.content = "index, follow";
-      document.head.appendChild(r);
+    // Description
+    let metaDesc = document.querySelector('meta[name="description"]');
+    if (!metaDesc) {
+      metaDesc = document.createElement('meta');
+      metaDesc.name = 'description';
+      document.head.appendChild(metaDesc);
     }
+    metaDesc.setAttribute(
+      'content',
+      "Connectez-vous à votre espace client Chez Mamie Régine pour suivre vos commandes et gérer votre compte."
+    );
+
+    // (optionnel) robots
+    let metaRobots = document.querySelector('meta[name="robots"]');
+    if (!metaRobots) {
+      metaRobots = document.createElement('meta');
+      metaRobots.name = 'robots';
+      document.head.appendChild(metaRobots);
+    }
+    metaRobots.setAttribute('content', 'noindex, nofollow');
   }, []);
 
   return (
