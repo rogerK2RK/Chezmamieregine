@@ -7,11 +7,17 @@ import './style.css';
 export default function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [feedback, setFeedback] = useState('');
+  const [feedbackType, setFeedbackType] = useState(null); // "success" | "error" | null
+
   const { login } = useClientAuth();
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setFeedback('');
+    setFeedbackType(null);
+
     try {
       const res = await api.post('/auth/login', { email, password });
 
@@ -19,7 +25,8 @@ export default function LoginForm() {
       localStorage.setItem('clientToken', res.data.token);
 
       if (['admin', 'superAdmin'].includes(res.data.role)) {
-        alert('Accès refusé : utilisez /admin/login pour les comptes administrateurs.');
+        setFeedbackType('error');
+        setFeedback('Accès refusé : utilisez la connexion administrateur pour ce compte.');
         return;
       }
 
@@ -33,14 +40,38 @@ export default function LoginForm() {
         name: displayName || res.data.email || '',
       });
 
-      navigate('/');
+      setFeedbackType('success');
+      setFeedback('Connexion réussie, redirection en cours...');
+
+      // petite redirection après un court délai pour laisser voir le message
+      setTimeout(() => {
+        navigate('/');
+      }, 800);
     } catch (err) {
-      alert('Erreur de connexion');
+      console.error('[LOGIN ERROR]', err?.response?.data || err);
+      const msg =
+        err?.response?.data?.message ||
+        'Erreur de connexion, vérifiez vos identifiants.';
+      setFeedbackType('error');
+      setFeedback(msg);
     }
   };
 
   return (
     <div className="connexion-container-content">
+      {/* POPUP / BANDEAU DE FEEDBACK */}
+      {feedback && (
+        <div
+          className={`feedback-banner ${
+            feedbackType === 'error' ? 'feedback-error' : 'feedback-success'
+          }`}
+          role="status"
+          aria-live="polite"
+        >
+          {feedback}
+        </div>
+      )}
+
       <form
         className="form-connexion"
         onSubmit={handleLogin}

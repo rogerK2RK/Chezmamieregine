@@ -107,3 +107,25 @@
     font-size: 2rem;
   }
 }
+
+
+/*Pop up message connexion*/
+.feedback-banner {
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.feedback-success {
+  background-color: #e6ffed;
+  color: #046c4e;
+  border: 1px solid #9ae6b4;
+}
+
+.feedback-error {
+  background-color: #ffe6e6;
+  color: #b00020;
+  border: 1px solid #feb2b2;
+}
