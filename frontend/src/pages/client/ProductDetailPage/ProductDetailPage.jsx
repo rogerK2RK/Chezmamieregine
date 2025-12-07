@@ -129,7 +129,7 @@ export default function ProductDetailPage() {
 
   return (
     <main>
-      <div className="pd-container">
+      <article className="pd-container">
         <div className="pd-grid glass-card">
           {/* ----------------- COLONNE GAUCHE : Image principale + vignettes ----------------- */}
           <div className="pd-left">
@@ -223,18 +223,30 @@ export default function ProductDetailPage() {
                 ← Retour
               </button>
 
-              <button
-                className="pd-btn-order"
-                disabled={plat.isAvailable === false}
-                title={plat.isAvailable === false ? "Indisponible" : "Commander"}
-              >
-                Commander
-              </button>
+              {plat.isAvailable === false ? (
+                <button
+                  className="pd-btn-order"
+                  disabled
+                  title="Indisponible"
+                  aria-label="Plat indisponible"
+                >
+                  Indisponible
+                </button>
+              ) : (
+                <a
+                  href="tel:0668347755"
+                  className="pd-btn-order"
+                  title="Commander par téléphone"
+                  aria-label={`Appeler pour commander le plat ${plat.name}`}
+                >
+                  Commander
+                </a>
+              )}
             </div>
           </div>
         </div>
         <CommentSection platId={id} />
-      </div>
+      </article>
     </main>
   );
 }
