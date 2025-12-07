@@ -6,7 +6,6 @@ import './style.css';
 import { Link } from 'react-router-dom';
 import logoCmr from '../../../assets/Logo CMR Blc.svg';
 
-
 export default function AdminLoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -23,7 +22,6 @@ export default function AdminLoginPage() {
       localStorage.getItem('adminRole') ||
       sessionStorage.getItem('adminRole');
 
-    // autoriser admin, owner, superAdmin (ton middleware accepte ces 3 rôles)
     if (token && ['admin', 'owner', 'superAdmin'].includes(role)) {
       navigate('/admin/dashboard', { replace: true });
     }
@@ -32,7 +30,6 @@ export default function AdminLoginPage() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      // Appel login
       const res = await api.post('/admin/login', { email, password });
 
       const token = res?.data?.token;
@@ -44,19 +41,16 @@ export default function AdminLoginPage() {
         return;
       }
 
-      // Vérif rôle autorisé pour la BO
       if (!['admin', 'owner', 'superAdmin'].includes(role)) {
         alert('Accès réservé aux administrateurs.');
         return;
       }
 
-      // Stockage selon "Se souvenir de moi"
       const storage = rememberMe ? localStorage : sessionStorage;
       storage.setItem('adminToken', token);
       storage.setItem('adminRole',  role);
       if (name) storage.setItem('adminName', name);
 
-      // Redirection BO
       navigate('/admin/dashboard');
     } catch (err) {
       console.log('ADMIN LOGIN ERROR:', err.response?.status, err.response?.data);
@@ -68,60 +62,87 @@ export default function AdminLoginPage() {
     <main className="login-box-all">
       <div className="particles"></div>
 
-      <form onSubmit={handleLogin} className="login-container">
-        <img className='logo-back-connexion' src={logoCmr} alt="Logo de chez Mamie Regine" />
+      <form
+        onSubmit={handleLogin}
+        className="login-container"
+        aria-label="Formulaire de connexion administrateur"
+      >
+        <img
+          className="logo-back-connexion"
+          src={logoCmr}
+          alt="Logo de Chez Mamie Régine"
+        />
 
         {/* Email */}
         <div className="form-group">
-          <label htmlFor="email" className="form-label">
+          <label htmlFor="admin-email" className="form-label">
             Identifiant
           </label>
           <input
             className="form-input"
-            id="email"
+            id="admin-email"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Email"
+            aria-label="Adresse email administrateur"
             required
           />
         </div>
 
         {/* Mot de passe + œil */}
         <div className="form-group password-field" style={{ position: 'relative' }}>
-          <label htmlFor="password" className="form-label">
+          <label htmlFor="admin-password" className="form-label">
             Mot de passe
           </label>
 
           <input
             className="form-input"
-            id="password"
+            id="admin-password"
             type={showPassword ? 'text' : 'password'}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Mot de passe"
+            aria-label="Mot de passe administrateur"
             required
           />
 
-          {/* Icône SVG animé */}
-          <EyeToggle open={showPassword} onToggle={() => setShowPassword((v) => !v)} />
+          {/* Bouton accessible pour afficher / masquer le mot de passe */}
+          <button
+            type="button"
+            className="password-toggle-button"
+            onClick={() => setShowPassword((v) => !v)}
+            aria-label={showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
+            aria-pressed={showPassword}
+          >
+            <EyeToggle open={showPassword} onToggle={() => {}} />
+          </button>
         </div>
 
-        <button type="submit" className="login-button">
+        <button
+          type="submit"
+          className="login-button"
+          aria-label="Se connecter à l’espace administrateur"
+        >
           SE CONNECTER
         </button>
 
         {/* Se souvenir de moi */}
         <div className="form-row-remember">
-          <label className="remember-label">
+          <label className="remember-label" htmlFor="remember-me">
             <input
+              id="remember-me"
               type="checkbox"
               checked={rememberMe}
               onChange={(e) => setRememberMe(e.target.checked)}
+              aria-label="Se souvenir de ma connexion administrateur sur cet appareil"
             />
             <span>Se souvenir de moi</span>
           </label>
-          <Link className='link-back'>Mot de passe oublié</Link>
+
+          <Link className="link-back">
+            Mot de passe oublié
+          </Link>
         </div>
       </form>
     </main>
