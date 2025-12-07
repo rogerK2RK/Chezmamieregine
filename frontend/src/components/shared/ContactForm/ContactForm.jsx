@@ -1,13 +1,16 @@
 import React from "react";
 import "./style.css";
 
-export default function ContactForm() {
+export default function ContactForm({ isPageContact = false }) {
+
+  const TitleTag = isPageContact ? "h1" : "h2";
+
   return (
     <div className="contact-container">
-      <h2>Contactez-nous</h2>
+      <TitleTag>Contactez-nous</TitleTag>
 
       <div className="contact-container-content">
-
+        
         {/* Bloc Formulaire */}
         <div className="form-section">
           <form
@@ -16,6 +19,7 @@ export default function ContactForm() {
             aria-label="Formulaire de contact"
           >
             <div className="form-row">
+
               {/* NOM */}
               <div className="form-group">
                 <label htmlFor="contact-lastname">Nom</label>
@@ -92,7 +96,7 @@ export default function ContactForm() {
           </form>
         </div>
 
-        {/* Bloc Carte (Lyon) */}
+        {/* Bloc Carte */}
         <div className="map-section">
           <div className="map-wrapper">
             <iframe
