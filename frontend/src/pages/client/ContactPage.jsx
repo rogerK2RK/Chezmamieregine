@@ -3,6 +3,6 @@ import ContactForm from '../../components/shared/ContactForm/ContactForm.jsx';
 
 export default function HomePage() {
   return <main>
-    <ContactForm />
+    <ContactForm isPageContact={true}/>
   </main>;
 }
