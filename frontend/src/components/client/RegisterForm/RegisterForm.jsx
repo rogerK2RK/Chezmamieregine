@@ -9,8 +9,23 @@ export default function RegisterForm() {
   const [email, setEmail]         = useState('');
   const [password, setPassword]   = useState('');
 
+  // 🆕 Gestion des erreurs par champ
+  const [errors, setErrors] = useState({
+    firstName: '',
+    lastName: '',
+    sex: '',
+    email: '',
+    password: '',
+    global: ''
+  });
+
+  const resetErrors = () =>
+    setErrors({ firstName: '', lastName: '', sex: '', email: '', password: '', global: '' });
+
   const handleRegister = async (e) => {
     e.preventDefault();
+    resetErrors();
+
     try {
       await api.post('/auth/register', {
         firstName,
@@ -19,19 +34,40 @@ export default function RegisterForm() {
         email,
         password,
       });
+
       alert('Inscription réussie');
-      setFirstName(''); 
-      setLastName(''); 
-      setSex(''); 
-      setEmail(''); 
+      setFirstName('');
+      setLastName('');
+      setSex('');
+      setEmail('');
       setPassword('');
+
     } catch (err) {
-      const msg =
-        err?.response?.data?.message ||
-        err?.message ||
-        "Erreur lors de l'inscription";
-      console.error('[REGISTER ERROR]', err?.response?.data || err);
-      alert(msg);
+      const msg = err?.response?.data?.message || "Erreur lors de l'inscription";
+
+      console.error('[REGISTER ERROR]', msg);
+
+      // 🔥 On va essayer de mapper les erreurs renvoyées par le back
+      const lowerMsg = msg.toLowerCase();
+
+      if (lowerMsg.includes('prénom') || lowerMsg.includes('first')) {
+        return setErrors((prev) => ({ ...prev, firstName: msg }));
+      }
+      if (lowerMsg.includes('nom') || lowerMsg.includes('last')) {
+        return setErrors((prev) => ({ ...prev, lastName: msg }));
+      }
+      if (lowerMsg.includes('sexe')) {
+        return setErrors((prev) => ({ ...prev, sex: msg }));
+      }
+      if (lowerMsg.includes('email')) {
+        return setErrors((prev) => ({ ...prev, email: msg }));
+      }
+      if (lowerMsg.includes('mot de passe') || lowerMsg.includes('password')) {
+        return setErrors((prev) => ({ ...prev, password: msg }));
+      }
+
+      // Si on ne sait pas à quel champ ça correspond → erreur globale
+      setErrors((prev) => ({ ...prev, global: msg }));
     }
   };
 
@@ -43,6 +79,11 @@ export default function RegisterForm() {
         aria-label="Formulaire d'inscription"
       >
         <h1>Inscription</h1>
+
+        {/* ERREUR GLOBALE */}
+        {errors.global && (
+          <p className="error-text global-error">{errors.global}</p>
+        )}
 
         {/* SEXE */}
         <div className="form-group">
@@ -59,6 +100,7 @@ export default function RegisterForm() {
             <option value="F">Femme</option>
             <option value="other">Autre</option>
           </select>
+          {errors.sex && <p className="error-text">{errors.sex}</p>}
         </div>
 
         {/* PRÉNOM */}
@@ -73,6 +115,7 @@ export default function RegisterForm() {
             placeholder="Prénom"
             required
           />
+          {errors.firstName && <p className="error-text">{errors.firstName}</p>}
         </div>
 
         {/* NOM */}
@@ -87,6 +130,7 @@ export default function RegisterForm() {
             placeholder="Nom"
             required
           />
+          {errors.lastName && <p className="error-text">{errors.lastName}</p>}
         </div>
 
         {/* EMAIL */}
@@ -101,6 +145,7 @@ export default function RegisterForm() {
             placeholder="Email"
             required
           />
+          {errors.email && <p className="error-text">{errors.email}</p>}
         </div>
 
         {/* MOT DE PASSE */}
@@ -115,6 +160,7 @@ export default function RegisterForm() {
             placeholder="Mot de passe"
             required
           />
+          {errors.password && <p className="error-text">{errors.password}</p>}
         </div>
 
         <button 
