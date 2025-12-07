@@ -63,7 +63,13 @@ export default function Header() {
               </div>
             )}
 
-            <Link to="/commande" className="btn-primary scrolled">Commander</Link>
+            <a href="tel:0668347755"
+              className="dropdown-cta"
+              aria-label="Appeler le restaurant au 06 68 34 77 55 pour commander"
+              onClick={() => setMenuOpen(false)}
+            >
+              Commander
+            </a>
           </nav>
         </div>
 
