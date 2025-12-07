@@ -105,7 +105,7 @@ export default function Header() {
             )}
 
             <div className="dropdown-sep" />
-            <Link to="/commande" className="dropdown-cta" onClick={() => setMenuOpen(false)}>Commander</Link>
+            <Link href="tel:0668347755" className="dropdown-cta" onClick={() => setMenuOpen(false)}>Commander</Link>
           </div>
         </div>
       </div>
