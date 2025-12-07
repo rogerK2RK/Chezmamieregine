@@ -7,9 +7,11 @@
   background-attachment: scroll;
 }
 
-.contact-container h2 {
+.contact-container h2, .contact-container h1 {
   margin: 0 0 1.75rem 0;
-  font-size: clamp(1.8rem, 6vw, 2.2rem);
+  font-family: var(--font-body) ! important;
+  font-size: 2rem;
+  font-weight: 600;
   color: #FFF;
   text-align: center;
 }
