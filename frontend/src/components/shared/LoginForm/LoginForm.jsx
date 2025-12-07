@@ -15,18 +15,17 @@ export default function LoginForm() {
     try {
       const res = await api.post('/auth/login', { email, password });
 
-      // indispensable pour l'Authorization auto par l'intercepteur
-      localStorage.setItem('clientToken', res.data.token)
+      // indispensable pour l’Authorization auto par l’intercepteur
+      localStorage.setItem('clientToken', res.data.token);
 
       if (['admin', 'superAdmin'].includes(res.data.role)) {
         alert('Accès refusé : utilisez /admin/login pour les comptes administrateurs.');
         return;
       }
 
-      // construit un "name" lisible à partir du retour backend
-      const displayName = [res.data.firstName, res.data.lastName].filter(Boolean).join(' ');
-
-      ;
+      const displayName = [res.data.firstName, res.data.lastName]
+        .filter(Boolean)
+        .join(' ');
 
       login({
         token: res.data.token,
@@ -42,11 +41,19 @@ export default function LoginForm() {
 
   return (
     <div className="connexion-container-content">
-      <form className="form-connexion" onSubmit={handleLogin}>
+      <form
+        className="form-connexion"
+        onSubmit={handleLogin}
+        aria-label="Formulaire de connexion client"
+      >
         <h1>Connexion</h1>
+
+        {/* EMAIL */}
         <div className="form-group">
-          <label>Identifiant</label>
+          <label htmlFor="login-email">Identifiant</label>
           <input
+            id="login-email"
+            aria-label="Entrer votre adresse email"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -54,9 +61,13 @@ export default function LoginForm() {
             required
           />
         </div>
+
+        {/* MOT DE PASSE */}
         <div className="form-group">
-          <label>Mot de passe</label>
+          <label htmlFor="login-password">Mot de passe</label>
           <input
+            id="login-password"
+            aria-label="Entrer votre mot de passe"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -64,7 +75,14 @@ export default function LoginForm() {
             required
           />
         </div>
-        <button className="btn-primary" type="submit">Se connecter</button>
+
+        <button
+          className="btn-primary"
+          type="submit"
+          aria-label="Se connecter à votre compte"
+        >
+          Se connecter
+        </button>
       </form>
     </div>
   );
