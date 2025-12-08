@@ -436,7 +436,7 @@ button, a {
 
 .account-dropdown-item {
   display: block;
-  width: 100%;
+  width: max-content;
   text-align: left;
   padding: 10px 12px;
   border-radius: 8px;
