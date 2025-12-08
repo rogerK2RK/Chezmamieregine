@@ -50,3 +50,21 @@ h1 {
   border-radius: 10px;
   cursor: pointer;
 }
+
+.cat-checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  padding: 0.4rem 0;
+}
+
+.cat-checkbox-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.95rem;
+}
+
+.cat-checkbox-item input[type="checkbox"] {
+  transform: scale(1.05);
+}

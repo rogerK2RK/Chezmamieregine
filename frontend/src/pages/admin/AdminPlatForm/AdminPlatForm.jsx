@@ -17,12 +17,12 @@ export default function AdminPlatForm() {
   const didFetchCategories = useRef(false);
   const didFetchPlat = useRef(false);
 
-  // Form principal (sans images)
+  // Form principal (⚠️ on passe de "category" → "categories" = tableau)
   const [form, setForm] = useState({
     ar: '',
     name: '',
     price: '',
-    category: '',
+    categories: [],      // <— ici maintenant c’est un array d’IDs
     description: '',
     isAvailable: true,
   });
@@ -57,17 +57,35 @@ export default function AdminPlatForm() {
     (async () => {
       try {
         const { data } = await apiAdmin.get(`/plats/${id}`, { headers });
+
+        // Normalisation des catégories :
+        // - si ton ancien modèle avait "category" (string/ObjectId)
+        // - et/ou un nouveau champ "categories" (array)
+        let catIds = [];
+
+        if (Array.isArray(data?.categories) && data.categories.length) {
+          // ex: categories: [ObjectId, ObjectId, ...]
+          catIds = data.categories.map((c) =>
+            typeof c === 'string' ? c : c?._id
+          ).filter(Boolean);
+        } else if (data?.category) {
+          // compat legacy : un seul champ "category"
+          catIds = [
+            typeof data.category === 'string'
+              ? data.category
+              : (data.category?._id || '')
+          ].filter(Boolean);
+        }
+
         setForm({
           ar: data?.ar || '',
           name: data?.name || '',
           price: data?.price ?? '', // on reconvertira en nombre au submit
-          category:
-            typeof data?.category === 'string'
-              ? data.category
-              : (data?.category?._id || ''),
+          categories: catIds,
           description: data?.description || '',
           isAvailable: data?.isAvailable ?? true,
         });
+
         setImages(Array.isArray(data?.images) ? data.images : []);
       } catch (e) {
         console.error('[GET /plats/:id]', e?.response?.status, e?.response?.data || e);
@@ -79,16 +97,29 @@ export default function AdminPlatForm() {
     })();
   }, [isEdit, id, headers, navigate]);
 
+  // Toggle d’une catégorie dans le tableau form.categories
+  const toggleCategory = (catId) => {
+    setForm((f) => {
+      const exists = f.categories.includes(catId);
+      if (exists) {
+        return { ...f, categories: f.categories.filter((id) => id !== catId) };
+      }
+      return { ...f, categories: [...f.categories, catId] };
+    });
+  };
+
   // Submit
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const priceNum = parseFloat(String(form.price).replace(',', '.'));
+
     const payload = {
       ar: String(form.ar || '').trim(),
       name: String(form.name || '').trim(),
       price: Number.isFinite(priceNum) ? priceNum : NaN,
-      ...(form.category ? { category: form.category } : {}),
+      // 👉 On envoie maintenant un tableau "categories"
+      categories: Array.isArray(form.categories) ? form.categories : [],
       description: String(form.description || '').trim(),
       isAvailable: !!form.isAvailable,
       images: Array.isArray(images)
@@ -159,18 +190,28 @@ export default function AdminPlatForm() {
           />
         </div>
 
+        {/* ✅ Catégories multi-sélection avec checkboxes */}
         <div>
-          <label>Catégorie</label>
-          <select
-            className="input"
-            value={form.category}
-            onChange={e => setForm(f => ({ ...f, category: e.target.value }))}
-          >
-            <option value="">— Aucune —</option>
-            {categories.map(c => (
-              <option key={c._id} value={c._id}>{c.name}</option>
+          <label>Catégories</label>
+          <div className="cat-checkbox-group">
+            {categories.length === 0 && (
+              <p className="text-muted">
+                Aucune catégorie créée pour le moment.
+              </p>
+            )}
+
+            {categories.map((c) => (
+              <label key={c._id} className="cat-checkbox-item">
+                <input
+                  type="checkbox"
+                  value={c._id}
+                  checked={form.categories.includes(c._id)}
+                  onChange={() => toggleCategory(c._id)}
+                />
+                <span>{c.name}</span>
+              </label>
             ))}
-          </select>
+          </div>
         </div>
 
         <div>
@@ -184,7 +225,6 @@ export default function AdminPlatForm() {
 
         <div>
           <label>Images</label>
-          {/* Drag & Drop + import — renvoie une liste d’URLs */}
           <AdminImageUploader value={images} onChange={setImages} />
         </div>
 
