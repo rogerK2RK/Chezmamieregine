@@ -1,0 +1,25 @@
+.error-container {
+  padding: 80px 20px;
+  text-align: center;
+}
+
+.error-title {
+  font-size: 6rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.error-text {
+  font-size: 1.2rem;
+  margin-bottom: 30px;
+}
+
+.error-btn {
+  display: inline-block;
+  padding: 12px 24px;
+  background: #d42b2b;
+  color: #fff;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+}

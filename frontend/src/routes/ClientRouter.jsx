@@ -4,6 +4,7 @@ import LoginPage from '../pages/client/LoginPage';
 import RegisterPage from '../pages/client/RegisterPage';
 import ContactPage from '../pages/client/ContactPage';
 import AccountPage from './pages/account/AccountPage';
+import ErrorPage from '../pages/client/ErrorPage';
 
 export default function ClientRouter() {
   return (
@@ -13,6 +14,7 @@ export default function ClientRouter() {
       <Route path="/inscription" element={<RegisterPage />} />
       <Route path="/contact" element={<ContactPage />} />
       <Route path="/account" element={<AccountPage />} />
+      <Route path="/*" element={<ErrorPage />} />
     </Routes>
   );
 }
