@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const clientAuthController = require('../controllers/clientAuthController');
 // 🔐 On importe bien le middleware avec le bon nom + bon fichier
-const { clientProtect } = require('../middlewares/clientAuth');
+const { clientProtect } = require('../middleware/clientAuth');
 
 // Inscription d’un nouveau client
 router.post('/register', clientAuthController.register);
