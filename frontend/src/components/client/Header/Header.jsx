@@ -9,8 +9,11 @@ export default function Header() {
   const { token, role, name, logout } = useClientAuth();
 
   const [scrolled, setScrolled] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const ddRef = useRef(null);
+  const [menuOpen, setMenuOpen] = useState(false); // mobile menu
+  const [accountOpen, setAccountOpen] = useState(false); // dropdown compte
+
+  const mobileDdRef = useRef(null);
+  const accountRef = useRef(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
@@ -18,10 +21,21 @@ export default function Header() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  // Fermeture du menu mobile au clic à l'extérieur
   useEffect(() => {
     const onClick = (e) => {
-      if (!ddRef.current) return;
-      if (!ddRef.current.contains(e.target)) setMenuOpen(false);
+      if (!mobileDdRef.current) return;
+      if (!mobileDdRef.current.contains(e.target)) setMenuOpen(false);
+    };
+    document.addEventListener('click', onClick);
+    return () => document.removeEventListener('click', onClick);
+  }, []);
+
+  // Fermeture du dropdown compte au clic à l'extérieur
+  useEffect(() => {
+    const onClick = (e) => {
+      if (!accountRef.current) return;
+      if (!accountRef.current.contains(e.target)) setAccountOpen(false);
     };
     document.addEventListener('click', onClick);
     return () => document.removeEventListener('click', onClick);
@@ -49,13 +63,57 @@ export default function Header() {
             <Link className="nav-link menu-item" to="/produits">Nos plats</Link>
             <Link className="nav-link menu-item" to="/contact">Contact</Link>
 
-            {isLogged && <Link className="nav-link menu-item" to="/account">Mon compte</Link>}
-
             {isLogged ? (
-              <>
-                <span>Connecté : {name || 'client'} {role ? `(${role})` : ''}</span>
-                <button className="btn-inline" onClick={handleLogout}>Déconnexion</button>
-              </>
+              <div className="account-wrapper" ref={accountRef}>
+                <button
+                  type="button"
+                  className="account-button"
+                  aria-haspopup="menu"
+                  aria-expanded={accountOpen}
+                  aria-label="Ouvrir le menu de votre compte"
+                  onClick={() => setAccountOpen(v => !v)}
+                >
+                  <div className="account-avatar">
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="18"
+                      height="18"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M12 12c2.209 0 4-1.791 4-4s-1.791-4-4-4-4 1.791-4 4 1.791 4 4 4zm0 2c-3.314 0-6 2.239-6 5v1h12v-1c0-2.761-2.686-5-6-5z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </div>
+                  <span className="account-label">
+                    {name ? `Mon compte` : 'Mon compte'}
+                  </span>
+                </button>
+
+                <div
+                  className={`account-dropdown ${accountOpen ? 'open' : ''}`}
+                  role="menu"
+                >
+                  <a
+                    href="https://chezmamieregine.vercel.app/account"
+                    className="account-dropdown-item"
+                    onClick={() => setAccountOpen(false)}
+                  >
+                    Gérer mon compte
+                  </a>
+                  <button
+                    type="button"
+                    className="account-dropdown-item danger"
+                    onClick={() => {
+                      setAccountOpen(false);
+                      handleLogout();
+                    }}
+                  >
+                    Déconnexion
+                  </button>
+                </div>
+              </div>
             ) : (
               <div className="cnx-dcnx">
                 <Link className="nav-link menu-item" to="/connexion">Connexion</Link> /
@@ -63,7 +121,8 @@ export default function Header() {
               </div>
             )}
 
-            <a href="tel:0668347755"
+            <a
+              href="tel:0668347755"
               className="dropdown-cta"
               aria-label="Appeler le restaurant au 06 68 34 77 55 pour commander"
               onClick={() => setMenuOpen(false)}
@@ -74,7 +133,7 @@ export default function Header() {
         </div>
 
         {/* Mobile */}
-        <div className="header-right" ref={ddRef}>
+        <div className="header-right" ref={mobileDdRef}>
           <button
             className="menu-toggle"
             aria-haspopup="menu"
@@ -109,8 +168,13 @@ export default function Header() {
             <div className="dropdown-sep" />
             {isLogged ? (
               <>
-                <div className="dropdown-user">Connecté : {name || 'client'} {role ? `(${role})` : ''}</div>
-                <button className="dropdown-item danger" onClick={() => { setMenuOpen(false); handleLogout(); }}>
+                <div className="dropdown-user">
+                  Connecté : {name || 'client'} {role ? `(${role})` : ''}
+                </div>
+                <button
+                  className="dropdown-item danger"
+                  onClick={() => { setMenuOpen(false); handleLogout(); }}
+                >
                   Déconnexion
                 </button>
               </>
@@ -122,7 +186,8 @@ export default function Header() {
             )}
 
             <div className="dropdown-sep" />
-            <a href="tel:0668347755"
+            <a
+              href="tel:0668347755"
               className="dropdown-cta"
               aria-label="Appeler le restaurant au 06 68 34 77 55 pour commander"
               onClick={() => setMenuOpen(false)}
