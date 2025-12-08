@@ -259,3 +259,21 @@ exports.updateMe = async (req, res) => {
     return res.status(500).json({ message: 'Erreur serveur.' });
   }
 };
+
+// Suppression du compte du client connecté
+exports.deleteMe = async (req, res) => {
+  try {
+    if (!req.client) {
+      return res.status(401).json({ message: 'Non autorisé.' });
+    }
+
+    const clientId = req.client._id;
+
+    await Client.findByIdAndDelete(clientId);
+
+    return res.json({ message: 'Compte supprimé avec succès.' });
+  } catch (e) {
+    console.error('DELETE ME client ERROR:', e);
+    return res.status(500).json({ message: 'Suppression du compte impossible.' });
+  }
+};

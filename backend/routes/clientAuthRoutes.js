@@ -8,5 +8,8 @@ router.post('/register', clientAuthController.register);
 // Connexion d’un client existant
 router.post('/login', clientAuthController.login);
 
+// Suppression du compte du client connecté
+router.delete('/me', authClient, clientAuthController.deleteMe);
+
 // Exporte le routeur pour l’utiliser dans server.js
 module.exports = router;
