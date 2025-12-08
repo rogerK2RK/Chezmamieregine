@@ -15,7 +15,7 @@ const NosPlats = () => {
   const getPerView = () => (window.innerWidth >= 1024 ? 3 : 1);
   const [perView, setPerView] = useState(getPerView);
 
-  // 🔹 Récupérer les plats "home" depuis l’API
+  // 🔹 Récupérer les plats depuis l’API publique
   useEffect(() => {
     (async () => {
       try {
@@ -25,9 +25,23 @@ const NosPlats = () => {
         const { data } = await api.get('/public/plats');
         const list = Array.isArray(data) ? data : [];
 
-        // 🏠 ici on filtre les plats qui doivent apparaître dans "Nos Plats"
-        // ⚠️ adapte la condition en fonction de ton modèle (isHome, home, featured, etc.)
-        const homePlats = list.filter((p) => p.isHome === true);
+        // 🏠 Filtrer les plats qui ont la catégorie "Home"
+        // On check à la fois:
+        // - la catégorie principale `category`
+        // - le tableau `categories`
+        const homePlats = list.filter((p) => {
+          const mainCat = p.category || null;
+          const extraCats = Array.isArray(p.categories) ? p.categories : [];
+
+          const hasHomeMain =
+            mainCat && (mainCat.name === 'Home' || mainCat.slug === 'home');
+
+          const hasHomeExtra = extraCats.some(
+            (c) => c && (c.name === 'Home' || c.slug === 'home')
+          );
+
+          return hasHomeMain || hasHomeExtra;
+        });
 
         setPlats(homePlats);
       } catch (e) {
