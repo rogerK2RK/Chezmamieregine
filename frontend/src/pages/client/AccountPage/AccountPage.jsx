@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../../services/api';
+import { useClientAuth } from '../../../context/ClientAuthContext.jsx';
 import './style.css';
 
 export default function AccountPage() {
@@ -18,6 +19,7 @@ export default function AccountPage() {
   const [deleting, setDeleting] = useState(false);
 
   const navigate = useNavigate();
+  const { logout } = useClientAuth(); // 🆕 pour pouvoir déconnecter le client
 
   useEffect(() => {
     (async () => {
@@ -97,9 +99,14 @@ export default function AccountPage() {
       setDeleting(true);
       setErr('');
       setOk('');
-      // À adapter selon ton endpoint côté back (ici on suppose DELETE /me)
+
+      // Suppression côté back
       await api.delete('/me');
 
+      // 🆕 On déconnecte le client (clear token / contexte)
+      logout();
+
+      // Message + redirection
       setOk("Votre compte a été supprimé. Vous allez être redirigé vers l'accueil.");
 
       setTimeout(() => {
