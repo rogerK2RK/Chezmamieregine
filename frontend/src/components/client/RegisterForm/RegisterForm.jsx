@@ -19,12 +19,16 @@ export default function RegisterForm() {
     global: ''
   });
 
+  // 🆕 Popup succès
+  const [successMessage, setSuccessMessage] = useState('');
+
   const resetErrors = () =>
     setErrors({ firstName: '', lastName: '', sex: '', email: '', password: '', global: '' });
 
   const handleRegister = async (e) => {
     e.preventDefault();
     resetErrors();
+    setSuccessMessage('');
 
     try {
       await api.post('/auth/register', {
@@ -35,7 +39,9 @@ export default function RegisterForm() {
         password,
       });
 
-      alert('Inscription réussie');
+      setSuccessMessage('Votre compte a bien été créé !');
+
+      // reset des champs
       setFirstName('');
       setLastName('');
       setSex('');
@@ -47,7 +53,6 @@ export default function RegisterForm() {
 
       console.error('[REGISTER ERROR]', msg);
 
-      // 🔥 On va essayer de mapper les erreurs renvoyées par le back
       const lowerMsg = msg.toLowerCase();
 
       if (lowerMsg.includes('prénom') || lowerMsg.includes('first')) {
@@ -66,13 +71,28 @@ export default function RegisterForm() {
         return setErrors((prev) => ({ ...prev, password: msg }));
       }
 
-      // Si on ne sait pas à quel champ ça correspond → erreur globale
       setErrors((prev) => ({ ...prev, global: msg }));
     }
   };
 
   return (
     <div className="connexion-container-content">
+      {/* POPUP SUCCÈS EN ABSOLUTE */}
+      {successMessage && (
+        <div className="register-success-popup" role="status" aria-live="polite">
+          <div className="register-success-box">
+            <p>{successMessage}</p>
+            <button
+              type="button"
+              className="btn-primary btn-close-popup"
+              onClick={() => setSuccessMessage('')}
+            >
+              Fermer
+            </button>
+          </div>
+        </div>
+      )}
+
       <form 
         className="register-form" 
         onSubmit={handleRegister}
