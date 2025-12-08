@@ -1,39 +1,20 @@
+// backend/routes/meRoutes.js
 const express = require('express');
 const router = express.Router();
+
+// Middleware d'auth client
 const { clientProtect } = require('../middleware/clientAuth');
 
-// Récupérer le profil du client connecté
-router.get('/', clientProtect, async (req, res) => {
-  const c = req.client;
-  res.json({
-    _id: c._id,
-    clientId: c.clientId,
-    firstName: c.firstName,
-    lastName: c.lastName,
-    sex: c.sex,
-    email: c.email,
-  });
-});
+// Contrôleur "me"
+const meController = require('../controllers/meController');
 
-// Mettre à jour le profil
-router.put('/', clientProtect, async (req, res) => {
-  const c = req.client;
-  const { firstName, lastName, sex, email } = req.body || {};
+// GET /api/me → profil du client connecté
+router.get('/', clientProtect, meController.getMe);
 
-  if (typeof firstName === 'string') c.firstName = firstName.trim();
-  if (typeof lastName === 'string') c.lastName = lastName.trim();
-  if (typeof email === 'string') c.email = email.trim().toLowerCase();
-  if (sex && ['H', 'F', 'other'].includes(sex)) c.sex = sex;
+// PUT /api/me → mise à jour du profil
+router.put('/', clientProtect, meController.updateMe);
 
-  await c.save();
-  res.json({
-    _id: c._id,
-    clientId: c.clientId,
-    firstName: c.firstName,
-    lastName: c.lastName,
-    sex: c.sex,
-    email: c.email,
-  });
-});
+// DELETE /api/me → suppression du compte
+router.delete('/', clientProtect, meController.deleteMe);
 
 module.exports = router;
