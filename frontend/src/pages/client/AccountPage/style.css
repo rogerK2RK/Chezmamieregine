@@ -1,54 +1,161 @@
 .acc-container {
-  width: 100%;
-  padding: 15rem 16px 16px;
+  min-height: 100vh;
+  padding: 7rem 16px 3rem;
   background-color: #73230d;
-  color: #e5e7eb;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
 }
 
-.acc-loading { opacity: 0.8; }
+.acc-card {
+  width: 100%;
+  max-width: 520px;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 1.8rem 1.5rem 1.6rem;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
+  color: #111827;
+}
+
+.acc-title {
+  font-size: 1.6rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.acc-loading {
+  text-align: center;
+  color: #4b5563;
+}
+
+/* Messages */
 .acc-error {
-  background: rgba(239,68,68,0.15);
-  color: #fecaca;
-  border: 1px solid rgba(239,68,68,0.35);
+  background: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
   border-radius: 10px;
   padding: 10px 12px;
   margin-bottom: 12px;
-}
-.acc-success {
-  background: rgba(34,197,94,.18);
-  color: #86efac;
-  border: 1px solid rgba(34,197,94,.35);
-  border-radius: 10px;
-  padding: 10px 12px;
-  margin-bottom: 12px;
+  font-size: 0.9rem;
 }
 
+.acc-success {
+  background: #ecfdf3;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  font-size: 0.9rem;
+}
+
+/* Formulaire */
 .acc-form {
   display: grid;
   gap: 12px;
+  margin-top: 0.5rem;
+}
+
+.acc-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.acc-field label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #374151;
 }
 
 .acc-input {
   width: 100%;
-  padding: 10px 12px;
-  border-radius: 8px;
-  border: 1px solid rgba(255,255,255,0.18);
-  background: rgba(255,255,255,0.06);
-  color: #fff;
-  min-width: 240px;
+  padding: 9px 11px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+  color: #111827;
+  font-size: 0.95rem;
 }
 
+.acc-input:disabled {
+  background: #f3f4f6;
+  color: #6b7280;
+  cursor: not-allowed;
+}
+
+/* Actions */
 .acc-actions {
   display: flex;
   justify-content: flex-end;
   gap: 8px;
-  margin-top: 6px;
+  margin-top: 10px;
 }
-.acc-btn-primary {
-  background: linear-gradient(135deg, #4f46e5, #7c3aed);
-  color: #fff;
-  border: none;
-  padding: 10px 14px;
-  border-radius: 10px;
+
+.acc-btn-primary,
+.acc-btn-secondary,
+.acc-btn-delete {
+  font-family: var(--font-body, system-ui, -apple-system, BlinkMacSystemFont);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  border-radius: 999px;
+  padding: 8px 16px;
   cursor: pointer;
+  border: none;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.15s ease;
+}
+
+/* Enregistrer */
+.acc-btn-primary {
+  background: #ef5007;
+  color: #ffffff;
+  box-shadow: 0 8px 20px rgba(239, 80, 7, 0.35);
+}
+
+.acc-btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(239, 80, 7, 0.45);
+}
+
+/* Modifier / Annuler */
+.acc-btn-secondary {
+  background: #f3f4f6;
+  color: #111827;
+  border: 1px solid #e5e7eb;
+}
+
+.acc-btn-secondary:hover {
+  background: #e5e7eb;
+}
+
+/* Zone suppression */
+.acc-delete-zone {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.acc-btn-delete {
+  background: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+}
+
+.acc-btn-delete:hover:not(:disabled) {
+  background: #fee2e2;
+}
+
+.acc-btn-delete:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+/* Responsive léger */
+@media (min-width: 640px) {
+  .acc-card {
+    padding: 2rem 2rem 1.8rem;
+  }
 }
