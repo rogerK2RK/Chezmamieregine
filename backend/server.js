@@ -4,6 +4,7 @@ const cors      = require('cors');
 const dotenv    = require('dotenv');
 const path      = require('path');
 const connectDB = require('./config/db');
+const publicContactRoutes = require('./routes/publicContactRoutes');
 
 dotenv.config();
 const app = express();
@@ -46,6 +47,8 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Admin
 app.use('/api/admin',          require('./routes/adminRoutes'));
 app.use('/api/admin/clients',  require('./routes/clientBackRoutes'));
+app.use('/api/admin',          require('./routes/adminContactRoutes'));
+
 // Auth client
 app.use('/api/auth',           require('./routes/clientAuthRoutes'));
 // Métier
@@ -56,6 +59,10 @@ app.use('/api/uploads',        require('./routes/uploadRoutes'));
 // Commentaires
 app.use('/api/comments',       require('./routes/commentFrontRoutes'));
 app.use('/api/admin/comments', require('./routes/commentBackRoutes'));
+
+//Commentaire
+app.use('/api/public', publicContactRoutes);
+
 // Public
 app.use('/api/public',         require('./routes/publicRoutes'));
 // Profil client (/api/me)

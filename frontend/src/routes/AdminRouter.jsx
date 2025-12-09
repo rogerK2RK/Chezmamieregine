@@ -7,6 +7,7 @@ import AdminLoginPage from '../pages/admin/AdminLoginPage/AdminLoginPage';
 import AdminPlatForm from '../pages/admin/AdminPlatForm';
 import PrivateRoute from './PrivateRoute';
 import { ADMIN_ROLES } from '../utils/roles';
+import AdminContactsPage from '../pages/admin/AdminContacts/AdminContactsPage';
 
 export default function AdminRouter() {
   return (
@@ -59,6 +60,14 @@ export default function AdminRouter() {
             <AdminPlatForm />
           </PrivateRoute>
         }
+      />
+      <Route 
+        path="/admin/contacts" 
+        element={
+          <PrivateRoute allowedRoles={ADMIN_ROLES}>
+            <AdminContactsPage />
+          </PrivateRoute>
+        } 
       />
     </Routes>
   );

@@ -1,25 +1,78 @@
-import React from "react";
+import React, { useState } from "react";
+import api from "../../../services/api"; // 👈 même instance que pour /public/plats
 import "./style.css";
 
 export default function ContactForm({ isPageContact = false }) {
-
   const TitleTag = isPageContact ? "h1" : "h2";
+
+  const [form, setForm] = useState({
+    lastName: "",
+    firstName: "",
+    email: "",
+    phone: "",
+    message: "",
+  });
+
+  const [loading, setLoading] = useState(false);
+  const [ok, setOk] = useState("");
+  const [err, setErr] = useState("");
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((f) => ({ ...f, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setOk("");
+    setErr("");
+    setLoading(true);
+
+    try {
+      await api.post("/public/contact", {
+        lastName: form.lastName,
+        firstName: form.firstName,
+        email: form.email,
+        phone: form.phone,
+        message: form.message,
+      });
+
+      setOk("Votre message a bien été envoyé. Nous vous répondrons rapidement.");
+      setForm({
+        lastName: "",
+        firstName: "",
+        email: "",
+        phone: "",
+        message: "",
+      });
+    } catch (error) {
+      const msg =
+        error?.response?.data?.message ||
+        "Une erreur est survenue lors de l'envoi du message.";
+      setErr(msg);
+      console.error("[CONTACT ERROR]", error?.response?.data || error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="contact-container">
       <TitleTag>Contactez-nous</TitleTag>
 
       <div className="contact-container-content">
-        
         {/* Bloc Formulaire */}
         <div className="form-section">
           <form
             className="contact-form"
-            onSubmit={(e) => e.preventDefault()}
+            onSubmit={handleSubmit}
             aria-label="Formulaire de contact"
           >
-            <div className="form-row">
+            {/* Messages globaux */}
+            {ok && <p className="contact-success">{ok}</p>}
+            {err && <p className="contact-error">{err}</p>}
 
+            <div className="form-row">
               {/* NOM */}
               <div className="form-group">
                 <label htmlFor="contact-lastname">Nom</label>
@@ -27,8 +80,10 @@ export default function ContactForm({ isPageContact = false }) {
                   id="contact-lastname"
                   aria-label="Entrer votre nom"
                   type="text"
-                  name="nom"
+                  name="lastName"
                   placeholder="Votre nom"
+                  value={form.lastName}
+                  onChange={handleChange}
                   required
                 />
               </div>
@@ -40,8 +95,10 @@ export default function ContactForm({ isPageContact = false }) {
                   id="contact-firstname"
                   aria-label="Entrer votre prénom"
                   type="text"
-                  name="prenom"
+                  name="firstName"
                   placeholder="Votre prénom"
+                  value={form.firstName}
+                  onChange={handleChange}
                   required
                 />
               </div>
@@ -56,6 +113,8 @@ export default function ContactForm({ isPageContact = false }) {
                 type="email"
                 name="email"
                 placeholder="exemple@mail.com"
+                value={form.email}
+                onChange={handleChange}
                 required
               />
             </div>
@@ -69,6 +128,8 @@ export default function ContactForm({ isPageContact = false }) {
                 type="tel"
                 name="phone"
                 placeholder="06 12 34 56 78"
+                value={form.phone}
+                onChange={handleChange}
                 required
               />
             </div>
@@ -82,6 +143,8 @@ export default function ContactForm({ isPageContact = false }) {
                 name="message"
                 rows="6"
                 placeholder="Votre message..."
+                value={form.message}
+                onChange={handleChange}
                 required
               />
             </div>
@@ -89,9 +152,11 @@ export default function ContactForm({ isPageContact = false }) {
             {/* BOUTON */}
             <button
               className="btn-primary"
+              type="submit"
               aria-label="Envoyer le formulaire de contact"
+              disabled={loading}
             >
-              Envoyer
+              {loading ? "Envoi..." : "Envoyer"}
             </button>
           </form>
         </div>
@@ -120,7 +185,6 @@ export default function ContactForm({ isPageContact = false }) {
             </a>
           </div>
         </div>
-
       </div>
     </div>
   );
