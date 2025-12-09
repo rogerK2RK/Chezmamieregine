@@ -12,7 +12,10 @@ import AdminContactsPage from '../pages/admin/AdminContacts/AdminContactsPage';
 export default function AdminRouter() {
   return (
     <Routes>
+      {/* cette route correspond à /admin/login */}
       <Route path="login" element={<AdminLoginPage />} />
+
+      {/* /admin/dashboard */}
       <Route
         path="dashboard"
         element={
@@ -21,6 +24,8 @@ export default function AdminRouter() {
           </PrivateRoute>
         }
       />
+
+      {/* /admin/plats */}
       <Route
         path="plats"
         element={
@@ -29,6 +34,8 @@ export default function AdminRouter() {
           </PrivateRoute>
         }
       />
+
+      {/* /admin/commandes */}
       <Route
         path="commandes"
         element={
@@ -37,6 +44,8 @@ export default function AdminRouter() {
           </PrivateRoute>
         }
       />
+
+      {/* /admin/utilisateurs */}
       <Route
         path="utilisateurs"
         element={
@@ -45,29 +54,35 @@ export default function AdminRouter() {
           </PrivateRoute>
         }
       />
+
+      {/* /admin/plats/new */}
       <Route
-        path="/admin/plats/new"
+        path="plats/new"
         element={
           <PrivateRoute allowedRoles={ADMIN_ROLES}>
             <AdminPlatForm />
           </PrivateRoute>
         }
       />
+
+      {/* /admin/plats/:id/edit */}
       <Route
-        path="/admin/plats/:id/edit"
+        path="plats/:id/edit"
         element={
           <PrivateRoute allowedRoles={ADMIN_ROLES}>
             <AdminPlatForm />
           </PrivateRoute>
         }
       />
-      <Route 
-        path="/admin/contacts" 
+
+      {/* /admin/contacts */}
+      <Route
+        path="contacts"
         element={
           <PrivateRoute allowedRoles={ADMIN_ROLES}>
             <AdminContactsPage />
           </PrivateRoute>
-        } 
+        }
       />
     </Routes>
   );
