@@ -6,6 +6,10 @@
   overflow: hidden;
 }
 
+.slider-track .slider-item .glass-card {
+  min-height: 94%;
+}
+
 /* Image de fond  */
 .nosplats-container::before {
   content: "";
