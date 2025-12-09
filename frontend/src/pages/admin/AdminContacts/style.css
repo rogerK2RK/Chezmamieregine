@@ -1,122 +1,153 @@
-.acontacts-root {
-  display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.6fr);
-  gap: 16px;
-  padding: 16px;
+/* Réutilisation du style admin déjà utilisé (même look que AdminComments) */
+
+h1 {
+  margin-bottom: 16px;
 }
 
-.acontacts-list,
-.acontacts-detail {
-  background: #ffffff;
+.filter-bar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid rgba(255,255,255,0.12);
   border-radius: 12px;
-  padding: 16px;
-  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+  overflow: hidden;
 }
 
-.acontacts-list h2,
-.acontacts-detail h2 {
-  margin-bottom: 12px;
+.cell {
+  padding: 12px 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  text-align: left;
 }
 
-.acontacts-ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+.client-email {
+  font-size: 12px;
+  opacity: 0.8;
 }
 
-.acontacts-item {
+.input {
+  flex: 1;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+  min-width: 260px;
+}
+
+.textarea {
+  min-height: 120px;
+}
+
+.btn-primary-back {
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  color: #fff;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.btn-ghost {
+  background: rgba(255,255,255,0.06);
+  color: #e5e7eb;
+  border: 1px solid rgba(255,255,255,0.18);
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-right: 6px;
+}
+
+.btn-danger {
+  background: rgba(239,68,68,0.14);
+  color: #fecaca;
+  border: 1px solid rgba(239,68,68,0.35);
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.badge-ok {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  background: rgba(34,197,94,.18);
+  color: #86efac;
+  border: 1px solid rgba(34,197,94,.35);
+}
+
+.badge-off {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  background: rgba(239,68,68,.18);
+  color: #fecaca;
+  border: 1px solid rgba(239,68,68,.35);
+}
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: grid;
+  place-items: center;
+  z-index: 40;
+}
+
+.card {
+  width: min(720px, 92vw);
+  background: rgba(13,15,18, 0.98);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 14px;
+  padding: 18px;
+  color: #e5e7eb;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+.muted {
+  opacity: 0.6;
+}
+
+/* Spécifique AdminContacts */
+
+.admin-contacts-message {
+  white-space: pre-wrap;
+  margin-top: 8px;
+}
+
+.row-clickable {
+  cursor: pointer;
+}
+
+.row-clickable:hover {
+  background: rgba(255,255,255,0.04);
+}
+
+.admin-alert {
   padding: 10px 12px;
   border-radius: 10px;
-  border: 1px solid #e5e7eb;
-  margin-bottom: 8px;
-  cursor: pointer;
-  transition: background 0.12s ease, transform 0.08s ease, box-shadow 0.12s ease;
-}
-
-.acontacts-item:hover {
-  background: #f9fafb;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
-}
-
-.acontacts-item.is-unread {
-  border-color: #e11d48;
-}
-
-.acontacts-item-header {
-  display: flex;
-  justify-content: space-between;
-  gap: 6px;
-  font-size: 0.9rem;
-  margin-bottom: 4px;
-}
-
-.acontacts-name {
-  font-weight: 600;
-}
-
-.acontacts-email {
-  color: #6b7280;
-}
-
-.acontacts-meta {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.8rem;
-  color: #6b7280;
-  margin-bottom: 4px;
-}
-
-.acontacts-badge {
-  background: #fee2e2;
-  color: #b91c1c;
-  border-radius: 999px;
-  padding: 2px 8px;
-  font-size: 0.7rem;
-  font-weight: 600;
-}
-
-.acontacts-preview {
-  font-size: 0.9rem;
-  color: #4b5563;
-}
-
-.acontacts-detail-block {
-  font-size: 0.95rem;
-  color: #111827;
-}
-
-.acontacts-detail-block p {
-  margin: 4px 0;
-}
-
-.acontacts-message {
-  margin-top: 8px;
-  white-space: pre-wrap;
-}
-
-.acontacts-placeholder {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  color: #9ca3af;
-  text-align: center;
-}
-
-.acontacts-error {
-  color: #b91c1c;
-  margin-bottom: 8px;
-}
-
-.acontacts-empty {
-  color: #6b7280;
+  margin-bottom: 12px;
   font-size: 0.9rem;
 }
 
-/* Mobile */
-@media (max-width: 900px) {
-  .acontacts-root {
-    grid-template-columns: 1fr;
-  }
+.admin-alert--error {
+  background: rgba(239,68,68,0.15);
+  color: #fecaca;
+  border: 1px solid rgba(239,68,68,0.35);
 }
