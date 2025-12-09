@@ -1,8 +1,10 @@
 import { Routes, Route } from 'react-router-dom';
+
 import ClientLayout from '../layouts/ClientLayout';
 import AdminAuthLayout from '../layouts/AdminAuthLayout';
 import AdminAppLayout from '../layouts/AdminAppLayout';
 
+/* --- Pages Client --- */
 import HomePage from '../pages/client/HomePage';
 import LoginPage from '../pages/client/LoginPage';
 import RegisterPage from '../pages/client/RegisterPage';
@@ -11,6 +13,7 @@ import ProductsPage from '../pages/client/ProductsPage/ProductsPage';
 import ProductDetailPage from '../pages/client/ProductDetailPage/ProductDetailPage';
 import AccountPage from '../pages/client/AccountPage/AccountPage';
 
+/* --- Pages Admin --- */
 import AdminLoginPage from '../pages/admin/AdminLoginPage/AdminLoginPage';
 import AdminDashboard from '../pages/admin/AdminDashboard/AdminDashboard';
 import AdminPlats from '../pages/admin/AdminPlats/AdminPlats';
@@ -20,14 +23,17 @@ import AdminClients from '../pages/admin/AdminClients/AdminClients';
 import AdminCategories from '../pages/admin/AdminCategories/AdminCategories';
 import AdminPlatForm from '../pages/admin/AdminPlatForm/AdminPlatForm';
 import AdminComments from '../pages/admin/AdminComments/AdminComments';
+import AdminContactsPage from '../pages/admin/AdminContacts/AdminContactsPage';
 
+/* --- Utils --- */
 import PrivateRoute from './PrivateRoute';
 import { ADMIN_ROLES } from '../utils/roles';
 
 export default function AppRouter() {
   return (
     <Routes>
-      {/* ===== SITE PUBLIC ===== */}
+
+      {/* ===================== SITE PUBLIC ===================== */}
       <Route element={<ClientLayout />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/connexion" element={<LoginPage />} />
@@ -35,17 +41,18 @@ export default function AppRouter() {
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/produits" element={<ProductsPage />} />
         <Route path="/produits/:slug" element={<ProductsPage />} />
-        <Route  path="/produit/:id" element={<ProductDetailPage />} />
-        <Route  path="/account" element={<AccountPage />} />
+        <Route path="/produit/:id" element={<ProductDetailPage />} />
+        <Route path="/account" element={<AccountPage />} />
       </Route>
 
-      {/* ===== ADMIN : login (sans sidebar) ===== */}
+      {/* ===================== ADMIN (AUTH) ===================== */}
       <Route element={<AdminAuthLayout />}>
         <Route path="/admin/login" element={<AdminLoginPage />} />
       </Route>
 
-      {/* ===== ADMIN : app (avec sidebar persistante) ===== */}
+      {/* ===================== ADMIN (APP) ===================== */}
       <Route element={<AdminAppLayout />}>
+
         <Route
           path="/admin/dashboard"
           element={
@@ -54,7 +61,7 @@ export default function AppRouter() {
             </PrivateRoute>
           }
         />
-        
+
         <Route
           path="/admin/commandes"
           element={
@@ -63,6 +70,7 @@ export default function AppRouter() {
             </PrivateRoute>
           }
         />
+
         <Route
           path="/admin/utilisateurs"
           element={
@@ -71,6 +79,7 @@ export default function AppRouter() {
             </PrivateRoute>
           }
         />
+
         <Route
           path="/admin/clients"
           element={
@@ -79,6 +88,7 @@ export default function AppRouter() {
             </PrivateRoute>
           }
         />
+
         <Route
           path="/admin/categories"
           element={
@@ -87,30 +97,34 @@ export default function AppRouter() {
             </PrivateRoute>
           }
         />
+
         <Route
           path="/admin/plats"
           element={
-            <PrivateRoute allowedRoles={['admin','superAdmin','owner']}>
+            <PrivateRoute allowedRoles={['admin', 'superAdmin', 'owner']}>
               <AdminPlats />
             </PrivateRoute>
           }
         />
+
         <Route
           path="/admin/plats/new"
           element={
-            <PrivateRoute allowedRoles={['admin','superAdmin','owner']}>
+            <PrivateRoute allowedRoles={['admin', 'superAdmin', 'owner']}>
               <AdminPlatForm />
             </PrivateRoute>
           }
         />
+
         <Route
           path="/admin/plats/:id/edit"
           element={
-            <PrivateRoute allowedRoles={['admin','superAdmin','owner']}>
+            <PrivateRoute allowedRoles={['admin', 'superAdmin', 'owner']}>
               <AdminPlatForm />
             </PrivateRoute>
           }
         />
+
         <Route
           path="/admin/comments"
           element={
@@ -119,7 +133,19 @@ export default function AppRouter() {
             </PrivateRoute>
           }
         />
+
+        {/*  NOUVELLE ROUTE CONTACTS ADMIN  */}
+        <Route
+          path="/admin/contacts"
+          element={
+            <PrivateRoute allowedRoles={ADMIN_ROLES}>
+              <AdminContactsPage />
+            </PrivateRoute>
+          }
+        />
+
       </Route>
+
     </Routes>
   );
 }
