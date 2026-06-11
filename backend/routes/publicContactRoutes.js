@@ -1,7 +1,7 @@
 // routes/publicContactRoutes.js
 const express = require('express');
 const router = express.Router();
-const Contact = require('../models/Contact');
+const Contact = require('../models/ContactMessage');
 
 // Regex
 const NAME_REGEX  = /^[A-Za-zÀ-ÖØ-öø-ÿ' -]{2,60}$/;
