@@ -52,20 +52,39 @@ button, a {
 .menu {
     width: 100%;
     position: relative;
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    background: rgba(230, 225, 221, 0.048);
+    overflow: hidden;
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.05));
     border-radius: 16px;
     padding: 12px 14px;
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.28);
     display: flex;
     align-items: center;
     gap: 12px;
-    transition: all 0.3s ease;
-    box-shadow: inset 0px 0px 2px #1b1b1b,
-                inset 1.2px 1.3px 5px #c0b5b599,
-                0px -3px 19px #0c0c0c27,
-                0px -12px 19px #0e0e0e1e;
+    transition: background 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.45),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.08);
+}
+
+/* Sheen : reflet lumineux diagonal en haut du verre */
+.menu::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.18) 0%,
+        rgba(255, 255, 255, 0) 45%
+    );
+}
+
+.menu.scrolled::before {
+    display: none;
 }
 .menu.scrolled {
     background: none !important;
@@ -350,20 +369,21 @@ button, a {
 
     .menu {
         position: relative;
-        backdrop-filter: blur(15px);
-        -webkit-backdrop-filter: blur(15px);
-        background: rgba(230, 225, 221, 0.048);
+        overflow: hidden;
+        backdrop-filter: blur(22px) saturate(180%);
+        -webkit-backdrop-filter: blur(22px) saturate(180%);
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.05));
         border-radius: 50px;
         padding: 10px 22px;
-        border: 1px solid rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.28);
         display: flex;
         align-items: center;
         gap: 32px;
-        transition: all 0.3s ease;
-        box-shadow: inset 0px 0px 2px #1b1b1b,
-                    inset 1.2px 1.3px 5px #c0b5b599,
-                    0px -3px 19px #0c0c0c27,
-                    0px -12px 19px #0e0e0e1e;
+        transition: background 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        box-shadow:
+            0 10px 36px rgba(0, 0, 0, 0.30),
+            inset 0 1px 0 rgba(255, 255, 255, 0.45),
+            inset 0 -1px 0 rgba(255, 255, 255, 0.08);
     }
 }
 
