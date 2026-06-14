@@ -4,7 +4,7 @@ import imageapropos from "./images/Apropos.png";
 
 export default function ImageTextSlider() {
   return (
-    <div className="section-container-all">
+    <div className="section-container-all" data-reveal>
       <h2>À Propos</h2>
       <div className="section-container">
         <div className="section-image">

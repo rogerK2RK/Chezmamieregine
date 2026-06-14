@@ -10,12 +10,14 @@
   min-height: 94%;
 }
 
-/* Image de fond  */
+/* Image de fond + voile sombre pour lisibilité du texte blanc */
 .nosplats-container::before {
   content: "";
   position: absolute;
   inset: 0;
-  background-image: var(--bg-img);
+  background-image:
+    linear-gradient(rgba(40, 20, 8, 0.45), rgba(40, 20, 8, 0.55)),
+    var(--bg-img);
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
@@ -39,6 +41,35 @@
   color: #ffffff;
   font-weight: bold;
   margin: 0 0 24px 0;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+/* États (chargement / vide / erreur) */
+.nosplats-loading,
+.nosplats-empty {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 1.05rem;
+  padding: 2.5rem 1rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 16px;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  max-width: 520px;
+  margin: 0 auto 24px;
+}
+
+.nosplats-error {
+  text-align: center;
+  color: #fff;
+  background: rgba(220, 38, 38, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 12px;
+  padding: 0.9rem 1.1rem;
+  max-width: 520px;
+  margin: 0 auto 20px;
+  font-size: 0.95rem;
 }
 
 /* CARROUSEL */
@@ -296,4 +327,45 @@
     transparent,
     rgba(255, 255, 255, 0.3)
   );
+}
+
+/* ===========================
+   MICRO-INTERACTIONS
+   =========================== */
+
+/* Lift de la carte au survol */
+.nosplats-card {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.3s ease;
+}
+.slider-item:hover .nosplats-card {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.22);
+}
+
+/* Zoom de l'image au survol de la carte */
+.nosplats-image-container {
+  overflow: hidden;
+  border-radius: 12px;
+}
+.nosplats-image {
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.slider-item:hover .nosplats-image {
+  transform: scale(1.06);
+}
+
+/* Animation des dots */
+.slider-dots .dot {
+  transition: transform 0.25s ease, background 0.25s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nosplats-card,
+  .nosplats-image,
+  .slider-item:hover .nosplats-card,
+  .slider-item:hover .nosplats-image {
+    transition: none;
+    transform: none;
+  }
 }

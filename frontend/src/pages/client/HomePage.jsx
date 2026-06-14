@@ -7,7 +7,6 @@ import Cta from '../../components/shared/CTA/cta.jsx';
 import ContactForm from '../../components/shared/ContactForm/ContactForm.jsx';
 
 export default function HomePage() {
-
   useEffect(() => {
     // -------- TITLE --------
     document.title = "Chez Mamie Régine – Plats malgaches faits maison";

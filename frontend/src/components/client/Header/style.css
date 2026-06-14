@@ -460,3 +460,76 @@ button, a {
 .account-dropdown-item.danger {
   color: #a02323;
 }
+
+/* =========================================================
+   RAFFINEMENTS MENU DESKTOP (≥820px)
+   ========================================================= */
+@media (min-width: 820px) {
+  .menu {
+    gap: 0.25rem;
+  }
+
+  .nav {
+    gap: 0.35rem;
+  }
+
+  /* Liens : soulignement animé propre plutôt qu'un fond plein */
+  .nav .nav-link,
+  .nav .menu-item {
+    background: transparent;
+    border-radius: 0;
+    padding: 8px 14px;
+    letter-spacing: 0.02em;
+  }
+
+  .nav .menu-item::after {
+    content: '';
+    position: absolute;
+    left: 14px;
+    right: 14px;
+    bottom: 4px;
+    height: 2px;
+    background: #fff;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .nav .menu-item:hover {
+    background: transparent;
+    transform: none;
+  }
+
+  .nav .menu-item:hover::after {
+    transform: scaleX(1);
+  }
+
+  /* Séparateur Connexion / Inscription */
+  .cnx-dcnx {
+    color: rgba(255, 255, 255, 0.35);
+    gap: 0.15rem;
+    font-weight: 400;
+  }
+
+  /* CTA "Commander" dans la barre */
+  .nav .dropdown-cta {
+    margin-left: 0.35rem;
+    padding: 10px 22px;
+    border-radius: 999px;
+    box-shadow: 0 6px 16px rgba(239, 80, 7, 0.32);
+    transition: transform 0.18s ease, box-shadow 0.25s ease, filter 0.15s ease;
+  }
+
+  .nav .dropdown-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(239, 80, 7, 0.42);
+    filter: brightness(1.03);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav .menu-item::after,
+  .nav .dropdown-cta {
+    transition: none;
+  }
+}

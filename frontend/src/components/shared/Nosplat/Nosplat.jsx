@@ -84,7 +84,7 @@ const NosPlats = () => {
       className="nosplats-container"
       style={{ ['--bg-img']: `url(${imgbackground})` }}
     >
-      <div className="nosplats-wrapper">
+      <div className="nosplats-wrapper" data-reveal>
         <h2 className="nosplats-title">Nos Plats</h2>
 
         {err && <div className="nosplats-error">{err}</div>}

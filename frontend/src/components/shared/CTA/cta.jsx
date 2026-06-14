@@ -6,7 +6,7 @@ import ctaImage from './images/cta.png';
 const Cta = () => {
   return (
     <div className="cta-container">
-      <div className="box">
+      <div className="box" data-reveal>
         <div className="cta-content">
           <p className="title">
             Lorem ipsom<br /> doloresd sit amet

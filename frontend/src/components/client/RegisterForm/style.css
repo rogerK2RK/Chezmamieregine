@@ -1,39 +1,45 @@
 /* ===========================
-   INSCRIPTION — MOBILE FIRST
-   Base = mobile ; enrichie pour tablette / desktop
+   INSCRIPTION — Carte élégante sur fond chaud
+   Cohérente avec la page Connexion
    =========================== */
 
-/* ===== Base mobile ===== */
 .connexion-container-content {
-  background: url(../../../assets/background.png) no-repeat;
+  position: relative;
+  background:
+    linear-gradient(rgba(40, 18, 8, 0.55), rgba(40, 18, 8, 0.65)),
+    url(../../../assets/background.png) no-repeat;
   background-size: cover;
-  background-position: 45%;
-  background-attachment: scroll;       /* mobile: plus fluide */
-  padding: 5.5rem 1rem;                /* mobile: plus compact */
+  background-position: center;
+  background-attachment: scroll;
+  padding: 5rem 1rem;
+  min-height: 80vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 70vh;
 }
 
 .register-form {
-  background-color: #FFF;
-  padding: 1.5rem;
+  background-color: #fffdfb;
+  padding: 2.25rem 1.75rem;
   width: 100%;
-  max-width: 420px;                    /* mobile : largeur agréable */
+  max-width: 480px;
   display: flex;
   flex-direction: column;
-  border-radius: 12px;
-  gap: 0.5rem;
+  border-radius: 20px;
+  gap: 0.25rem;
+  box-shadow: 0 24px 60px rgba(20, 8, 3, 0.35);
+  border: 1px solid rgba(115, 35, 13, 0.08);
 }
 
 .connexion-container-content h1 {
   width: 100%;
-  margin: 0 0 1rem 0;
+  margin: 0 0 1.25rem 0;
   text-align: center;
-  font-family: var(--font-body) ! important;
-  font-size: 2rem;
-  font-weight: 600;
+  font-family: 'Playfair Display', serif ! important;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #2c1810;
+  text-transform: none;
 }
 
 .form-group {
@@ -43,76 +49,97 @@
   margin-bottom: 1rem;
 }
 
+.register-form label {
+  margin-bottom: 0.45rem;
+  font-weight: 600;
+  font-size: 0.88rem;
+  text-transform: none;
+  color: #4b3a33;
+}
+
 .register-form input,
 .register-form select {
-  padding: 0.85rem 0.9rem;
-  border: 1px solid #e5e7eb;
-  border-radius: 10px;
+  padding: 0.9rem 1rem;
+  border: 1px solid #e3d9d3;
+  border-radius: 12px;
   font-size: 1rem;
-  background: #fff;
+  font-family: var(--font-body);
+  background: #fdfbfa;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.register-form input::placeholder {
+  color: #b3a59d;
 }
 
 .register-form input:focus,
 .register-form select:focus {
   outline: none;
-  box-shadow: 0 0 0 4px rgba(239, 80, 7, 0.14);
+  background: #fff;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 4px rgba(239, 80, 7, 0.16);
 }
 
 .register-form .btn-primary {
   width: 100%;
-  max-width: 320px;
-  margin: 0.5rem auto 0;
+  max-width: none;
+  margin: 0.5rem 0 0;
+  background: #EF5007;
+  color: #fff;
+  border: none;
+  padding: 0.95rem 1.5rem;
+  font-size: 1rem;
+  border-radius: 12px;
+  letter-spacing: 0.02em;
 }
 
-/* ===========================
-   TABLET (≥768px)
-   =========================== */
+/* Lien de bascule (vers la connexion) */
+.form-switch {
+  margin: 1.25rem 0 0;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #8a7468;
+  text-transform: none;
+}
+.form-switch a {
+  color: #EF5007;
+  font-weight: 700;
+  text-decoration: none;
+  text-transform: none;
+}
+.form-switch a:hover {
+  text-decoration: underline;
+}
+
+/* ===== Tablette (≥768px) ===== */
 @media (min-width: 768px) {
   .connexion-container-content {
-    padding: 9rem 3rem;
+    padding: 6rem 3rem;
   }
-
   .register-form {
-    padding: 2rem 2.5rem;
-    width: 70%;
-  }
-
-  .connexion-container-content h1 {
-    font-size: 1.9rem;
+    padding: 2.75rem 2.5rem;
+    max-width: 500px;
   }
 }
 
-/* ===========================
-   DESKTOP (≥1024px)
-   — remet tes valeurs d’origine
-   =========================== */
+/* ===== Desktop (≥1024px) ===== */
 @media (min-width: 1024px) {
   .connexion-container-content {
-    background-attachment: fixed;     /* ton fond fixe */
-    padding: 9rem 12rem;             /* valeurs d’origine */
+    background-attachment: fixed;
+    padding: 7rem 2rem;
   }
-
   .register-form {
-    padding: 3rem 4rem 3rem;
-    width: 30%;                       /* ta largeur fixe */
-    flex-wrap: wrap;
+    max-width: 500px;
   }
-
   .connexion-container-content h1 {
-    font-size: 2rem;
+    font-size: 2.4rem;
   }
 }
 
-/*pop up inscription*/
-/* Pour que l'absolute se base sur ce conteneur */
-.connexion-container-content {
-  position: relative;
-}
-
-/* Overlay du popup */
+/* ===== Pop-up succès inscription ===== */
 .register-success-popup {
   position: absolute;
-  inset: 0; /* top:0; right:0; bottom:0; left:0 */
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -120,21 +147,26 @@
   z-index: 20;
 }
 
-/* Boîte centrale */
 .register-success-box {
   background: #ffffff;
-  padding: 1.5rem 2rem;
-  border-radius: 12px;
+  padding: 2rem;
+  border-radius: 16px;
   text-align: center;
-  max-width: 320px;
-  width: 100%;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
-  font-size: 0.95rem;
+  max-width: 360px;
+  width: 90%;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  font-size: 0.98rem;
+  color: #2c1810;
 }
 
-/* Bouton fermer */
 .btn-close-popup {
-  margin-top: 1rem;
+  margin-top: 1.25rem;
+  width: 100%;
+  background: #EF5007;
+  color: #fff;
+  border: none;
+  padding: 0.85rem 1.5rem;
+  border-radius: 12px;
 }
 
 /* Erreurs */
@@ -148,4 +180,3 @@
   margin-bottom: 10px;
   text-align: center;
 }
-

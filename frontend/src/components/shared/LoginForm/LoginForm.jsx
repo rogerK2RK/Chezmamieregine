@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import api from '../../../services/api';
 import { useClientAuth } from '../../../context/ClientAuthContext.jsx';
 import './style.css';
@@ -78,6 +78,7 @@ export default function LoginForm() {
         aria-label="Formulaire de connexion client"
       >
         <h1>Connexion</h1>
+        <p className="form-subtitle">Heureux de vous revoir chez Mamie Régine</p>
 
         {/* EMAIL */}
         <div className="form-group">
@@ -114,6 +115,10 @@ export default function LoginForm() {
         >
           Se connecter
         </button>
+
+        <p className="form-switch">
+          Pas encore de compte ? <Link to="/inscription">Créer un compte</Link>
+        </p>
       </form>
     </div>
   );

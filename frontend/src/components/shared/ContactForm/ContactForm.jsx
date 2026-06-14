@@ -57,7 +57,7 @@ export default function ContactForm({ isPageContact = false }) {
   };
 
   return (
-    <div className="contact-container">
+    <div className="contact-container" data-reveal>
       <TitleTag>Contactez-nous</TitleTag>
 
       <div className="contact-container-content">

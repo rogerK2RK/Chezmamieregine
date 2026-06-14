@@ -46,10 +46,27 @@
   height: 240px;
 }
 
+.cta-image {
+  overflow: hidden;
+}
+
 .cta-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.box:hover .cta-image img {
+  transform: scale(1.05);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cta-image img,
+  .box:hover .cta-image img {
+    transition: none;
+    transform: none;
+  }
 }
 
 /* ===========================

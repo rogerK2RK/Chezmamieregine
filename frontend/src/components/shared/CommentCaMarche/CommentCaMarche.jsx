@@ -29,7 +29,12 @@ const CommentCaMarche = () => {
       
       <div className="ccm-grid">
         {steps.map((step, index) => (
-          <div key={index} className="ccm-step">
+          <div
+            key={index}
+            className="ccm-step"
+            data-reveal
+            style={{ '--reveal-delay': `${index * 0.12}s` }}
+          >
             <div className="ccm-icon-wrapper">
               <div className="ccm-icon-circle">
                 <img src={step.icon} alt={step.title} className="ccm-icon" />

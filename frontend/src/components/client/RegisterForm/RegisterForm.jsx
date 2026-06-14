@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import api from '../../../services/api';
 import './style.css';
 
@@ -190,6 +191,10 @@ export default function RegisterForm() {
         >
           S'inscrire
         </button>
+
+        <p className="form-switch">
+          Déjà un compte ? <Link to="/connexion">Se connecter</Link>
+        </p>
       </form>
     </div>
   );
