@@ -29,12 +29,42 @@ export default function Hero() {
       </div>
 
       <div className="hero-content">
-          <h1 className="title">Chez<br/> 
-            Mamie Régine</h1>
-          <div className="hero-content-scd">
-            <span className="text-lg">Les saveurs authentiques de la grande île</span>
-            <Link className="btn-primary" to="/produits">Voire nos plats</Link>
-          </div>
+        <span className="hero-eyebrow">La cuisine maison qui réchauffe le cœur</span>
+
+        <h1 className="title">
+          Des plats malgaches authentiques préparés{' '}
+          <span className="title-accent">avec amour.</span>
+        </h1>
+
+        <p className="hero-desc">
+          Chez Mamie Régine, chaque recette raconte une histoire de famille,
+          de tradition et de partage. Fait maison, avec des ingrédients frais
+          et locaux.
+        </p>
+
+        <div className="hero-actions">
+          <Link className="btn-primary" to="/produits">Découvrir le menu →</Link>
+          <a className="btn-outline" href="tel:0668347755">Commander maintenant</a>
+        </div>
+
+        <ul className="hero-stats">
+          <li className="hero-stat">
+            <span className="hero-stat-num">100%</span>
+            <span className="hero-stat-label">Fait maison</span>
+          </li>
+          <li className="hero-stat">
+            <span className="hero-stat-num">10K+</span>
+            <span className="hero-stat-label">Clients satisfaits</span>
+          </li>
+          <li className="hero-stat">
+            <span className="hero-stat-num">4.9/5</span>
+            <span className="hero-stat-label">Avis Google</span>
+          </li>
+          <li className="hero-stat">
+            <span className="hero-stat-num">Frais</span>
+            <span className="hero-stat-label">Ingrédients locaux</span>
+          </li>
+        </ul>
       </div>
 
     </div>

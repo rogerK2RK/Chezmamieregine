@@ -114,14 +114,20 @@ button, a {
   to   { opacity: 1; transform: translateY(0); }
 }
 
+.hero-content .hero-eyebrow {
+  animation: hero-fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
 .hero-content .title {
-  animation: hero-fade-up 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: hero-fade-up 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.12s both;
 }
-.hero-content .text-lg {
-  animation: hero-fade-up 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+.hero-content .hero-desc {
+  animation: hero-fade-up 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.24s both;
 }
-.hero-content-scd .btn-primary {
-  animation: hero-fade-up 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both;
+.hero-content .hero-actions {
+  animation: hero-fade-up 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.36s both;
+}
+.hero-content .hero-stats {
+  animation: hero-fade-up 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.48s both;
 }
 
 /* --- Lift global au survol des boutons --- */
@@ -144,9 +150,11 @@ button, a {
     transform: none;
     transition: none;
   }
+  .hero-content .hero-eyebrow,
   .hero-content .title,
-  .hero-content .text-lg,
-  .hero-content-scd .btn-primary {
+  .hero-content .hero-desc,
+  .hero-content .hero-actions,
+  .hero-content .hero-stats {
     animation: none;
   }
   .btn-primary:hover { transform: none; }
