@@ -14,6 +14,10 @@ const app = express();
 /* Proxy (Render/NGINX/Vercel) */
 app.set('trust proxy', 1);
 
+/* Health-check infra (Render) — répond AVANT l'init DB pour que le service soit
+   toujours vu "live", même si MongoDB est momentanément indisponible. */
+app.get('/healthz', (_req, res) => res.json({ ok: true }));
+
 /* --- Initialisation unique (DB + superadmin) ---
    Mémorisée pour ne s'exécuter qu'une fois, même en serverless où le module
    peut être réutilisé entre invocations (cold start partagé). */
@@ -99,7 +103,6 @@ app.use('/api/public',         require('./routes/publicRoutes'));
 app.use('/api/me',             require('./routes/meRoutes'));
 
 /* --- Health --- */
-app.get('/healthz', (_req, res) => res.json({ ok: true }));
 app.get('/api/health', (_req, res) => res.json({ ok: true }));
 
 /* --- 404 & erreurs --- */
