@@ -9,6 +9,10 @@ const { ensureSuperAdmin } = require('./utils/initAdmin');
 const publicContactRoutes = require('./routes/publicContactRoutes');
 
 dotenv.config();
+
+// Valide la présence des secrets JWT au démarrage (fail-fast).
+require('./config/jwt');
+
 const app = express();
 
 /* Proxy (Render/NGINX/Vercel) */

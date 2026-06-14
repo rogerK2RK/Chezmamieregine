@@ -4,6 +4,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 // Modèle Mongoose pour les clients
 const Client = require('../models/Client');
+// Secret JWT centralisé (validé au démarrage)
+const { JWT_SECRET } = require('../config/jwt');
 
 // =========================
 // Regex de validation
@@ -15,8 +17,7 @@ const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/;
 
 // 🔐 Génère un token JWT pour un client connecté
 function signClientToken(id) {
-  const secret = process.env.JWT_SECRET || 'dev_secret';
-  return jwt.sign({ id }, secret, { expiresIn: '30d' }); // Token valide 30 jours
+  return jwt.sign({ id }, JWT_SECRET, { expiresIn: '30d' }); // Token valide 30 jours
 }
 
 // 🧾 Contrôleur : inscription d’un nouveau client

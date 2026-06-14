@@ -2,15 +2,16 @@
 const bcrypt = require('bcryptjs');
 // Pour la génération de tokens JWT            
 const jwt = require('jsonwebtoken');
-// Modèle Mongoose pour les utilisateurs admin         
+// Modèle Mongoose pour les utilisateurs admin
 const AdminUser = require('../models/AdminUser');
+// Secret JWT admin centralisé (validé au démarrage)
+const { JWT_ADMIN_SECRET } = require('../config/jwt');
 
 // Fonction utilitaire : génère un token JWT pour un admin
 function signAdminToken(admin) {
-  const secret = process.env.JWT_ADMIN_SECRET || process.env.JWT_SECRET;
   return jwt.sign(
     { id: admin._id, type: 'admin', role: admin.role },
-    secret,
+    JWT_ADMIN_SECRET,
     { expiresIn: '30d' }
   );
 }

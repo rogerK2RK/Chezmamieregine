@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const Client = require('../models/Client');
+const { JWT_SECRET } = require('../config/jwt');
 
 const clientProtect = async (req, res, next) => {
   try {
@@ -11,11 +12,9 @@ const clientProtect = async (req, res, next) => {
 
     const token = auth.split(' ')[1];
 
-    // ⚠️ Utilise EXACTEMENT le même secret que pour la signature (fallback inclus)
-    const secret = process.env.JWT_SECRET || 'dev_secret';
     let decoded;
     try {
-      decoded = jwt.verify(token, secret);
+      decoded = jwt.verify(token, JWT_SECRET);
       console.log('[clientProtect] decoded =', decoded); // log payload
     } catch (e) {
       console.error('[clientProtect] verify ERROR:', e.name, e.message);

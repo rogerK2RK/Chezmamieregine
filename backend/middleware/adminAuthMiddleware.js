@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const AdminUser = require('../models/AdminUser');
+const { JWT_ADMIN_SECRET } = require('../config/jwt');
 
 exports.adminProtect = async (req, res, next) => {
   try {
@@ -11,7 +12,7 @@ exports.adminProtect = async (req, res, next) => {
 
     // Extrait et vérifie le jeton avec la clé secrète
     const token = auth.split(' ')[1];
-    const decoded = jwt.verify(token, process.env.JWT_ADMIN_SECRET || process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, JWT_ADMIN_SECRET);
 
     // Vérifie le rôle et le type de compte du token
     if (!decoded.type || !['admin', 'owner', 'superAdmin'].includes(decoded.role)) {

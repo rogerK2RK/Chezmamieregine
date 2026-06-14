@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const { JWT_SECRET } = require("../config/jwt");
 
 // Middleware pour protéger les routes des utilisateurs connectés
 const protect = async (req, res, next) => {
@@ -10,7 +11,7 @@ const protect = async (req, res, next) => {
     try {
       // Extrait le jeton et le vérifie avec la clé secrète
       token = token.split(" ")[1];
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const decoded = jwt.verify(token, JWT_SECRET);
 
       // Récupère l’utilisateur associé au token (sans le mot de passe)
       req.user = await User.findById(decoded.id).select("-password");
