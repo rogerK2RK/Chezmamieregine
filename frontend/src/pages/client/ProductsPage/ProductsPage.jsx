@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import api from '../../../services/api';
 import { MOCK_PLATS, MOCK_CATEGORIES } from '../../../data/mockPlats';
+import { whatsappLink } from '../../../config/contact.js';
 import Reassurance from '../../../components/shared/Reassurance/Reassurance.jsx';
 import heroImg from '../../../components/shared/Hero/images/hero-ravitoto.jpg';
 import './style.css';
@@ -76,6 +77,13 @@ export default function ProductsPage() {
 
   const goCat = (s) => navigate(s ? `/produits/${s}` : '/produits');
   const openPlat = (p) => navigate(`/produit/${p._id}`);
+
+  // Lien WhatsApp pré-rempli avec le plat choisi
+  const orderLink = (p) =>
+    whatsappLink(
+      `Bonjour Chez Mamie Régine 👋, je souhaite commander : ${p.name}` +
+      (p.price ? ` (${Number(p.price).toFixed(0)} €)` : '') + '.'
+    );
 
   const Badges = ({ p }) => {
     const badges = Array.isArray(p.badges) && p.badges.length ? p.badges : ['Fait maison'];
@@ -193,7 +201,13 @@ export default function ProductsPage() {
                 </div>
 
                 <div className="menu-card-body">
-                  <h2 className="menu-card-title">
+                  <h2
+                    className="menu-card-title"
+                    onClick={() => openPlat(p)}
+                    role="link"
+                    tabIndex={0}
+                    onKeyDown={(e) => e.key === 'Enter' && openPlat(p)}
+                  >
                     {p.nameMain || p.name}
                     {p.nameAccent ? <span className="menu-card-accent"> {p.nameAccent}</span> : null}
                   </h2>
@@ -201,7 +215,19 @@ export default function ProductsPage() {
                   <p className="menu-card-desc">{p.description || ''}</p>
                   <div className="menu-card-foot">
                     <span className="menu-card-price">{Number(p.price ?? 0).toFixed(0)} €</span>
-                    <button className="btn-primary" onClick={() => openPlat(p)}>Commander</button>
+                    <div className="menu-card-actions">
+                      <button className="menu-card-link" onClick={() => openPlat(p)}>
+                        Voir le plat
+                      </button>
+                      <a
+                        className="btn-primary"
+                        href={orderLink(p)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Commander
+                      </a>
+                    </div>
                   </div>
                 </div>
               </article>
@@ -238,7 +264,16 @@ export default function ProductsPage() {
                   </div>
                   <div className="menu-mini-foot">
                     <span className="menu-mini-price">{Number(p.price ?? 0).toFixed(0)} €</span>
-                    <button className="menu-mini-add" aria-label={`Commander ${p.name}`}>+</button>
+                    <a
+                      className="menu-mini-add"
+                      href={orderLink(p)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`Commander ${p.name} sur WhatsApp`}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      +
+                    </a>
                   </div>
                 </article>
               ))}

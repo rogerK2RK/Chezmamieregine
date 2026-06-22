@@ -195,6 +195,11 @@
   line-height: 1.1;
   color: var(--color-secondary);
   margin: 0;
+  cursor: pointer;
+  transition: color var(--dur) ease;
+}
+.menu-card-title:hover {
+  color: var(--color-primary);
 }
 .menu-card-accent {
   display: block;
@@ -240,6 +245,27 @@
   font-size: var(--fs-xl);
   font-weight: 700;
   color: var(--color-secondary);
+}
+.menu-card-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+.menu-card-link {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--color-text-muted);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  text-transform: none;
+  cursor: pointer;
+  border-bottom: 1px solid var(--color-border);
+  transition: color var(--dur) ease, border-color var(--dur) ease;
+}
+.menu-card-link:hover {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
 }
 .menu-card-foot .btn-primary {
   padding: 0.7rem 1.4rem;
@@ -326,6 +352,9 @@
   color: var(--color-secondary);
 }
 .menu-mini-add {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: 32px;
   height: 32px;
   border-radius: 50%;
@@ -334,11 +363,13 @@
   color: #fff;
   font-size: 1.2rem;
   line-height: 1;
+  text-decoration: none;
   cursor: pointer;
   transition: var(--transition);
 }
 .menu-mini-add:hover {
   background: var(--color-primary-dark);
+  transform: scale(1.1);
 }
 
 /* États */
