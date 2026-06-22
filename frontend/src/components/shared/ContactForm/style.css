@@ -15,7 +15,7 @@
 
 .contact-container h2, .contact-container h1 {
   margin: 0 0 1.75rem 0! important;
-  font-family: 'Playfair Display', serif ! important;
+  font-family: var(--font-display) ! important;
   font-size: 2.2rem! important;
   font-weight: 700! important;
   color: #ffffff! important;
@@ -96,13 +96,13 @@
   .contact-channels { grid-template-columns: repeat(3, 1fr); }
 }
 
-/* ===== Formulaire ===== */
+/* ===== Formulaire (carte papier claire, accent lumineux) ===== */
 .form-section {
   padding: 1.75rem;
-  background-color: var(--color-white);
+  background-color: #FFFDF8;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
-  border: 1px solid var(--color-border);
+  border: 2px solid var(--color-ink);
 }
 
 .contact-form {

@@ -1,70 +1,82 @@
-/* === Import Google Fonts === */
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=Playfair+Display:wght@600;700&family=MonteCarlo&display=swap');
+/* === Import Google Fonts ===
+   Anton  -> titres "affiche" condensés (capitales)
+   Manrope -> corps de texte moderne et net
+   Fraunces -> accents éditoriaux (italique chaleureux) */
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,500;1,9..144,500;1,9..144,600&display=swap');
 
 /* =========================================================
-   DESIGN SYSTEM — Chez Mamie Régine
-   Identité : restaurant malgache premium, palette chaude
-   (terracotta / ocre / crème / brun épice).
-   Toutes les valeurs ci-dessous sont les "tokens" à réutiliser
-   partout (couleurs, espacements, rayons, ombres, typo, transitions).
+   DESIGN SYSTEM v2 — "ATELIER" (affiche éditoriale)
+   Papier clair, encre profonde, orange en seule couleur punch.
+   Typo condensée massive (Anton) + Manrope.
    ========================================================= */
 :root {
   /* ---- Polices ---- */
-  --font-title: 'MonteCarlo', cursive;          /* Nom de marque (H1 signature) */
-  --font-subtitle: 'Playfair Display', serif;   /* Titres de section (H1/H2) */
-  --font-auther-title: 'Playfair Display', serif; /* alias rétro-compat */
-  --font-body: 'Montserrat', sans-serif;        /* Texte, boutons, navigation */
+  --font-display: 'Anton', sans-serif;          /* Titres affiche (capitales) */
+  --font-subtitle: 'Anton', sans-serif;         /* (alias utilisé par les composants) */
+  --font-title: 'Anton', sans-serif;
+  --font-serif: 'Fraunces', serif;              /* Accent éditorial italique */
+  --font-body: 'Manrope', sans-serif;           /* Texte, boutons, nav */
 
-  /* ---- Couleurs de marque ---- */
-  --color-primary: #EF5007;          /* Orange brûlé — accent principal */
-  --color-primary-dark: #C53D00;     /* Orange foncé — survols */
-  --color-primary-soft: rgba(239, 80, 7, 0.12); /* Fond/halo léger */
-  --color-accent: #D9A441;           /* Ocre doré */
-  --color-terracotta: #B0512F;       /* Terracotta */
-  --color-spice: #7A2E12;            /* Brun épice (voiles, accents foncés) */
+  /* ---- Couleurs ---- */
+  --color-primary: #EF5007;          /* Orange punch (conservé) */
+  --color-primary-dark: #C53D00;
+  --color-primary-soft: rgba(239, 80, 7, 0.12);
+  --color-accent: #1F6F5C;           /* Vert profond (rappel Madagascar, secondaire) */
 
-  /* ---- Surfaces & texte ---- */
-  --color-bg: #FFFFFF;               /* Fond principal */
-  --color-bg-alt: #FBF6EF;           /* Fond secondaire (crème chaud) */
-  --color-cream: #FBF6EF;            /* Crème */
-  --color-cream-alt: #F3E9DC;        /* Crème plus soutenue */
-  --color-dark: #1A0F0A;             /* Brun-noir profond (header/hero) */
-  --color-dark-alt: #2A1A12;         /* Brun foncé alternatif */
-  --color-secondary: #2A1A12;        /* Texte principal (brun chaud) */
-  --color-text: #2A1A12;             /* alias texte */
-  --color-text-muted: #6B5A4E;       /* Texte secondaire / discret */
-  --color-border: #EAE0D5;           /* Bordures (chaud) */
-  --color-white: #FFFFFF;
+  --color-ink: #0E0B07;              /* Fond principal — encre profonde chaude */
+  --color-surface: #181109;          /* Surface (sections) */
+  --color-surface-2: #221811;        /* Cartes / panneaux */
+  --color-paper: #F4ECDD;            /* Crème — texte clair & accents lumineux */
+  --color-paper-2: #E7D9C2;
+
+  /* alias rétro-compat (réutilisés par les composants existants) -> thème SOMBRE
+     - "secondary" = couleur de texte par défaut (clair sur fond sombre)
+     - "cream" = fond de section (devient une surface sombre)
+     - "white" = fond de carte (devient un panneau sombre) */
+  --color-secondary: var(--color-paper);
+  --color-text: var(--color-paper);
+  --color-text-muted: #A99A86;
+  --color-bg: var(--color-ink);
+  --color-bg-alt: var(--color-surface);
+  --color-cream: var(--color-surface);
+  --color-cream-alt: var(--color-surface-2);
+  --color-dark: var(--color-ink);
+  --color-dark-alt: #241C15;
+  --color-white: var(--color-surface-2);   /* "cartes blanches" -> panneaux sombres */
+  --color-border: rgba(244, 236, 221, 0.14); /* filet clair sur sombre */
+  --color-border-ink: rgba(244, 236, 221, 0.14);
+  --color-terracotta: #B0512F;
+  --color-spice: #7A2E12;
 
   /* ---- États ---- */
-  --color-success: #3F8F5B;
+  --color-success: #2F7A4E;
   --color-error: #C0392B;
   --color-info: #2E7D9A;
 
-  /* ---- Espacement (échelle 4 / 8px) ---- */
-  --space-2xs: 0.25rem;  /* 4px  */
-  --space-xs:  0.5rem;   /* 8px  */
-  --space-sm:  0.75rem;  /* 12px */
-  --space-md:  1rem;     /* 16px */
-  --space-lg:  1.5rem;   /* 24px */
-  --space-xl:  2rem;     /* 32px */
-  --space-2xl: 3rem;     /* 48px */
-  --space-3xl: 4rem;     /* 64px */
-  --space-4xl: 6rem;     /* 96px */
-  --section-y: clamp(3rem, 8vw, 6rem); /* rythme vertical des sections */
+  /* ---- Espacement ---- */
+  --space-2xs: 0.25rem;
+  --space-xs:  0.5rem;
+  --space-sm:  0.75rem;
+  --space-md:  1rem;
+  --space-lg:  1.5rem;
+  --space-xl:  2rem;
+  --space-2xl: 3rem;
+  --space-3xl: 4rem;
+  --space-4xl: 6rem;
+  --section-y: clamp(3.5rem, 9vw, 7rem);
 
-  /* ---- Rayons de bordure ---- */
-  --radius-sm: 8px;
-  --radius-md: 14px;
-  --radius-lg: 20px;
-  --radius-xl: 28px;
+  /* ---- Rayons (anguleux = look affiche) ---- */
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 6px;
+  --radius-xl: 10px;
   --radius-full: 999px;
 
-  /* ---- Ombres (teintées chaud) ---- */
-  --shadow-sm: 0 2px 8px rgba(42, 26, 18, 0.08);
-  --shadow-md: 0 8px 24px rgba(42, 26, 18, 0.12);
-  --shadow-lg: 0 18px 48px rgba(42, 26, 18, 0.18);
-  --shadow-brand: 0 10px 28px rgba(239, 80, 7, 0.28);
+  /* ---- Ombres (discrètes, on privilégie les filets) ---- */
+  --shadow-sm: 0 2px 0 rgba(23, 18, 14, 0.06);
+  --shadow-md: 6px 6px 0 rgba(23, 18, 14, 0.10);
+  --shadow-lg: 10px 10px 0 var(--color-ink);
+  --shadow-brand: 8px 8px 0 var(--color-primary);
 
   /* ---- Transitions ---- */
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
@@ -73,206 +85,193 @@
   --dur-slow: 0.6s;
   --transition: all var(--dur) var(--ease);
 
-  /* ---- Échelle typographique ---- */
-  --fs-xs: 0.78rem;   /* 12.5px — eyebrow / labels */
-  --fs-sm: 0.9rem;    /* 14px   — texte secondaire */
-  --fs-base: 1rem;    /* 16px   — corps */
-  --fs-md: 1.125rem;  /* 18px   — corps proéminent */
-  --fs-lg: 1.35rem;   /* 21px   — sous-titres */
-  --fs-xl: 1.75rem;   /* 28px   — H3 */
-  --fs-2xl: 2.25rem;  /* 36px   — H2 */
-  --fs-3xl: 3rem;     /* 48px   — H1 */
-  --fs-display: clamp(2.5rem, 6vw, 4rem); /* titres héros */
+  /* ---- Échelle typo ---- */
+  --fs-xs: 0.75rem;
+  --fs-sm: 0.875rem;
+  --fs-base: 1rem;
+  --fs-md: 1.125rem;
+  --fs-lg: 1.35rem;
+  --fs-xl: 1.75rem;
+  --fs-2xl: 2.5rem;
+  --fs-3xl: 3.5rem;
+  --fs-display: clamp(3rem, 11vw, 8rem);
 
-  /* rétro-compat (anciens noms) */
-  --fs-h1: 2.5rem;
+  --fs-h1: 3rem;
   --fs-h2: 2rem;
   --fs-h3: 1.5rem;
   --fs-body: 1rem;
 
   /* ---- Conteneurs ---- */
-  --container: 1200px;
+  --container: 1240px;
   --container-narrow: 760px;
-  --container-wide: 1320px;
+  --container-wide: 1400px;
 }
 
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
-html {
-  scroll-behavior: smooth;
-}
+html { scroll-behavior: smooth; }
 
 body {
   margin: 0;
   min-height: 100vh;
+  background: var(--color-ink);
   font-family: var(--font-body);
-  color: var(--color-secondary);
+  color: var(--color-paper);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-::selection {
-  background: var(--color-primary);
-  color: #fff;
-}
+::selection { background: var(--color-primary); color: #fff; }
 
-/* Titres */
-h1 {
-  font-family: 'MonteCarlo', cursive !important;
+/* ---- Titres : Anton, capitales, très serrés ---- */
+h1, h2, h3 {
+  font-family: var(--font-display);
   font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.005em;
+  line-height: 0.95;
+  margin: 0;
 }
+h1 { font-size: var(--fs-3xl); }
+h2 { font-size: var(--fs-2xl); }
+h3 { font-size: var(--fs-xl); }
+h4 { font-family: var(--font-body); font-weight: 700; margin: 0; }
 
-h4 {
-  font-family: var(--font-body);
-}
-
-h2 {
-  font-family: var(--font-body);
-  font-size: var(--fs-2xl);
-  font-weight: 600;
-}
-
-h3 {
-  font-family: var(--font-body);
-  font-size: var(--fs-xl);
-  font-weight: 600;
-}
-
-/* Texte */
 p, span, li {
   font-family: var(--font-body);
   font-size: var(--fs-base);
   font-weight: 400;
 }
 
-/* Boutons & liens */
 button, a {
   font-family: var(--font-body);
   font-size: var(--fs-base);
-  font-weight: 600;
-  text-transform: uppercase;
+  font-weight: 700;
 }
 
-/* Champs de formulaire : héritent de la police du site (évite le rendu navigateur) */
-input, textarea, select {
-  font-family: var(--font-body);
+input, textarea, select { font-family: var(--font-body); }
+
+/* Accent éditorial italique (Fraunces) — pour ponctuer un titre */
+.accent-serif {
+  font-family: var(--font-serif);
+  font-style: italic;
+  text-transform: none;
+  font-weight: 500;
+  letter-spacing: -0.01em;
 }
 
 /* =========================================================
-   UTILITAIRES PARTAGÉS
+   UTILITAIRES
    ========================================================= */
-
-/* Conteneur centré standard (largeur de contenu homogène) */
 .container {
   width: 100%;
   max-width: var(--container);
   margin-inline: auto;
-  padding-inline: var(--space-md);
+  padding-inline: var(--space-lg);
 }
 .container--narrow { max-width: var(--container-narrow); }
 
 /* =========================================================
-   BOUTONS (composant partagé)
+   BOUTONS — anguleux, contour encre, wipe orange au survol
    ========================================================= */
 .btn-primary,
 .btn-outline,
 .btn-ghost {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  padding: 0.85rem 1.6rem;
-  border-radius: var(--radius-full);
+  gap: 0.55rem;
+  padding: 0.95rem 1.7rem;
+  border-radius: var(--radius-sm);
   font-family: var(--font-body);
-  font-size: var(--fs-base);
-  font-weight: 600;
+  font-size: var(--fs-sm);
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.08em;
   text-decoration: none;
   cursor: pointer;
-  border: 1.5px solid transparent;
-  transition: var(--transition);
+  border: 2px solid transparent;
+  transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease),
+              background var(--dur) ease, color var(--dur) ease;
 }
 
 .btn-primary {
   background: var(--color-primary);
-  color: var(--color-white);
+  color: #fff;
+  border-color: var(--color-primary);
+  box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.45);
 }
 .btn-primary:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.55);
   background: var(--color-primary-dark);
-  box-shadow: var(--shadow-brand);
+  border-color: var(--color-primary-dark);
 }
+.btn-primary:active { transform: translate(0, 0); box-shadow: 2px 2px 0 rgba(0,0,0,0.4); }
 
 .btn-outline {
   background: transparent;
-  color: currentColor;
-  border-color: currentColor;
+  color: var(--color-paper);
+  border-color: var(--color-paper);
 }
 .btn-outline:hover {
-  background: var(--color-primary);
-  border-color: var(--color-primary);
-  color: var(--color-white);
+  background: var(--color-paper);
+  color: var(--color-ink);
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.45);
 }
 
 .btn-ghost {
-  background: var(--color-cream-alt);
-  color: var(--color-secondary);
+  background: var(--color-surface-2);
+  color: var(--color-paper);
+  box-shadow: var(--shadow-sm);
 }
-.btn-ghost:hover {
-  background: var(--color-cream);
-}
+.btn-ghost:hover { background: var(--color-surface); }
 
 /* =========================================================
-   EN-TÊTES DE SECTION (cohérence inter-blocs)
+   EN-TÊTES DE SECTION — numéro + filet + titre affiche
    ========================================================= */
 .section-eyebrow {
   display: inline-flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: 0.7rem;
   color: var(--color-primary);
+  font-family: var(--font-body);
   font-size: var(--fs-xs);
-  font-weight: 700;
-  letter-spacing: 0.16em;
+  font-weight: 800;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
-  margin-bottom: var(--space-sm);
 }
 .section-eyebrow::before {
   content: "";
-  width: 28px;
+  width: 34px;
   height: 2px;
   background: var(--color-primary);
 }
 
 .section-title {
-  font-family: var(--font-subtitle);   /* Playfair Display */
-  font-size: clamp(2rem, 5.5vw, 3rem);
-  font-weight: 700;
-  line-height: 1.12;
-  letter-spacing: -0.01em;
-  margin: 0 0 var(--space-md) 0;
-  /* couleur héritée du bloc : sombre sur fond clair, blanche sur fond sombre */
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 6vw, 4rem);
+  font-weight: 400;
+  text-transform: uppercase;
+  line-height: 0.95;
+  letter-spacing: 0.005em;
+  margin: var(--space-sm) 0 var(--space-md);
 }
 
-/* En-tête centré (blocs à titre centré : Nos plats, Comment ça marche…) */
 .section-head {
-  max-width: 640px;
+  max-width: 760px;
   margin: 0 auto var(--space-2xl);
   text-align: center;
 }
-.section-head .section-eyebrow {
-  justify-content: center;
-}
-.section-head .section-eyebrow::before {
-  display: none;   /* pas de tiret quand c'est centré */
-}
+.section-head .section-eyebrow { justify-content: center; }
 
-/* Squelette de chargement (états loading premium) */
+/* Squelette de chargement */
 .skeleton {
   position: relative;
   overflow: hidden;
-  background: var(--color-cream-alt);
+  background: var(--color-paper-2);
   border-radius: var(--radius-md);
 }
 .skeleton::after {
@@ -280,116 +279,49 @@ input, textarea, select {
   position: absolute;
   inset: 0;
   transform: translateX(-100%);
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.55),
-    transparent
-  );
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
   animation: skeleton-shimmer 1.4s infinite;
 }
-@keyframes skeleton-shimmer {
-  100% { transform: translateX(100%); }
-}
+@keyframes skeleton-shimmer { 100% { transform: translateX(100%); } }
 
 /* =========================================================
    ANIMATIONS
    ========================================================= */
-
-/* --- Révélation au scroll (via le hook useScrollReveal) --- */
 [data-reveal] {
   opacity: 0;
-  transform: translateY(34px);
-  filter: blur(6px);
+  transform: translateY(40px);
   transition:
-    opacity 0.85s var(--ease),
-    transform 0.85s var(--ease),
-    filter 0.85s var(--ease);
+    opacity 0.8s var(--ease),
+    transform 0.8s var(--ease);
   transition-delay: var(--reveal-delay, 0s);
-  will-change: opacity, transform, filter;
+  will-change: opacity, transform;
 }
+[data-reveal="left"]  { transform: translateX(-56px); }
+[data-reveal="right"] { transform: translateX(56px); }
+[data-reveal="up"]    { transform: translateY(40px); }
+[data-reveal="zoom"]  { transform: scale(0.94); }
+[data-reveal].is-visible { opacity: 1; transform: none; }
 
-/* Variantes directionnelles */
-[data-reveal="left"]  { transform: translateX(-48px); }
-[data-reveal="right"] { transform: translateX(48px); }
-[data-reveal="up"]    { transform: translateY(34px); }
-[data-reveal="zoom"]  { transform: scale(0.92); }
+/* Révélation de titre par "masque" (overflow + slide) */
+.reveal-mask { overflow: hidden; display: inline-block; }
+.reveal-mask > * {
+  display: inline-block;
+  transform: translateY(110%);
+  transition: transform 0.9s var(--ease);
+  transition-delay: var(--reveal-delay, 0s);
+}
+.reveal-mask.is-visible > *,
+[data-reveal].is-visible .reveal-mask > * { transform: none; }
 
-[data-reveal].is-visible {
-  opacity: 1;
-  transform: none;
-  filter: none;
-}
+@keyframes marquee-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@keyframes float-soft { 0%,100% { transform: translateY(0);} 50%{ transform: translateY(-8px);} }
+@keyframes scroll-bob { 0%,100% { transform: translateY(0); opacity: .7;} 50%{ transform: translateY(6px); opacity:1;} }
 
-/* --- Bande défilante (marquee) --- */
-@keyframes marquee-scroll {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
-
-/* --- Flottement doux (badges, visuels) --- */
-@keyframes float-soft {
-  0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-8px); }
-}
-
-/* --- Indice de scroll (souris/flèche sous le hero) --- */
-@keyframes scroll-bob {
-  0%, 100% { transform: translateY(0); opacity: 0.7; }
-  50%      { transform: translateY(6px); opacity: 1; }
-}
-
-/* --- Entrée du Hero au chargement --- */
-@keyframes hero-fade-up {
-  from { opacity: 0; transform: translateY(32px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-.hero-content .hero-eyebrow {
-  animation: hero-fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-.hero-content .title {
-  animation: hero-fade-up 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.12s both;
-}
-.hero-content .hero-desc {
-  animation: hero-fade-up 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.24s both;
-}
-.hero-content .hero-actions {
-  animation: hero-fade-up 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.36s both;
-}
-.hero-content .hero-stats {
-  animation: hero-fade-up 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.48s both;
-}
-
-/* --- Lift global au survol des boutons --- */
-.btn-primary {
-  transition: var(--transition);
-}
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-brand);
-}
-.btn-primary:active {
-  transform: translateY(0);
-}
-
-/* --- Respect de prefers-reduced-motion --- */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  [data-reveal] {
-    opacity: 1;
-    transform: none;
-    filter: none;
-    transition: none;
-  }
+  [data-reveal] { opacity: 1; transform: none; transition: none; }
+  .reveal-mask > * { transform: none; transition: none; }
   .marquee__track { animation: none !important; }
-  .hero-content .hero-eyebrow,
-  .hero-content .title,
-  .hero-content .hero-desc,
-  .hero-content .hero-actions,
-  .hero-content .hero-stats {
-    animation: none;
-  }
-  .btn-primary:hover { transform: none; }
+  .btn-primary:hover, .btn-outline:hover { transform: none; }
   .skeleton::after { animation: none; }
 }
