@@ -1,62 +1,93 @@
+/* =========================================================
+   CTA — bannière premium (dégradé chaud + bouton contrastant)
+   (tokens du design system)
+   ========================================================= */
 .cta-container {
-  padding: 3rem 1.5rem;
+  padding: var(--section-y) 5%;
 }
 
 .box {
-  background-color: #EF5007;
-  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  height: auto;
-  overflow: hidden;
+  border-radius: var(--radius-xl);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-terracotta));
+  box-shadow: var(--shadow-lg);
+  max-width: var(--container);
+  margin: 0 auto;
 }
 
 .cta-content {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 2.5rem 1.5rem;
+  align-items: flex-start;
+  text-align: left;
+  padding: var(--space-2xl) var(--space-xl);
   color: #fff;
 }
 
+.cta-eyebrow {
+  display: inline-block;
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: var(--space-sm);
+}
+
 .cta-content .title {
-  font-size: clamp(2rem, 8vw, 3rem);
-  font-weight: 600;
-  margin: 0 0 0.5rem 0;
-  line-height: 1.2;
+  font-family: var(--font-subtitle);   /* Playfair, comme les titres de section */
+  font-size: clamp(2rem, 5vw, 2.8rem);
+  font-weight: 700;
+  line-height: 1.15;
+  margin: 0 0 var(--space-sm) 0;
 }
 
 .cta-content .subtitle {
-  font-size: clamp(1.2rem, 4.5vw, 1.8rem);
-  font-weight: 500;
-  margin-top: 0.3rem;
-  margin-bottom: 1.5rem;
+  font-size: clamp(1.05rem, 2.5vw, 1.2rem);
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.92);
+  line-height: 1.6;
+  margin: 0 0 var(--space-lg) 0;
+  max-width: 46ch;
 }
 
-.cta-content .btn-primary {
-  font-size: 1rem;
-  padding: 10px 24px;
-  border-radius: 30px;
+/* Bouton clair contrastant sur le fond orange */
+.btn-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.8rem;
+  border-radius: var(--radius-full);
+  background: #fff;
+  color: var(--color-primary);
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: var(--fs-base);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  transition: var(--transition);
+}
+.btn-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  background: var(--color-cream);
 }
 
 .cta-image {
   width: 100%;
   height: 240px;
-}
-
-.cta-image {
   overflow: hidden;
 }
-
 .cta-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform var(--dur-slow) var(--ease);
 }
-
 .box:hover .cta-image img {
   transform: scale(1.05);
 }
@@ -67,37 +98,22 @@
     transition: none;
     transform: none;
   }
+  .btn-cta:hover {
+    transform: none;
+  }
 }
 
-/* ===========================
-   TABLET ≥768px
-   =========================== */
+/* ===== Tablette + Desktop (≥768px) ===== */
 @media (min-width: 768px) {
-  .cta-container {
-    padding: 4rem 5%;
-  }
-
   .box {
-    border-radius: 25px;
     flex-direction: row;
     align-items: stretch;
-    height: 400px;
   }
 
   .cta-content {
     width: 55%;
-    text-align: left;
-    align-items: flex-start;
     justify-content: center;
-    padding: 3rem 3rem;
-  }
-
-  .cta-content .title {
-    font-size: 3rem;
-  }
-
-  .cta-content .subtitle {
-    font-size: 1.8rem;
+    padding: var(--space-3xl);
   }
 
   .cta-image {
@@ -106,58 +122,9 @@
   }
 }
 
-/* ===========================
-   DESKTOP ≥1024px
-   =========================== */
+/* ===== Desktop (≥1024px) ===== */
 @media (min-width: 1024px) {
-  .cta-container {
-    padding: 6rem 5%;
-  }
-
-  .box {
-    background-color: #EF5007;
-    border-radius: 25px;
-    display: flex;
-    flex-direction: row;
-    height: fit-content;
-  }
-
-  /* LEFT */
   .cta-content {
-    display: flex;
-    flex-direction: column;
-    padding: 4rem 5rem;
-    width: 55%;
-    color: #fff;
-    text-align: left;
-    align-items: flex-start;
-  }
-
-  .cta-content .title {
-    font-size: 72px;
-    font-weight: 600;
-    margin: 0;
-    width: 100%;
-  }
-
-  .cta-content .subtitle {
-    font-size: 36px;
-    font-weight: 500;
-    width: 100%;
-    margin-top: 0;
-  }
-
-  .cta-content .btn-primary::before {
-    color: #EF5007;
-  }
-
-  .cta-image {
-    width: 45%;
-  }
-
-  .cta-image img {
-    object-fit: cover;
-    width: 100%;
-    height: 100%;
+    padding: var(--space-4xl) var(--space-3xl);
   }
 }

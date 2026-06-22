@@ -1,26 +1,99 @@
 /* === Import Google Fonts === */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=Playfair+Display:wght@600;700&family=MonteCarlo&display=swap');
 
-/* === Variables globales === */
+/* =========================================================
+   DESIGN SYSTEM — Chez Mamie Régine
+   Identité : restaurant malgache premium, palette chaude
+   (terracotta / ocre / crème / brun épice).
+   Toutes les valeurs ci-dessous sont les "tokens" à réutiliser
+   partout (couleurs, espacements, rayons, ombres, typo, transitions).
+   ========================================================= */
 :root {
-  /* Fonts */
-  --font-title: 'MonteCarlo', cursive;          /* Titres principaux (H1) */
-  --font-subtitle: 'Playfair Display', serif;   /* Sous-titres (H2, H3) */
+  /* ---- Polices ---- */
+  --font-title: 'MonteCarlo', cursive;          /* Nom de marque (H1 signature) */
+  --font-subtitle: 'Playfair Display', serif;   /* Titres de section (H1/H2) */
+  --font-auther-title: 'Playfair Display', serif; /* alias rétro-compat */
   --font-body: 'Montserrat', sans-serif;        /* Texte, boutons, navigation */
 
-  /* Palette couleurs */
-  --color-primary: #FF8A34;   /* Couleur de marque principale */
-  --color-secondary: #2C2C2C; /* Texte sombre */
-  --color-accent: #F2C94C;    /* Accent (jaune/doré) */
-  --color-bg: #FFFFFF;        /* Fond */
-  --color-bg-alt: #F9F9F9;    /* Fond secondaire (gris très clair) */
-  --color-border: #E5E5E5;    /* Bordures */
+  /* ---- Couleurs de marque ---- */
+  --color-primary: #EF5007;          /* Orange brûlé — accent principal */
+  --color-primary-dark: #C53D00;     /* Orange foncé — survols */
+  --color-primary-soft: rgba(239, 80, 7, 0.12); /* Fond/halo léger */
+  --color-accent: #D9A441;           /* Ocre doré */
+  --color-terracotta: #B0512F;       /* Terracotta */
+  --color-spice: #7A2E12;            /* Brun épice (voiles, accents foncés) */
 
-  /* Échelle de tailles (optionnel) */
-  --fs-h1: 2.5rem; /* ~40px */
-  --fs-h2: 2rem;   /* ~32px */
-  --fs-h3: 1.5rem; /* ~24px */
-  --fs-body: 1rem; /* 16px */
+  /* ---- Surfaces & texte ---- */
+  --color-bg: #FFFFFF;               /* Fond principal */
+  --color-bg-alt: #FBF6EF;           /* Fond secondaire (crème chaud) */
+  --color-cream: #FBF6EF;            /* Crème */
+  --color-cream-alt: #F3E9DC;        /* Crème plus soutenue */
+  --color-dark: #1A0F0A;             /* Brun-noir profond (header/hero) */
+  --color-dark-alt: #2A1A12;         /* Brun foncé alternatif */
+  --color-secondary: #2A1A12;        /* Texte principal (brun chaud) */
+  --color-text: #2A1A12;             /* alias texte */
+  --color-text-muted: #6B5A4E;       /* Texte secondaire / discret */
+  --color-border: #EAE0D5;           /* Bordures (chaud) */
+  --color-white: #FFFFFF;
+
+  /* ---- États ---- */
+  --color-success: #3F8F5B;
+  --color-error: #C0392B;
+  --color-info: #2E7D9A;
+
+  /* ---- Espacement (échelle 4 / 8px) ---- */
+  --space-2xs: 0.25rem;  /* 4px  */
+  --space-xs:  0.5rem;   /* 8px  */
+  --space-sm:  0.75rem;  /* 12px */
+  --space-md:  1rem;     /* 16px */
+  --space-lg:  1.5rem;   /* 24px */
+  --space-xl:  2rem;     /* 32px */
+  --space-2xl: 3rem;     /* 48px */
+  --space-3xl: 4rem;     /* 64px */
+  --space-4xl: 6rem;     /* 96px */
+  --section-y: clamp(3rem, 8vw, 6rem); /* rythme vertical des sections */
+
+  /* ---- Rayons de bordure ---- */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-full: 999px;
+
+  /* ---- Ombres (teintées chaud) ---- */
+  --shadow-sm: 0 2px 8px rgba(42, 26, 18, 0.08);
+  --shadow-md: 0 8px 24px rgba(42, 26, 18, 0.12);
+  --shadow-lg: 0 18px 48px rgba(42, 26, 18, 0.18);
+  --shadow-brand: 0 10px 28px rgba(239, 80, 7, 0.28);
+
+  /* ---- Transitions ---- */
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 0.15s;
+  --dur: 0.3s;
+  --dur-slow: 0.6s;
+  --transition: all var(--dur) var(--ease);
+
+  /* ---- Échelle typographique ---- */
+  --fs-xs: 0.78rem;   /* 12.5px — eyebrow / labels */
+  --fs-sm: 0.9rem;    /* 14px   — texte secondaire */
+  --fs-base: 1rem;    /* 16px   — corps */
+  --fs-md: 1.125rem;  /* 18px   — corps proéminent */
+  --fs-lg: 1.35rem;   /* 21px   — sous-titres */
+  --fs-xl: 1.75rem;   /* 28px   — H3 */
+  --fs-2xl: 2.25rem;  /* 36px   — H2 */
+  --fs-3xl: 3rem;     /* 48px   — H1 */
+  --fs-display: clamp(2.5rem, 6vw, 4rem); /* titres héros */
+
+  /* rétro-compat (anciens noms) */
+  --fs-h1: 2.5rem;
+  --fs-h2: 2rem;
+  --fs-h3: 1.5rem;
+  --fs-body: 1rem;
+
+  /* ---- Conteneurs ---- */
+  --container: 1200px;
+  --container-narrow: 760px;
+  --container-wide: 1320px;
 }
 
 * {
@@ -45,15 +118,10 @@ body {
   color: #fff;
 }
 
-:root {
-  --font-title: 'MonteCarlo', cursive;
-  --font-auther-title: 'Playfair Display', serif;
-  --font-body: 'Montserrat', sans-serif;
-}
-
 /* Titres */
-h1 { 
-  font-family: 'MonteCarlo', cursive !important; font-weight: 400; 
+h1 {
+  font-family: 'MonteCarlo', cursive !important;
+  font-weight: 400;
 }
 
 h4 {
@@ -61,31 +129,166 @@ h4 {
 }
 
 h2 {
-  /* font-family: var(--font-auther-title); */
   font-family: var(--font-body);
-  font-size: 2rem;
+  font-size: var(--fs-2xl);
   font-weight: 600;
 }
 
 h3 {
   font-family: var(--font-body);
-  font-size: 1.5rem;
+  font-size: var(--fs-xl);
   font-weight: 600;
 }
 
 /* Texte */
 p, span, li {
   font-family: var(--font-body);
-  font-size: 16px;
+  font-size: var(--fs-base);
   font-weight: 400;
 }
 
 /* Boutons & liens */
 button, a {
   font-family: var(--font-body);
-  font-size: 1rem;
+  font-size: var(--fs-base);
   font-weight: 600;
   text-transform: uppercase;
+}
+
+/* Champs de formulaire : héritent de la police du site (évite le rendu navigateur) */
+input, textarea, select {
+  font-family: var(--font-body);
+}
+
+/* =========================================================
+   UTILITAIRES PARTAGÉS
+   ========================================================= */
+
+/* Conteneur centré standard (largeur de contenu homogène) */
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--space-md);
+}
+.container--narrow { max-width: var(--container-narrow); }
+
+/* =========================================================
+   BOUTONS (composant partagé)
+   ========================================================= */
+.btn-primary,
+.btn-outline,
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.6rem;
+  border-radius: var(--radius-full);
+  font-family: var(--font-body);
+  font-size: var(--fs-base);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  transition: var(--transition);
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: var(--color-white);
+}
+.btn-primary:hover {
+  background: var(--color-primary-dark);
+  box-shadow: var(--shadow-brand);
+}
+
+.btn-outline {
+  background: transparent;
+  color: currentColor;
+  border-color: currentColor;
+}
+.btn-outline:hover {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--color-white);
+}
+
+.btn-ghost {
+  background: var(--color-cream-alt);
+  color: var(--color-secondary);
+}
+.btn-ghost:hover {
+  background: var(--color-cream);
+}
+
+/* =========================================================
+   EN-TÊTES DE SECTION (cohérence inter-blocs)
+   ========================================================= */
+.section-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--color-primary);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin-bottom: var(--space-sm);
+}
+.section-eyebrow::before {
+  content: "";
+  width: 28px;
+  height: 2px;
+  background: var(--color-primary);
+}
+
+.section-title {
+  font-family: var(--font-subtitle);   /* Playfair Display */
+  font-size: clamp(1.8rem, 5vw, 2.4rem);
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0 0 var(--space-md) 0;
+  /* couleur héritée du bloc : sombre sur fond clair, blanche sur fond sombre */
+}
+
+/* En-tête centré (blocs à titre centré : Nos plats, Comment ça marche…) */
+.section-head {
+  max-width: 640px;
+  margin: 0 auto var(--space-2xl);
+  text-align: center;
+}
+.section-head .section-eyebrow {
+  justify-content: center;
+}
+.section-head .section-eyebrow::before {
+  display: none;   /* pas de tiret quand c'est centré */
+}
+
+/* Squelette de chargement (états loading premium) */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: var(--color-cream-alt);
+  border-radius: var(--radius-md);
+}
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.55),
+    transparent
+  );
+  animation: skeleton-shimmer 1.4s infinite;
+}
+@keyframes skeleton-shimmer {
+  100% { transform: translateX(100%); }
 }
 
 /* =========================================================
@@ -95,13 +298,18 @@ button, a {
 /* --- Révélation au scroll (via le hook useScrollReveal) --- */
 [data-reveal] {
   opacity: 0;
-  transform: translateY(28px);
+  transform: translateY(32px);
   transition:
-    opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity 0.8s var(--ease),
+    transform 0.8s var(--ease);
   transition-delay: var(--reveal-delay, 0s);
-  will-change: opacity, transform;
 }
+
+/* Variantes directionnelles */
+[data-reveal="left"]  { transform: translateX(-44px); }
+[data-reveal="right"] { transform: translateX(44px); }
+[data-reveal="up"]    { transform: translateY(32px); }
+[data-reveal="zoom"]  { transform: scale(0.92); }
 
 [data-reveal].is-visible {
   opacity: 1;
@@ -132,11 +340,11 @@ button, a {
 
 /* --- Lift global au survol des boutons --- */
 .btn-primary {
-  transition: all 0.3s ease, transform 0.18s ease, box-shadow 0.25s ease;
+  transition: var(--transition);
 }
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 24px rgba(239, 80, 7, 0.28);
+  box-shadow: var(--shadow-brand);
 }
 .btn-primary:active {
   transform: translateY(0);
@@ -158,4 +366,5 @@ button, a {
     animation: none;
   }
   .btn-primary:hover { transform: none; }
+  .skeleton::after { animation: none; }
 }

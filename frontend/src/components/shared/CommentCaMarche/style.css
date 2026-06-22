@@ -1,53 +1,95 @@
+/* =========================================================
+   COMMENT ÇA MARCHE — version moderne (numéros + pastilles)
+   (tokens du design system)
+   ========================================================= */
 .ccm-container {
-  margin: 0;
-  padding: 3rem 1rem;
-  background-color: #FDF6EB;
-}
-
-.ccm-title {
-  font-size: clamp(1.8rem, 6vw, 2.2rem);
-  font-weight: bold;
-  text-align: center;
-  color: #1f2937;
-  margin: 0 0 2rem 0;
+  padding: var(--section-y) var(--space-md);
+  background-color: var(--color-cream);
 }
 
 .ccm-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 1.5rem;
+  gap: var(--space-lg);
+  max-width: var(--container);
+  margin: 0 auto;
 }
 
-/* ===== Étapes ===== */
+/* ===== Étape ===== */
 .ccm-step {
-  background-color: #ffffff;
-  border: 1px solid #c8360631;
-  border-radius: 20px;
-  padding: 2rem 1.5rem;
-  text-align: center;
-  transition: box-shadow 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+  background-color: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-2xl) var(--space-xl) var(--space-xl);
+  text-align: left;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--dur) ease, transform var(--dur) var(--ease);
 }
-
 .ccm-step:hover {
-  box-shadow: 0 14px 30px rgba(200, 54, 6, 0.15);
+  box-shadow: var(--shadow-md);
   transform: translateY(-6px);
 }
 
-/* Icône */
+/* Gros numéro fantôme en arrière-plan */
+.ccm-step-num {
+  position: absolute;
+  top: -0.75rem;
+  right: 0.75rem;
+  font-family: var(--font-subtitle);
+  font-size: 5.5rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--color-primary-soft);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Pastille d'icône (orange doux) */
 .ccm-icon-wrapper {
-  width: 64px;
-  height: 64px;
-  background-color: #f97316;
-  border-radius: 16px;
+  position: relative;
+  z-index: 1;
+  width: 68px;
+  height: 68px;
+  background-color: var(--color-primary-soft);
+  border-radius: var(--radius-full);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 1.5rem auto;
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  margin-bottom: var(--space-lg);
+  transition: transform var(--dur) var(--ease);
+}
+.ccm-step:hover .ccm-icon-wrapper {
+  transform: scale(1.06);
 }
 
-.ccm-step:hover .ccm-icon-wrapper {
-  transform: scale(1.08) rotate(-3deg);
+.ccm-icon {
+  width: 36px;
+  height: auto;
+}
+
+.ccm-step-title {
+  position: relative;
+  z-index: 1;
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  color: var(--color-secondary);
+  margin: 0 0 var(--space-xs) 0;
+}
+
+.ccm-step-subtitle {
+  font-size: var(--fs-base);
+  color: var(--color-text-muted);
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* CTA sous les étapes */
+.ccm-cta {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-2xl);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -60,101 +102,22 @@
   }
 }
 
-.ccm-icon-circle {
-  background-color: white;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.ccm-icon {
-  width: 72px;
-  height: auto;
-}
-
-/* Titres */
-.ccm-step-title {
-  font-size: 1.25rem;
-  font-weight: bold;
-  color: #1f2937;
-  margin-bottom: 0.5rem;
-  min-height: auto;
-}
-
-.ccm-step-subtitle {
-  font-size: 1rem;
-  color: #4b5563;
-  line-height: 1.4;
-}
-
-/* ===========================
-   TABLET (≥768px)
-   =========================== */
+/* ===== Tablette + Desktop (≥768px) ===== */
 @media (min-width: 768px) {
   .ccm-container {
-    padding: 5rem 5%;
-  }
-
-  .ccm-title {
-    font-size: 2.3rem;
-    margin-bottom: 2.5rem;
+    padding: var(--section-y) 5%;
   }
 
   .ccm-grid {
-    grid-template-columns: repeat(3, minmax(240px, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-xl);
   }
 
   .ccm-step {
-    padding: 2.5rem 2rem;
+    padding: var(--space-2xl) var(--space-xl);
   }
 
-  .ccm-icon {
-    width: 90px;
-  }
-
-  .ccm-step-title {
-    font-size: 1.35rem;
-  }
-
-  .ccm-step-subtitle {
-    font-size: 1.05rem;
-  }
-}
-
-/* ===========================
-   DESKTOP (≥1024px)
-   =========================== */
-@media (min-width: 1024px) {
-  .ccm-container {
-    padding: 10rem 5%;
-  }
-
-  .ccm-title {
-    font-size: 2.5rem;
-    margin-bottom: 48px;
-  }
-
-  .ccm-grid {
-    grid-template-columns: repeat(3, minmax(260px, 1fr));
-    gap: 24px;
-  }
-
-  .ccm-step {
-    padding: 40px 60px;
-  }
-
-  .ccm-icon { 
-    width: 100px; 
-  }
-
-  .ccm-step-title {
-    font-size: 1.5rem;
-    min-height: 58px;
-  }
-
-  .ccm-step-subtitle {
-    font-size: 1.2rem;
+  .ccm-step-num {
+    font-size: 6.5rem;
   }
 }

@@ -1,9 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import api from '../../../services/api';
+import { MOCK_PLATS, MOCK_CATEGORIES } from '../../../data/mockPlats';
+import Reassurance from '../../../components/shared/Reassurance/Reassurance.jsx';
+import heroImg from '../../../components/shared/Hero/images/hero-ravitoto.jpg';
 import './style.css';
 
-const PAGE_SIZE = 8;
+const PAGE_STEP = 6;
 
 export default function ProductsPage() {
   const { slug } = useParams();
@@ -11,212 +14,241 @@ export default function ProductsPage() {
 
   const [cats, setCats] = useState([]);
   const [plats, setPlats] = useState([]);
-  const [activeCat, setActiveCat] = useState(null);
-  const [loadingCats, setLoadingCats] = useState(true);
-  const [loadingPlats, setLoadingPlats] = useState(true);
-  const [page, setPage] = useState(1);
-  const [errMsg, setErrMsg] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState('');
+  const [sort, setSort] = useState('default');
+  const [visible, setVisible] = useState(PAGE_STEP);
 
-  // 👇 catégorie courante (objet complet) en fonction du slug
-  const currentCat = useMemo(
-    () => (slug ? cats.find((c) => c.slug === slug) || null : null),
-    [slug, cats]
-  );
-
-  // 1) Catégories publiques
+  // Catégories
   useEffect(() => {
     (async () => {
       try {
-        setLoadingCats(true);
-        setErrMsg('');
         const { data } = await api.get('/public/categories');
-        const list = Array.isArray(data) ? data : [];
-        setCats(list);
-
-        if (slug) {
-          const found = list.find((c) => c.slug === slug);
-          if (found) setActiveCat(found._id);
-          else {
-            setActiveCat(null);
-            navigate('/produits', { replace: true });
-          }
-        } else {
-          setActiveCat(null);
-        }
-      } catch (e) {
-        console.error('[GET /api/public/categories]', e?.response?.data || e);
-        setErrMsg('Impossible de charger les catégories.');
-      } finally {
-        setLoadingCats(false);
+        setCats(Array.isArray(data) && data.length ? data : MOCK_CATEGORIES);
+      } catch {
+        setCats(MOCK_CATEGORIES);
       }
     })();
-  }, [slug, navigate]);
+  }, []);
 
-  // 2) Plats publics (optionnellement filtrés par catégorie)
+  // Plats
   useEffect(() => {
     (async () => {
       try {
-        setLoadingPlats(true);
-        setErrMsg('');
-        setPage(1);
-
-        const url = activeCat
-          ? `/public/plats?category=${activeCat}`
-          : `/public/plats`;
-
-        const { data } = await api.get(url);
-        setPlats(Array.isArray(data) ? data : []);
-      } catch (e) {
-        console.error('[GET /api/public/plats]', e?.response?.data || e);
-        setErrMsg('Impossible de charger les plats.');
-        setPlats([]);
+        setLoading(true);
+        const { data } = await api.get('/public/plats');
+        setPlats(Array.isArray(data) && data.length ? data : MOCK_PLATS);
+      } catch {
+        setPlats(MOCK_PLATS);
       } finally {
-        setLoadingPlats(false);
+        setLoading(false);
       }
     })();
-  }, [activeCat]);
+  }, []);
 
-  // 3) META SEO dynamiques (titre + description)
+  // SEO
   useEffect(() => {
-    const baseTitle = 'Nos plats malgaches – Chez Mamie Régine';
-    const baseDesc =
-      'Découvrez tous nos plats malgaches faits maison, disponibles à la commande chez Mamie Régine.';
+    document.title = 'Nos plats malgaches – Chez Mamie Régine';
+  }, []);
 
-    const title = currentCat
-      ? `${currentCat.name} – Plats malgaches | Chez Mamie Régine`
-      : baseTitle;
+  const catSlug = (p) =>
+    p?.category?.slug ||
+    (Array.isArray(p?.categories) && p.categories[0]?.slug) ||
+    '';
 
-    const desc = currentCat
-      ? `Découvrez les plats de la catégorie "${currentCat.name}" chez Mamie Régine : spécialités malgaches faites maison.`
-      : baseDesc;
-
-    document.title = title;
-
-    let metaDesc = document.querySelector("meta[name='description']");
-    if (!metaDesc) {
-      metaDesc = document.createElement('meta');
-      metaDesc.setAttribute('name', 'description');
-      document.head.appendChild(metaDesc);
+  // Filtrage + tri
+  const filtered = useMemo(() => {
+    let list = [...plats];
+    if (slug) list = list.filter((p) => catSlug(p) === slug);
+    if (search.trim()) {
+      const q = search.trim().toLowerCase();
+      list = list.filter((p) => (p.name || '').toLowerCase().includes(q));
     }
-    metaDesc.setAttribute('content', desc);
-  }, [currentCat]);
+    if (sort === 'price-asc') list.sort((a, b) => (a.price ?? 0) - (b.price ?? 0));
+    if (sort === 'price-desc') list.sort((a, b) => (b.price ?? 0) - (a.price ?? 0));
+    return list;
+  }, [plats, slug, search, sort]);
 
-  // 4) pagination front
-  const pageCount = Math.max(1, Math.ceil(plats.length / PAGE_SIZE));
-  const currentPageItems = useMemo(() => {
-    const start = (page - 1) * PAGE_SIZE;
-    return plats.slice(start, start + PAGE_SIZE);
-  }, [plats, page]);
+  useEffect(() => setVisible(PAGE_STEP), [slug, search, sort]);
 
-  // 5) navigation catégorie
-  const goCat = (c) => {
-    if (!c) navigate('/produits');
-    else navigate(`/produits/${c.slug}`);
+  const shown = filtered.slice(0, visible);
+  const related = plats.filter((p) => !shown.some((s) => s._id === p._id)).slice(0, 3);
+
+  const goCat = (s) => navigate(s ? `/produits/${s}` : '/produits');
+  const openPlat = (p) => navigate(`/produit/${p._id}`);
+
+  const Badges = ({ p }) => {
+    const badges = Array.isArray(p.badges) && p.badges.length ? p.badges : ['Fait maison'];
+    return (
+      <ul className="menu-card-badges">
+        {badges.slice(0, 3).map((b) => (
+          <li key={b}><span className="menu-dot" aria-hidden="true" />{b}</li>
+        ))}
+      </ul>
+    );
   };
 
   return (
-    <main className="products-container">
-      <h1>Nos plats</h1>
+    <main className="menu-page">
+      {/* Hero compact propre à la page menu */}
+      <header
+        className="menu-hero"
+        style={{
+          backgroundImage: `linear-gradient(90deg, rgba(20,9,4,0.82), rgba(20,9,4,0.45)), url(${heroImg})`,
+        }}
+      >
+        <div className="menu-hero-inner">
+          <span className="section-eyebrow">Notre cuisine</span>
+          <h1 className="menu-hero-title">
+            Nos plats <span className="menu-hero-accent">malgaches</span>
+          </h1>
+          <p className="menu-hero-desc">
+            Faits maison chaque jour, inspirés des saveurs authentiques de
+            Madagascar. Choisissez, commandez, régalez-vous.
+          </p>
+        </div>
+      </header>
 
-      {/* Boutons catégories */}
-      <div className="products-categories">
-        <button
-          onClick={() => goCat(null)}
-          className={`cat-btn ${!slug ? 'active' : ''}`}
-        >
-          Tous
-        </button>
-        {!loadingCats &&
-          cats.map((c) => (
+      <div className="menu-body">
+        {/* Chips catégories */}
+        <div className="menu-chips">
+          <button className={`menu-chip ${!slug ? 'is-active' : ''}`} onClick={() => goCat(null)}>
+            Tous les plats
+          </button>
+          {cats.map((c) => (
             <button
-              key={c._id}
-              onClick={() => goCat(c)}
-              className={`cat-btn ${slug === c.slug ? 'active' : ''}`}
+              key={c._id || c.slug}
+              className={`menu-chip ${slug === c.slug ? 'is-active' : ''}`}
+              onClick={() => goCat(c.slug)}
             >
               {c.name}
             </button>
           ))}
-      </div>
+        </div>
 
-      {/* Erreur globale éventuelle */}
-      {errMsg && <div className="error-msg">{errMsg}</div>}
+        {/* Filtres */}
+        <div className="menu-filters">
+          <div className="menu-search">
+            <span className="menu-search-icon" aria-hidden="true">⌕</span>
+            <input
+              type="search"
+              placeholder="Rechercher un plat..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              aria-label="Rechercher un plat"
+            />
+          </div>
+          <select
+            className="menu-select"
+            value={slug || ''}
+            onChange={(e) => goCat(e.target.value || null)}
+            aria-label="Filtrer par catégorie"
+          >
+            <option value="">Catégorie</option>
+            {cats.map((c) => (
+              <option key={c._id || c.slug} value={c.slug}>{c.name}</option>
+            ))}
+          </select>
+          <select
+            className="menu-select"
+            value={sort}
+            onChange={(e) => setSort(e.target.value)}
+            aria-label="Trier par prix"
+          >
+            <option value="default">Prix</option>
+            <option value="price-asc">Prix croissant</option>
+            <option value="price-desc">Prix décroissant</option>
+          </select>
+        </div>
 
-      {/* Liste des plats */}
-      {loadingPlats ? (
-        <div className="loading">Chargement…</div>
-      ) : (
-        <>
-          {currentPageItems.length === 0 ? (
-            <div className="no-results">Aucun plat dans cette catégorie.</div>
-          ) : (
-            <div className="products-grid">
-              {currentPageItems.map((p) => (
-                <article
-                  key={p._id}
-                  className="product-card is-clickable"
-                  onClick={() => navigate(`/produit/${p._id}`)}
-                  tabIndex={0}
-                  onKeyDown={(e) =>
-                    (e.key === 'Enter' || e.key === ' ') &&
-                    navigate(`/produit/${p._id}`)
-                  }
-                  role="button"
-                  aria-label={`Ouvrir ${p.name}`}
-                >
-                  <div className="thumb">
+        {/* Liste */}
+        {loading ? (
+          <div className="menu-loading">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="menu-card-skeleton skeleton" />
+            ))}
+          </div>
+        ) : filtered.length === 0 ? (
+          <div className="menu-empty">
+            <p>Aucun plat ne correspond à votre recherche.</p>
+            <button className="btn-primary" onClick={() => { setSearch(''); goCat(null); }}>
+              Voir tous les plats
+            </button>
+          </div>
+        ) : (
+          <div className="menu-list">
+            {shown.map((p, i) => (
+              <article
+                key={p._id}
+                className={`menu-card ${i % 2 === 1 ? 'is-reverse' : ''}`}
+                data-reveal
+              >
+                <div className="menu-card-media" onClick={() => openPlat(p)}>
+                  {Array.isArray(p.images) && p.images[0] ? (
+                    <img src={p.images[0]} alt={p.name} />
+                  ) : (
+                    <div className="menu-card-placeholder" aria-hidden="true">🍽️</div>
+                  )}
+                  <span className="menu-card-badge">Fait maison</span>
+                </div>
+
+                <div className="menu-card-body">
+                  <h2 className="menu-card-title">
+                    {p.nameMain || p.name}
+                    {p.nameAccent ? <span className="menu-card-accent"> {p.nameAccent}</span> : null}
+                  </h2>
+                  <Badges p={p} />
+                  <p className="menu-card-desc">{p.description || ''}</p>
+                  <div className="menu-card-foot">
+                    <span className="menu-card-price">{Number(p.price ?? 0).toFixed(0)} €</span>
+                    <button className="btn-primary" onClick={() => openPlat(p)}>Commander</button>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
+
+        {/* Voir plus */}
+        {!loading && visible < filtered.length && (
+          <div className="menu-more">
+            <button className="menu-more-btn" onClick={() => setVisible((v) => v + PAGE_STEP)}>
+              Voir plus de plats ↓
+            </button>
+          </div>
+        )}
+
+        {/* Suggestions */}
+        {!loading && related.length > 0 && (
+          <section className="menu-related">
+            <h2 className="menu-related-title">Vous pourriez aussi aimer</h2>
+            <div className="menu-related-grid">
+              {related.map((p) => (
+                <article key={p._id} className="menu-mini" onClick={() => openPlat(p)}>
+                  <div className="menu-mini-media">
                     {Array.isArray(p.images) && p.images[0] ? (
-                      <img src={p.images[0]} alt={p.name} className="thumb-img" />
+                      <img src={p.images[0]} alt={p.name} />
                     ) : (
-                      <div className="thumb-placeholder">🍽️</div>
+                      <div className="menu-card-placeholder" aria-hidden="true">🍽️</div>
                     )}
                   </div>
-                  <h3>{p.name}</h3>
-                  <p className="desc">{p.description || ''}</p>
-                  <p className="price">
-                    {Number(p.price ?? 0).toFixed(2)} €
-                  </p>
-                  <button
-                    className="btn-primary"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      navigate(`/produit/${p._id}`);
-                    }}
-                  >
-                    Voir le plat
-                  </button>
+                  <div className="menu-mini-body">
+                    <h3>{p.name}</h3>
+                    <span className="menu-mini-cat">{p.category?.name || ''}</span>
+                  </div>
+                  <div className="menu-mini-foot">
+                    <span className="menu-mini-price">{Number(p.price ?? 0).toFixed(0)} €</span>
+                    <button className="menu-mini-add" aria-label={`Commander ${p.name}`}>+</button>
+                  </div>
                 </article>
               ))}
             </div>
-          )}
+          </section>
+        )}
+      </div>
 
-          {/* Pagination */}
-          {pageCount > 1 && (
-            <div className="pagination">
-              <button
-                disabled={page === 1}
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
-              >
-                ‹
-              </button>
-              {Array.from({ length: pageCount }).map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setPage(i + 1)}
-                  className={page === i + 1 ? 'active' : ''}
-                >
-                  {i + 1}
-                </button>
-              ))}
-              <button
-                disabled={page === pageCount}
-                onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
-              >
-                ›
-              </button>
-            </div>
-          )}
-        </>
-      )}
+      {/* Réassurance (bandeau partagé) */}
+      <Reassurance />
     </main>
   );
 }

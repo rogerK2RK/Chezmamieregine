@@ -6,17 +6,21 @@ import ctaImage from './images/cta.png';
 const Cta = () => {
   return (
     <div className="cta-container">
-      <div className="box" data-reveal>
-        <div className="cta-content">
+      <div className="box">
+        <div className="cta-content" data-reveal="right">
+          <span className="cta-eyebrow">Sur commande</span>
           <p className="title">
-            Lorem ipsom<br /> doloresd sit amet
+            Envie d'un voyage culinaire à Madagascar ?
           </p>
-          <p className="subtitle">cuisinées avec amour</p>
-          <Link to="/produits" className="btn-primary scrolled">Nous rejoindres</Link>
+          <p className="subtitle">
+            Des plats faits maison, préparés avec des produits frais et des
+            épices choisies avec soin.
+          </p>
+          <Link to="/produits" className="btn-cta">Voir nos plats</Link>
         </div>
 
-        <div className="cta-image">
-          <img src={ctaImage} alt="image de cuisinière" />
+        <div className="cta-image" data-reveal="left">
+          <img src={ctaImage} alt="Plat malgache fait maison" />
         </div>
       </div>
     </div>

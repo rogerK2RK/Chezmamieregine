@@ -1,5 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 
+import ScrollToTop from '../components/common/ScrollToTop';
 import ClientLayout from '../layouts/ClientLayout';
 import AdminAuthLayout from '../layouts/AdminAuthLayout';
 import AdminAppLayout from '../layouts/AdminAppLayout';
@@ -31,6 +32,8 @@ import { ADMIN_ROLES } from '../utils/roles';
 
 export default function AppRouter() {
   return (
+    <>
+    <ScrollToTop />
     <Routes>
 
       {/* ===================== SITE PUBLIC ===================== */}
@@ -147,5 +150,6 @@ export default function AppRouter() {
       </Route>
 
     </Routes>
+    </>
   );
 }

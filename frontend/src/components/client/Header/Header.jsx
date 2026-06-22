@@ -1,14 +1,22 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { useClientAuth } from '../../../context/ClientAuthContext.jsx';
 import './style.css';
 import logo from '../../../assets/Logo CMR Blc.svg';
 
 export default function Header() {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const { token, role, name, logout } = useClientAuth();
 
   const [scrolled, setScrolled] = useState(false);
+
+  // Pages dont le haut est un héro sombre → header transparent au repos.
+  // Les autres (fond clair : fiche plat, compte…) → header solide d'emblée.
+  const hasDarkHero =
+    ['/', '/produits', '/contact', '/connexion', '/inscription'].includes(pathname) ||
+    pathname.startsWith('/produits/');
+  const solid = scrolled || !hasDarkHero;
   const [menuOpen, setMenuOpen] = useState(false); // mobile menu
   const [accountOpen, setAccountOpen] = useState(false); // dropdown compte
 
@@ -49,7 +57,7 @@ export default function Header() {
   const isLogged = !!token;
 
   return (
-    <header className={`header ${scrolled ? 'scrolled' : ''}`}>
+    <header className={`header ${solid ? 'scrolled' : ''}`}>
       <div className="header-container">
         <div className="logo">
           <Link to="/">
@@ -58,10 +66,10 @@ export default function Header() {
         </div>
 
         {/* Desktop */}
-        <div className={`menu ${scrolled ? 'scrolled' : ''}`} id="Menu">
+        <div className={`menu ${solid ? 'scrolled' : ''}`} id="Menu">
           <nav className="nav">
-            <Link className="nav-link menu-item" to="/produits">Nos plats</Link>
-            <Link className="nav-link menu-item" to="/contact">Contact</Link>
+            <NavLink className="nav-link menu-item" to="/produits">Nos plats</NavLink>
+            <NavLink className="nav-link menu-item" to="/contact">Contact</NavLink>
 
             {isLogged ? (
               <div className="account-wrapper" ref={accountRef}>
@@ -95,13 +103,13 @@ export default function Header() {
                   className={`account-dropdown ${accountOpen ? 'open' : ''}`}
                   role="menu"
                 >
-                  <a
-                    href="https://chezmamieregine.vercel.app/account"
+                  <Link
+                    to="/account"
                     className="account-dropdown-item"
                     onClick={() => setAccountOpen(false)}
                   >
                     Gérer mon compte
-                  </a>
+                  </Link>
                   <button
                     type="button"
                     className="account-dropdown-item danger"
@@ -135,26 +143,17 @@ export default function Header() {
         {/* Mobile */}
         <div className="header-right" ref={mobileDdRef}>
           <button
-            className="menu-toggle"
+            className={`menu-toggle ${menuOpen ? 'is-open' : ''}`}
             aria-haspopup="menu"
             aria-expanded={menuOpen}
             aria-label={menuOpen ? "Fermer le menu" : "Ouvrir le menu"}
             onClick={() => setMenuOpen(v => !v)}
           >
-            <svg
-              className="menu-toggle-icon"
-              viewBox="0 0 24 24"
-              width="28"
-              height="28"
-              aria-hidden="true"
-            >
-              <path
-                d="M3 6h18M3 12h18M3 18h18"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-              />
-            </svg>
+            <span className="burger" aria-hidden="true">
+              <span></span>
+              <span></span>
+              <span></span>
+            </span>
           </button>
 
           <div className={`dropdown ${menuOpen ? 'open' : ''}`} role="menu">

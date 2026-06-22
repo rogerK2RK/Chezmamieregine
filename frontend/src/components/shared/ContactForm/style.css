@@ -1,9 +1,13 @@
 .contact-container {
-  padding: 3rem 1rem;
-  margin: 0 auto;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* réserve la hauteur du header fixe en haut pour ne pas couper le titre */
+  padding: calc(96px + var(--space-xl)) var(--space-md) var(--space-2xl);
   background:
     linear-gradient(rgba(40, 18, 8, 0.55), rgba(40, 18, 8, 0.62)),
-    url(../../../assets/background.png) no-repeat;
+    url(../../../assets/background.jpg) no-repeat;
   background-size: cover;
   background-position: 45%;
   background-attachment: scroll;
@@ -20,6 +24,9 @@
 }
 
 .contact-container-content {
+  width: 100%;
+  max-width: var(--container);
+  margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr;
   gap: 1.25rem;
@@ -28,10 +35,10 @@
 /* ===== Formulaire ===== */
 .form-section {
   padding: 1.75rem;
-  background-color: #FFF;
-  border-radius: 16px;
-  box-shadow: 0 12px 40px rgba(115, 35, 13, 0.12);
-  border: 1px solid rgba(115, 35, 13, 0.06);
+  background-color: var(--color-white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--color-border);
 }
 
 .contact-form {
@@ -117,11 +124,12 @@
 .map-wrapper {
   position: relative;
   width: 100%;
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  background: #f9fafb;
-  min-height: 260px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: var(--color-cream-alt);
+  min-height: 280px;
 }
 
 .map-frame {
@@ -130,6 +138,42 @@
   width: 100%;
   height: 100%;
   border: 0;
+  /* carte désaturée et chaude au repos, qui se révèle au survol */
+  filter: grayscale(0.35) contrast(1.05);
+  transition: filter var(--dur-slow) var(--ease);
+}
+.map-wrapper:hover .map-frame {
+  filter: grayscale(0) contrast(1);
+}
+
+/* Surcouche : capte la molette (la page défile) tant que la carte
+   n'est pas activée par un clic → plus de zoom involontaire */
+.map-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-family: var(--font-body);
+}
+.map-overlay span {
+  background: rgba(26, 15, 10, 0.78);
+  color: #fff;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  text-transform: none;
+  padding: 0.5rem 0.9rem;
+  border-radius: var(--radius-full);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  transition: opacity var(--dur) ease;
+}
+.map-wrapper:hover .map-overlay span {
+  opacity: 1;
 }
 
 .map-link {
@@ -137,14 +181,30 @@
   right: 12px;
   bottom: 12px;
   z-index: 2;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.92);
   backdrop-filter: saturate(180%) blur(6px);
-  padding: 0.45rem 0.7rem;
-  border-radius: 999px;
-  font-size: 0.85rem;
-  color: #111827;
+  padding: 0.5rem 0.9rem;
+  border-radius: var(--radius-full);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  text-transform: none;
+  color: var(--color-secondary);
   text-decoration: none;
-  border: 1px solid rgba(0,0,0,0.06);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+}
+.map-link:hover {
+  background: var(--color-primary);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .map-frame,
+  .map-wrapper:hover .map-frame {
+    transition: none;
+  }
 }
 
 /* ===========================

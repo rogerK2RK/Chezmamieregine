@@ -1,5 +1,5 @@
 import './style.css';
-import logo from '../../../assets/Logo CMR Blc.svg'
+import logo from '../../../assets/Logo CMR Blc.svg';
 import { Link } from 'react-router-dom';
 
 export default function Footer() {
@@ -7,65 +7,57 @@ export default function Footer() {
 
   return (
     <footer className="footer">
+      <div className="footer-inner">
+        {/* Marque */}
+        <div className="footer-brand">
+          <img className="footer-logo" src={logo} alt="Chez Mamie Régine" />
+          <p className="footer-desc">
+            Cuisine malgache faite maison, préparée avec des produits frais et
+            livrée à Lyon. Les saveurs authentiques de la grande île, à partager.
+          </p>
 
-      <div className='footer-top'>
-
-        <div className='footer-top--left'>
-          <img className='logo' src={logo} alt="logo de chez mamie régine" />
-          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint cumque ipsa, ad, natus fugit, distinctio error optio cupiditate non in praesentium officia? Praesentium totam corporis libero. Nam possimus alias quod.</p>
-          <div>
-            <h4>OPENING HOURS</h4>
-            <div className='blc-hours'>
-              <div>
-                <p>Lundi - vendredi</p>
-                <p>14h à 18h</p>
-              </div>
-              <div>
-                <p>Samedi</p>
-                <p>8h à 18h</p>
-              </div>
-              <div>
-                <p>Dimanche</p>
-                <p>FERMER</p>
-              </div>
-            </div>
-            
+          <div className="footer-hours">
+            <h4>Horaires</h4>
+            <ul>
+              <li><span>Lun – Ven</span><span>14h – 18h</span></li>
+              <li><span>Samedi</span><span>8h – 18h</span></li>
+              <li><span>Dimanche</span><span>Fermé</span></li>
+            </ul>
           </div>
         </div>
 
-        <div className='footer-top--right'>
-          <div className='content'>
-            <h4>NAVIGATION</h4>
-            <Link>Malgache</Link>
-            <Link>Malgache</Link>
-            <Link>Malgache</Link>
+        {/* Colonnes de liens */}
+        <div className="footer-cols">
+          <div className="footer-col">
+            <h4>Navigation</h4>
+            <Link to="/">Accueil</Link>
+            <Link to="/produits">Nos plats</Link>
+            <Link to="/contact">Contact</Link>
+            <Link to="/account">Mon compte</Link>
           </div>
-          <div className='content'>
-            <h4>DISHES</h4>
-            <Link>Malgache</Link>
-            <Link>Malgache</Link>
-            <Link>Malgache</Link>
+
+          <div className="footer-col">
+            <h4>Contact</h4>
+            <a href="tel:0668347755">06 68 34 77 55</a>
+            <span>Lyon, France</span>
+            <Link to="/contact">Nous écrire</Link>
           </div>
-          <div className='content'>
-            <h4>FOLLOW US</h4>
-            <Link>Malgache</Link>
-            <Link>Malgache</Link>
-            <Link>Malgache</Link>
+
+          <div className="footer-col">
+            <h4>Suivez-nous</h4>
+            <a href="https://instagram.com" target="_blank" rel="noreferrer">Instagram</a>
+            <a href="https://facebook.com" target="_blank" rel="noreferrer">Facebook</a>
           </div>
         </div>
-
       </div>
 
-      <hr/>
-
-      <div className='footer-btm'>
-        <p>© {year} Chez Mamie Régine. Tous droits réservés. Designed by Roger RETITA</p>
-        <div className="links">
+      <div className="footer-bottom">
+        <p>© {year} Chez Mamie Régine — Tous droits réservés. Conçu par Roger RETITA.</p>
+        <div className="footer-bottom-links">
           <a href="/mentions-legales">Mentions légales</a>
-          <a href="/contact">Contact</a>
+          <Link to="/contact">Contact</Link>
         </div>
       </div>
-      
     </footer>
   );
 }

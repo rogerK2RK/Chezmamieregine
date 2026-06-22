@@ -16,6 +16,7 @@ export default function ContactForm({ isPageContact = false }) {
   const [loading, setLoading] = useState(false);
   const [ok, setOk] = useState("");
   const [err, setErr] = useState("");
+  const [mapActive, setMapActive] = useState(false); // interaction carte au clic
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -57,12 +58,15 @@ export default function ContactForm({ isPageContact = false }) {
   };
 
   return (
-    <div className="contact-container" data-reveal>
-      <TitleTag>Contactez-nous</TitleTag>
+    <div className="contact-container">
+      <div className="section-head" data-reveal>
+        <span className="section-eyebrow">Une question ?</span>
+        <TitleTag className="section-title">Contactez-nous</TitleTag>
+      </div>
 
       <div className="contact-container-content">
         {/* Bloc Formulaire */}
-        <div className="form-section">
+        <div className="form-section" data-reveal="right">
           <form
             className="contact-form"
             onSubmit={handleSubmit}
@@ -162,17 +166,31 @@ export default function ContactForm({ isPageContact = false }) {
         </div>
 
         {/* Bloc Carte */}
-        <div className="map-section">
-          <div className="map-wrapper">
+        <div className="map-section" data-reveal="left">
+          <div
+            className="map-wrapper"
+            onMouseLeave={() => setMapActive(false)}
+          >
             <iframe
               title="Carte de Lyon"
               aria-label="Localisation de Lyon sur une carte interactive"
               className="map-frame"
               src="https://www.openstreetmap.org/export/embed.html?bbox=4.793%2C45.65%2C4.95%2C45.80&layer=mapnik&marker=45.7640%2C4.8357"
-              style={{ border: 0 }}
+              style={{ border: 0, pointerEvents: mapActive ? "auto" : "none" }}
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
             />
+
+            {!mapActive && (
+              <button
+                type="button"
+                className="map-overlay"
+                onClick={() => setMapActive(true)}
+                aria-label="Activer l'interaction avec la carte"
+              >
+                <span>Cliquer pour interagir</span>
+              </button>
+            )}
 
             <a
               href="https://www.openstreetmap.org/?mlat=45.7640&mlon=4.8357#map=12/45.7640/4.8357"

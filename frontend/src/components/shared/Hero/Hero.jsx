@@ -1,70 +1,58 @@
 import { Link } from 'react-router-dom';
-import React, { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from 'react';
 import './style.css';
 
-import haricot from './images/hero-haricot.png';
-import ravitoto from './images/hero-ravitoto.png';
-import tilapia from './images/hero-tilapia.png';
-import ravitoto2 from './images/hero-crevette.png';
+import haricot from './images/hero-haricot.jpg';
+import ravitoto from './images/hero-ravitoto.jpg';
+import tilapia from './images/hero-tilapia.jpg';
+import crevette from './images/hero-crevette.jpg';
 
-const images = [haricot, ravitoto, tilapia, ravitoto2];
+const images = [haricot, ravitoto, tilapia, crevette];
+const INTERVAL = 7000;
 
 export default function Hero() {
-  const [index, setIndex] = useState(0);
+  // `index` = image affichée, `prev` = image précédente (gardée opaque sous le fondu).
+  const [{ index, prev }, setSlide] = useState({ index: 0, prev: null });
+  const timerRef = useRef(null);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setIndex((prev) => (prev + 1) % images.length);
-    }, 7000);
-    return () => clearInterval(interval);
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion) return undefined;
+    timerRef.current = setInterval(() => {
+      setSlide((s) => ({ index: (s.index + 1) % images.length, prev: s.index }));
+    }, INTERVAL);
+    return () => clearInterval(timerRef.current);
   }, []);
 
   return (
     <div className="hero-carousel">
-      <div
-        className="bkgrd-carousel"
-        style={{
-          backgroundImage: `url(${images[index]})`,
-        }}>
+      {/* Calques empilés : précharge toutes les images + vrai fondu enchaîné sans flash */}
+      <div className="hero-slides" aria-hidden="true">
+        {images.map((src, i) => (
+          <div
+            key={src}
+            className={`hero-slide${i === index ? ' is-active' : ''}${i === prev ? ' is-prev' : ''}`}
+            style={{ backgroundImage: `url(${src})` }}
+          />
+        ))}
       </div>
 
       <div className="hero-content">
-        <span className="hero-eyebrow">La cuisine maison qui réchauffe le cœur</span>
+        <span className="hero-eyebrow">Notre cuisine</span>
 
         <h1 className="title">
-          Des plats malgaches authentiques préparés{' '}
-          <span className="title-accent">avec amour.</span>
+          Authentique.<br />Généreuse.<br />
+          <span className="title-accent">Malagasy.</span>
         </h1>
 
         <p className="hero-desc">
-          Chez Mamie Régine, chaque recette raconte une histoire de famille,
-          de tradition et de partage. Fait maison, avec des ingrédients frais
-          et locaux.
+          Découvrez des recettes familiales préparées chaque jour avec passion,
+          inspirées des saveurs authentiques de Madagascar.
         </p>
 
         <div className="hero-actions">
           <Link className="btn-primary" to="/produits">Découvrir le menu →</Link>
-          <a className="btn-outline" href="tel:0668347755">Commander maintenant</a>
         </div>
-
-        <ul className="hero-stats">
-          <li className="hero-stat">
-            <span className="hero-stat-num">100%</span>
-            <span className="hero-stat-label">Fait maison</span>
-          </li>
-          <li className="hero-stat">
-            <span className="hero-stat-num">10K+</span>
-            <span className="hero-stat-label">Clients satisfaits</span>
-          </li>
-          <li className="hero-stat">
-            <span className="hero-stat-num">4.9/5</span>
-            <span className="hero-stat-label">Avis Google</span>
-          </li>
-          <li className="hero-stat">
-            <span className="hero-stat-num">Frais</span>
-            <span className="hero-stat-label">Ingrédients locaux</span>
-          </li>
-        </ul>
       </div>
 
     </div>

@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../../../services/api';
 import './style.css';
-import imgbackground from './images/Nos Plats.png';
+import imgbackground from './images/nos-plats.jpg';
 
 const NosPlats = () => {
   const navigate = useNavigate();
@@ -84,8 +84,11 @@ const NosPlats = () => {
       className="nosplats-container"
       style={{ ['--bg-img']: `url(${imgbackground})` }}
     >
-      <div className="nosplats-wrapper" data-reveal>
-        <h2 className="nosplats-title">Nos Plats</h2>
+      <div className="nosplats-wrapper">
+        <div className="section-head" data-reveal>
+          <span className="section-eyebrow">À la carte</span>
+          <h2 className="section-title">Nos plats à la une</h2>
+        </div>
 
         {err && <div className="nosplats-error">{err}</div>}
 
@@ -98,7 +101,7 @@ const NosPlats = () => {
         ) : (
           <>
             {/* Carrousel */}
-            <div className="slider">
+            <div className="slider" data-reveal style={{ '--reveal-delay': '0.1s' }}>
               <button
                 className="slider-btn slider-btn--prev"
                 onClick={prev}
@@ -175,7 +178,7 @@ const NosPlats = () => {
           </>
         )}
 
-        <div className="nosplats-footer">
+        <div className="nosplats-footer" data-reveal>
           <Link
             to="/produits"
             className="nosplats-button btn-primary scrolled"
