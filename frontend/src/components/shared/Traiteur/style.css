@@ -1,0 +1,182 @@
+/* =========================================================
+   TRAITEUR & ÉVÉNEMENTS — section sombre "temps fort"
+   ========================================================= */
+.traiteur {
+  padding: var(--section-y) var(--space-md);
+  background:
+    radial-gradient(120% 120% at 100% 0%, rgba(239, 80, 7, 0.18), transparent 55%),
+    var(--color-dark);
+  color: #fff;
+}
+
+.traiteur-inner {
+  max-width: var(--container);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-2xl);
+  align-items: center;
+}
+
+/* ---- Visuel ---- */
+.traiteur-media {
+  position: relative;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  aspect-ratio: 16 / 11;
+}
+.traiteur-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform var(--dur-slow) var(--ease);
+}
+.traiteur-media:hover img {
+  transform: scale(1.05);
+}
+.traiteur-badge {
+  position: absolute;
+  top: var(--space-md);
+  left: var(--space-md);
+  background: var(--color-primary);
+  color: #fff;
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.45rem 0.9rem;
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-brand);
+}
+
+/* ---- Contenu ---- */
+.traiteur .section-eyebrow {
+  display: inline-block;
+  color: var(--color-accent);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin-bottom: var(--space-sm);
+}
+
+.traiteur .section-title {
+  font-family: var(--font-subtitle);
+  font-size: clamp(1.9rem, 5vw, 2.6rem);
+  font-weight: 700;
+  line-height: 1.15;
+  color: #fff;
+  margin: 0 0 var(--space-md) 0;
+}
+
+.traiteur-lead {
+  color: rgba(255, 255, 255, 0.82);
+  font-size: var(--fs-md);
+  line-height: 1.65;
+  max-width: 52ch;
+  margin: 0 0 var(--space-xl) 0;
+}
+
+/* ---- Grille d'événements ---- */
+.traiteur-grid {
+  list-style: none;
+  margin: 0 0 var(--space-xl) 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-md);
+}
+
+.traiteur-card {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.04);
+  transition: border-color var(--dur) ease, background var(--dur) ease, transform var(--dur) var(--ease);
+}
+.traiteur-card:hover {
+  border-color: rgba(239, 80, 7, 0.5);
+  background: rgba(255, 255, 255, 0.07);
+  transform: translateY(-3px);
+}
+
+.traiteur-icon {
+  flex: 0 0 auto;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+}
+
+.traiteur-card h3 {
+  margin: 0 0 0.2rem 0;
+  font-size: var(--fs-base);
+  font-weight: 700;
+  color: #fff;
+}
+.traiteur-card p {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.5;
+}
+
+/* ---- Actions ---- */
+.traiteur-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-lg);
+}
+.traiteur-actions .btn-primary {
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  padding: 0.95rem 1.8rem;
+  border-radius: var(--radius-full);
+  text-decoration: none;
+  font-weight: 700;
+}
+.traiteur-phone {
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.35);
+  padding-bottom: 1px;
+}
+.traiteur-phone:hover {
+  color: #fff;
+  border-color: #fff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .traiteur-media img,
+  .traiteur-media:hover img,
+  .traiteur-card,
+  .traiteur-card:hover {
+    transition: none;
+    transform: none;
+  }
+}
+
+/* ===== Tablette + Desktop ===== */
+@media (min-width: 768px) {
+  .traiteur { padding: var(--section-y) 5%; }
+  .traiteur-grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (min-width: 1024px) {
+  .traiteur-inner {
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: var(--space-3xl);
+  }
+}

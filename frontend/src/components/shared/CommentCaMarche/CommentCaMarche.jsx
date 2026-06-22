@@ -1,6 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import './style.css';
+import { WA_ORDER, TEL_LINK, PHONE_DISPLAY } from '../../../config/contact.js';
 import plat from './images/steak.png';
 import commande from './images/client.png';
 import livraison from './images/livraison-de-colis.png';
@@ -15,8 +15,8 @@ const CommentCaMarche = () => {
     },
     {
       num: "02",
-      title: "Commande par téléphone",
-      subtitle: "Appelle-nous, choisis la date et ton mode de paiement.",
+      title: "Commande par appel ou WhatsApp",
+      subtitle: "Écris-nous ou appelle-nous, choisis la date et le mode de paiement.",
       icon: commande
     },
     {
@@ -54,7 +54,10 @@ const CommentCaMarche = () => {
       </div>
 
       <div className="ccm-cta" data-reveal>
-        <Link to="/produits" className="btn-primary">Commander</Link>
+        <a className="btn-primary" href={WA_ORDER} target="_blank" rel="noopener noreferrer">
+          Commander sur WhatsApp
+        </a>
+        <a className="ccm-cta-phone" href={TEL_LINK}>ou {PHONE_DISPLAY}</a>
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { useClientAuth } from '../../../context/ClientAuthContext.jsx';
+import { WA_ORDER } from '../../../config/contact.js';
 import './style.css';
 import logo from '../../../assets/Logo CMR Blc.svg';
 
@@ -69,6 +70,7 @@ export default function Header() {
         <div className={`menu ${solid ? 'scrolled' : ''}`} id="Menu">
           <nav className="nav">
             <NavLink className="nav-link menu-item" to="/produits">Nos plats</NavLink>
+            <a className="nav-link menu-item" href="/#traiteur">Traiteur</a>
             <NavLink className="nav-link menu-item" to="/contact">Contact</NavLink>
 
             {isLogged ? (
@@ -130,9 +132,11 @@ export default function Header() {
             )}
 
             <a
-              href="tel:0668347755"
+              href={WA_ORDER}
+              target="_blank"
+              rel="noopener noreferrer"
               className="dropdown-cta"
-              aria-label="Appeler le restaurant au 06 68 34 77 55 pour commander"
+              aria-label="Commander sur WhatsApp"
               onClick={() => setMenuOpen(false)}
             >
               Commander
@@ -158,6 +162,7 @@ export default function Header() {
 
           <div className={`dropdown ${menuOpen ? 'open' : ''}`} role="menu">
             <Link to="/produits" className="dropdown-item" onClick={() => setMenuOpen(false)}>Nos plats</Link>
+            <a href="/#traiteur" className="dropdown-item" onClick={() => setMenuOpen(false)}>Traiteur</a>
             <Link to="/contact"  className="dropdown-item" onClick={() => setMenuOpen(false)}>Contact</Link>
 
             {isLogged && (
@@ -186,9 +191,11 @@ export default function Header() {
 
             <div className="dropdown-sep" />
             <a
-              href="tel:0668347755"
+              href={WA_ORDER}
+              target="_blank"
+              rel="noopener noreferrer"
               className="dropdown-cta"
-              aria-label="Appeler le restaurant au 06 68 34 77 55 pour commander"
+              aria-label="Commander sur WhatsApp"
               onClick={() => setMenuOpen(false)}
             >
               Commander

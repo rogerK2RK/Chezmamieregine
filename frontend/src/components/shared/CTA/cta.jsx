@@ -1,7 +1,7 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import './style.css';
 import ctaImage from './images/cta.png';
+import { WA_ORDER, TEL_LINK, PHONE_DISPLAY } from '../../../config/contact.js';
 
 const Cta = () => {
   return (
@@ -13,10 +13,15 @@ const Cta = () => {
             Envie d'un voyage culinaire à Madagascar ?
           </p>
           <p className="subtitle">
-            Des plats faits maison, préparés avec des produits frais et des
-            épices choisies avec soin.
+            Passez commande en un message : on prépare tout maison et on vous
+            livre. Réponse rapide, du lundi au dimanche.
           </p>
-          <Link to="/produits" className="btn-cta">Voir nos plats</Link>
+          <div className="cta-actions">
+            <a className="btn-cta" href={WA_ORDER} target="_blank" rel="noopener noreferrer">
+              Commander sur WhatsApp
+            </a>
+            <a className="cta-phone" href={TEL_LINK}>ou {PHONE_DISPLAY}</a>
+          </div>
         </div>
 
         <div className="cta-image" data-reveal="left">

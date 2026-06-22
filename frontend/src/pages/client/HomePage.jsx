@@ -9,6 +9,7 @@ import CommentCaMarche from '../../components/shared/CommentCaMarche/CommentCaMa
 import Cta from '../../components/shared/CTA/cta.jsx';
 import ContactForm from '../../components/shared/ContactForm/ContactForm.jsx';
 import Reassurance from '../../components/shared/Reassurance/Reassurance.jsx';
+import Traiteur from '../../components/shared/Traiteur/Traiteur.jsx';
 
 export default function HomePage() {
   // Smooth scroll (Lenis) + calage par sections (snap), uniquement sur l'accueil.
@@ -82,15 +83,16 @@ export default function HomePage() {
   return (
     <main className="home-page">
       <Hero />
+      <Reassurance />
       {/* Le contenu remonte par-dessus le Hero figé (sticky stacking) */}
       <div className="home-sheet">
         <Apropos />
         <NosPlats />
         <CommentCaMarche />
+        <Traiteur />
         <Cta />
         <ContactForm />
       </div>
-      <Reassurance />
     </main>
   );
 }

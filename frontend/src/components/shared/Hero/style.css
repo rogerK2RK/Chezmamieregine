@@ -133,6 +133,36 @@
   font-size: 1rem;
 }
 
+/* Bouton WhatsApp (garde l'orange de marque + icône) */
+.btn-wa {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
+}
+.btn-wa svg {
+  flex: 0 0 auto;
+}
+
+/* Rappel téléphone sous les boutons */
+.hero-phone {
+  margin: 0;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.8);
+  text-transform: none;
+}
+.hero-phone a {
+  color: #fff;
+  font-weight: 700;
+  text-decoration: none;
+  text-transform: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+  padding-bottom: 1px;
+}
+.hero-phone a:hover {
+  border-color: #fff;
+}
+
 .btn-outline {
   display: inline-flex;
   align-items: center;
