@@ -4,12 +4,12 @@
     background-color: var(--color-surface-2);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
-    color: var(--color-paper);
+    color: var(--color-secondary);
 }
 .cmt-title   {
     font-family: var(--font-display);
     text-transform: uppercase;
-    color: var(--color-paper);
+    color: var(--color-secondary);
     font-size: 1.5rem;
     margin: 0 0 12px;
 }
@@ -46,8 +46,8 @@
     padding: 10px 12px;
     border-radius: var(--radius-sm);
     border: 1px solid var(--color-border);
-    background: rgba(244, 236, 221, 0.06);
-    color: var(--color-paper);
+    background: var(--color-paper);
+    color: var(--color-secondary);
     font-family: var(--font-body);
 }
 .cmt-input::placeholder { color: var(--color-text-muted); }

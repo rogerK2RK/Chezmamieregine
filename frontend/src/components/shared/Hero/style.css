@@ -4,8 +4,8 @@
 .hero {
   position: relative;
   background:
-    radial-gradient(120% 90% at 85% 10%, rgba(239, 80, 7, 0.16), transparent 55%),
-    var(--color-ink);
+    radial-gradient(120% 90% at 85% 10%, rgba(239, 80, 7, 0.12), transparent 55%),
+    var(--color-paper);
   padding: calc(96px + var(--space-2xl)) var(--space-lg) var(--space-3xl);
   overflow: hidden;
 }
@@ -19,7 +19,7 @@
   font-family: var(--font-display);
   font-size: 22vw;
   line-height: 1;
-  color: var(--color-paper);
+  color: var(--color-ink);
   opacity: 0.05;
   pointer-events: none;
   white-space: nowrap;
@@ -55,7 +55,7 @@
   line-height: 0.9;
   letter-spacing: 0.005em;
   margin: 0 0 var(--space-lg);
-  color: var(--color-paper);
+  color: var(--color-secondary);
 }
 .hero-line { display: block; }
 .hero-line--serif {
@@ -84,7 +84,7 @@
   color: var(--color-text-muted);
 }
 .hero-phone a {
-  color: var(--color-paper);
+  color: var(--color-secondary);
   font-weight: 800;
   text-decoration: none;
   border-bottom: 2px solid var(--color-primary);
@@ -98,7 +98,7 @@
   margin: 0;
   width: 100%;
   max-width: 460px;
-  border: 2px solid var(--color-paper);
+  border: 2px solid var(--color-secondary);
   border-radius: var(--radius-md);
   background: var(--color-surface-2);
 }
@@ -137,8 +137,8 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: var(--color-paper);
-  color: var(--color-ink);
+  background: var(--color-ink);
+  color: var(--color-paper);
   font-family: var(--font-body);
   font-size: var(--fs-xs);
   font-weight: 800;
@@ -158,7 +158,7 @@
   flex-direction: column;
   align-items: center;
   gap: 0.35rem;
-  color: var(--color-paper);
+  color: var(--color-secondary);
   font-family: var(--font-body);
   font-size: 0.68rem;
   font-weight: 800;

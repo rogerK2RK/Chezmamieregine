@@ -23,28 +23,28 @@
   --color-primary-soft: rgba(239, 80, 7, 0.12);
   --color-accent: #1F6F5C;           /* Vert profond (rappel Madagascar, secondaire) */
 
-  --color-ink: #0E0B07;              /* Fond principal — encre profonde chaude */
-  --color-surface: #181109;          /* Surface (sections) */
-  --color-surface-2: #221811;        /* Cartes / panneaux */
-  --color-paper: #F4ECDD;            /* Crème — texte clair & accents lumineux */
-  --color-paper-2: #E7D9C2;
+  --color-ink: #17120E;              /* Encre — texte & accents foncés */
+  --color-surface: #FBF4E8;          /* Surface (sections) claire */
+  --color-surface-2: #FFFDF8;        /* Cartes / panneaux (blanc cassé) */
+  --color-paper: #F4ECDD;            /* Papier crème — fond principal */
+  --color-paper-2: #EADDC7;
 
-  /* alias rétro-compat (réutilisés par les composants existants) -> thème SOMBRE
-     - "secondary" = couleur de texte par défaut (clair sur fond sombre)
-     - "cream" = fond de section (devient une surface sombre)
-     - "white" = fond de carte (devient un panneau sombre) */
-  --color-secondary: var(--color-paper);
-  --color-text: var(--color-paper);
-  --color-text-muted: #A99A86;
-  --color-bg: var(--color-ink);
-  --color-bg-alt: var(--color-surface);
-  --color-cream: var(--color-surface);
-  --color-cream-alt: var(--color-surface-2);
+  /* alias rétro-compat (réutilisés par les composants existants) -> thème CLAIR
+     - "secondary" = couleur de texte par défaut (encre sur fond clair)
+     - "cream" = fond de section clair
+     - "white" = fond de carte (blanc cassé) */
+  --color-secondary: var(--color-ink);
+  --color-text: var(--color-ink);
+  --color-text-muted: #6E6253;
+  --color-bg: var(--color-paper);
+  --color-bg-alt: var(--color-paper-2);
+  --color-cream: var(--color-paper);
+  --color-cream-alt: var(--color-paper-2);
   --color-dark: var(--color-ink);
   --color-dark-alt: #241C15;
-  --color-white: var(--color-surface-2);   /* "cartes blanches" -> panneaux sombres */
-  --color-border: rgba(244, 236, 221, 0.14); /* filet clair sur sombre */
-  --color-border-ink: rgba(244, 236, 221, 0.14);
+  --color-white: var(--color-surface-2);   /* cartes claires */
+  --color-border: #DBCDB6;                  /* filet chaud clair */
+  --color-border-ink: rgba(23, 18, 14, 0.16);
   --color-terracotta: #B0512F;
   --color-spice: #7A2E12;
 
@@ -114,9 +114,9 @@ html { scroll-behavior: smooth; }
 body {
   margin: 0;
   min-height: 100vh;
-  background: var(--color-ink);
+  background: var(--color-paper);
   font-family: var(--font-body);
-  color: var(--color-paper);
+  color: var(--color-ink);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -212,14 +212,14 @@ input, textarea, select { font-family: var(--font-body); }
 
 .btn-outline {
   background: transparent;
-  color: var(--color-paper);
-  border-color: var(--color-paper);
+  color: var(--color-secondary);
+  border-color: var(--color-secondary);
 }
 .btn-outline:hover {
-  background: var(--color-paper);
-  color: var(--color-ink);
+  background: var(--color-secondary);
+  color: var(--color-bg);
   transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.45);
+  box-shadow: 6px 6px 0 rgba(23, 18, 14, 0.25);
 }
 
 .btn-ghost {
