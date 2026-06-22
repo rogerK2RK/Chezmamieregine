@@ -1,6 +1,7 @@
 import './style.css';
 import logo from '../../../assets/Logo CMR Blc.svg';
 import { Link } from 'react-router-dom';
+import { WA_ORDER, TEL_LINK, PHONE_DISPLAY } from '../../../config/contact.js';
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -32,14 +33,16 @@ export default function Footer() {
             <h4>Navigation</h4>
             <Link to="/">Accueil</Link>
             <Link to="/produits">Nos plats</Link>
+            <a href="/#traiteur">Traiteur</a>
             <Link to="/contact">Contact</Link>
             <Link to="/account">Mon compte</Link>
           </div>
 
           <div className="footer-col">
             <h4>Contact</h4>
-            <a href="tel:0668347755">06 68 34 77 55</a>
-            <span>Lyon, France</span>
+            <a href={WA_ORDER} target="_blank" rel="noreferrer">WhatsApp</a>
+            <a href={TEL_LINK}>{PHONE_DISPLAY}</a>
+            <span>Livraison à Lyon</span>
             <Link to="/contact">Nous écrire</Link>
           </div>
 
