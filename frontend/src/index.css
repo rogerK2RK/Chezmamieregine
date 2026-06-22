@@ -247,9 +247,10 @@ input, textarea, select {
 
 .section-title {
   font-family: var(--font-subtitle);   /* Playfair Display */
-  font-size: clamp(1.8rem, 5vw, 2.4rem);
+  font-size: clamp(2rem, 5.5vw, 3rem);
   font-weight: 700;
-  line-height: 1.2;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
   margin: 0 0 var(--space-md) 0;
   /* couleur héritée du bloc : sombre sur fond clair, blanche sur fond sombre */
 }
@@ -298,22 +299,44 @@ input, textarea, select {
 /* --- Révélation au scroll (via le hook useScrollReveal) --- */
 [data-reveal] {
   opacity: 0;
-  transform: translateY(32px);
+  transform: translateY(34px);
+  filter: blur(6px);
   transition:
-    opacity 0.8s var(--ease),
-    transform 0.8s var(--ease);
+    opacity 0.85s var(--ease),
+    transform 0.85s var(--ease),
+    filter 0.85s var(--ease);
   transition-delay: var(--reveal-delay, 0s);
+  will-change: opacity, transform, filter;
 }
 
 /* Variantes directionnelles */
-[data-reveal="left"]  { transform: translateX(-44px); }
-[data-reveal="right"] { transform: translateX(44px); }
-[data-reveal="up"]    { transform: translateY(32px); }
+[data-reveal="left"]  { transform: translateX(-48px); }
+[data-reveal="right"] { transform: translateX(48px); }
+[data-reveal="up"]    { transform: translateY(34px); }
 [data-reveal="zoom"]  { transform: scale(0.92); }
 
 [data-reveal].is-visible {
   opacity: 1;
   transform: none;
+  filter: none;
+}
+
+/* --- Bande défilante (marquee) --- */
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* --- Flottement doux (badges, visuels) --- */
+@keyframes float-soft {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-8px); }
+}
+
+/* --- Indice de scroll (souris/flèche sous le hero) --- */
+@keyframes scroll-bob {
+  0%, 100% { transform: translateY(0); opacity: 0.7; }
+  50%      { transform: translateY(6px); opacity: 1; }
 }
 
 /* --- Entrée du Hero au chargement --- */
@@ -356,8 +379,10 @@ input, textarea, select {
   [data-reveal] {
     opacity: 1;
     transform: none;
+    filter: none;
     transition: none;
   }
+  .marquee__track { animation: none !important; }
   .hero-content .hero-eyebrow,
   .hero-content .title,
   .hero-content .hero-desc,
