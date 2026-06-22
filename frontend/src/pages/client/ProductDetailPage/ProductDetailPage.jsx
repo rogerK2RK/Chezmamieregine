@@ -3,11 +3,9 @@ import { useNavigate, useParams, Link } from "react-router-dom";
 import api from "../../../services/api";
 import SafeImage from "../../../components/common/SafeImage";
 import { getMockPlatById, MAMIE_PHOTO } from "../../../data/mockPlats";
+import { whatsappLink, TEL_LINK } from "../../../config/contact.js";
 import "./style.css";
 import CommentSection from "../../../features/comments/CommentSection";
-
-const WHATSAPP = "33668347755";
-const PHONE = "0668347755";
 
 export default function ProductDetailPage() {
   const { id } = useParams();
@@ -72,7 +70,10 @@ export default function ProductDetailPage() {
   const infos = Array.isArray(plat.infos) && plat.infos.length
     ? plat.infos
     : ["Plat préparé chaque jour", "Ingrédients frais et locaux", "Recette traditionnelle"];
-  const waText = encodeURIComponent(`Bonjour, je souhaite commander : ${plat.name}.`);
+  const waOrder = whatsappLink(
+    `Bonjour Chez Mamie Régine 👋, je souhaite commander : ${plat.name}` +
+    (plat.price ? ` (${Number(plat.price).toFixed(0)} €)` : '') + '.'
+  );
 
   return (
     <main className="pd">
@@ -155,13 +156,13 @@ export default function ProductDetailPage() {
                 <>
                   <a
                     className="pd-btn pd-btn--primary"
-                    href={`https://wa.me/${WHATSAPP}?text=${waText}`}
+                    href={waOrder}
                     target="_blank"
                     rel="noreferrer"
                   >
                     Commander sur WhatsApp
                   </a>
-                  <a className="pd-btn pd-btn--outline" href={`tel:${PHONE}`}>
+                  <a className="pd-btn pd-btn--outline" href={TEL_LINK}>
                     Commander par téléphone
                   </a>
                 </>
