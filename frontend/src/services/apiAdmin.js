@@ -1,22 +1,13 @@
 import axios from 'axios';
-import authHeaderAdmin from './authHeaderAdmin';
 
 const root = (import.meta.env.VITE_API_URL || 'http://localhost:5000').replace(/\/$/, '');
 const baseURL = root.endsWith('/api') ? root : `${root}/api`;
 
-const apiAdmin = axios.create({
-  baseURL,
-  withCredentials: true,
-});
+const apiAdmin = axios.create({ baseURL });
 
 apiAdmin.interceptors.request.use((config) => {
-  const headers = authHeaderAdmin();
-  if (headers?.Authorization) {
-    config.headers = { ...(config.headers || {}), ...headers };
-    if(import.meta.env.DEV){
-      console.log('[REQ] POST/GET', config.url, 'Auth?', !!headers.Authorization);
-    }
-  }
+  const t = localStorage.getItem('adminToken');
+  if (t) config.headers.Authorization = `Bearer ${t}`;
   return config;
 });
 

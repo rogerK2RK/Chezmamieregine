@@ -1,16 +1,21 @@
-const express = require('express');
-const router = express.Router();
-const categoryController = require('../controllers/categoryController'); // Contrôleur des catégories
-const platController = require('../controllers/platController'); // Contrôleur des plats
+const router = require('express').Router();
+const plat = require('../controllers/platController');
+const category = require('../controllers/categoryController');
+const contact = require('../controllers/contactController');
+const comment = require('../controllers/commentController');
 
-// Liste des catégories visibles sur le site (front)
-router.get('/categories', categoryController.listPublic);
+// Plats
+router.get('/plats', plat.listPublic);
+router.get('/plats/:id', plat.getPublic);
 
-// Liste des plats disponibles, avec option de filtrage par catégorie
-router.get('/plats', platController.listPublic);
+// Catégories
+router.get('/categories', category.listPublic);
 
-// Détail d’un plat spécifique (par ID)
-router.get('/plats/:id', platController.getOnePublic);
+// Contact
+router.post('/contact', contact.create);
 
-// Exporte le routeur public
+// Commentaires d'un plat
+router.get('/plats/:platId/comments', comment.listByPlat);
+router.post('/plats/:platId/comments', comment.create);
+
 module.exports = router;

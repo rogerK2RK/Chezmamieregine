@@ -1,3 +1,2 @@
-// api/index.js (point d'entrée Vercel)
-const app = require('../backend/app');
-module.exports = app; // Express app -> handler serverless
+// Entrée serverless (Vercel) — réutilise l'app Express.
+module.exports = require('../backend/app');

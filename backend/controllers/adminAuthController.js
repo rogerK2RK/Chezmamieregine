@@ -1,96 +1,44 @@
-// Pour le hachage et la vérif de mots de passe
 const bcrypt = require('bcryptjs');
-// Pour la génération de tokens JWT            
 const jwt = require('jsonwebtoken');
-// Modèle Mongoose pour les utilisateurs admin
 const AdminUser = require('../models/AdminUser');
-// Secret JWT admin centralisé (validé au démarrage)
 const { JWT_ADMIN_SECRET } = require('../config/jwt');
+const { asyncHandler, emailRegex } = require('../utils/helpers');
 
-// Fonction utilitaire : génère un token JWT pour un admin
-function signAdminToken(admin) {
-  return jwt.sign(
-    { id: admin._id, type: 'admin', role: admin.role },
-    JWT_ADMIN_SECRET,
-    { expiresIn: '30d' }
-  );
-}
+const signAdmin = (a) =>
+  jwt.sign({ id: a._id, type: 'admin', role: a.role }, JWT_ADMIN_SECRET, { expiresIn: '30d' });
 
-// Contrôleur : connexion d’un administrateur
-exports.loginAdmin = async (req, res) => {
-  try {
-    const emailNorm = (req.body.email || '').trim().toLowerCase();
-    const { password } = req.body;
+exports.loginAdmin = asyncHandler(async (req, res) => {
+  const email = String(req.body.email || '').trim().toLowerCase();
+  const password = String(req.body.password || '');
 
-    // Vérifie si l'admin existe
-    const admin = await AdminUser.findOne({ email: emailNorm });
-    if (!admin) return res.status(400).json({ message: 'Identifiants invalides' });
+  const admin = await AdminUser.findOne({ email });
+  if (!admin || !(await bcrypt.compare(password, admin.password)))
+    return res.status(400).json({ message: 'Identifiants invalides' });
+  if (!['admin', 'owner', 'superAdmin'].includes(admin.role))
+    return res.status(403).json({ message: 'Accès réservé aux administrateurs' });
 
-    // Vérifie le rôle autorisé
-    if (!['admin', 'owner', 'superAdmin'].includes(admin.role)) {
-      return res.status(403).json({ message: 'Accès réservé aux administrateurs' });
-    }
+  return res.json({
+    _id: admin._id, name: admin.name, email: admin.email,
+    role: admin.role, token: signAdmin(admin),
+  });
+});
 
-    // Compare le mot de passe fourni avec le hash stocké
-    const ok = await bcrypt.compare(password, admin.password);
-    if (!ok) return res.status(400).json({ message: 'Identifiants invalides' });
+// Création d'un admin par un superAdmin/owner
+exports.createAdmin = asyncHandler(async (req, res) => {
+  let { name, email, password, role } = req.body;
+  email = String(email || '').trim().toLowerCase();
+  if (!name || !emailRegex.test(email) || !password)
+    return res.status(400).json({ message: 'Champs invalides.' });
+  if (!['admin', 'owner'].includes(role)) role = 'admin';
+  if (await AdminUser.findOne({ email }))
+    return res.status(400).json({ message: 'Email déjà utilisé.' });
 
-    // Génère le token JWT
-    const token = signAdminToken(admin);
+  const hashed = await bcrypt.hash(password, 10);
+  const admin = await AdminUser.create({ name, email, password: hashed, role });
+  return res.status(201).json({ _id: admin._id, adminId: admin.adminId, name: admin.name, email: admin.email, role: admin.role });
+});
 
-    // Retourne les infos admin + token
-    res.json({
-      _id: admin._id,
-      name: admin.name,
-      email: admin.email,
-      role: admin.role,
-      token
-    });
-  } catch (err) {
-    console.error('loginAdmin error', err);
-    res.status(500).json({ message: 'Erreur serveur' });
-  }
-};
-
-// Contrôleur : création d’un utilisateur admin par un autre admin
-exports.createUserByAdmin = async (req, res) => {
-  try {
-    const { name, email, password, role } = req.body;
-
-    // Vérifie que le rôle est autorisé
-    if (!['admin', 'owner'].includes(role)) {
-      return res.status(400).json({ message: 'Rôle non autorisé' });
-    }
-
-    // Vérifie si l’email est déjà utilisé
-    const emailNorm = (email || '').trim().toLowerCase();
-    const exists = await AdminUser.findOne({ email: emailNorm });
-    if (exists) return res.status(400).json({ message: 'Utilisateur déjà existant' });
-
-    // Hachage du mot de passe et création du compte
-    const hashed = await bcrypt.hash(password, 10);
-    const user = await AdminUser.create({ name, email: emailNorm, password: hashed, role });
-
-    // Retourne les infos du nouvel utilisateur (sans mot de passe)
-    res.status(201).json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role
-    });
-  } catch (err) {
-    console.error('createUserByAdmin error', err);
-    res.status(500).json({ message: 'Erreur serveur' });
-  }
-};
-
-// Contrôleur : liste tous les administrateurs (sans les mots de passe)
-exports.listAdmins = async (_req, res) => {
-  try {
-    const users = await AdminUser.find({}, '-password').sort({ createdAt: -1 });
-    res.json(users);
-  } catch (e) {
-    console.error('listAdmins error', e);
-    res.status(500).json({ message: 'Erreur serveur' });
-  }
-};
+exports.listAdmins = asyncHandler(async (_req, res) => {
+  const admins = await AdminUser.find().select('-password').sort('-createdAt').lean();
+  res.json(admins);
+});

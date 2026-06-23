@@ -1,61 +1,26 @@
 import { useEffect } from 'react';
 
-/**
- * Révèle en douceur les éléments portant l'attribut [data-reveal] quand ils
- * entrent dans le viewport (fade + slide géré en CSS via la classe .is-visible).
- *
- * - Respecte prefers-reduced-motion (affiche tout immédiatement).
- * - Fallback : si IntersectionObserver est absent, tout est révélé.
- * - À appeler une fois dans une page (ex. HomePage) ; observe aussi les
- *   éléments montés après coup (carrousel chargé en async).
- */
+// Révèle les [data-reveal] au scroll (ajoute .is-visible). À appeler dans le layout.
 export default function useScrollReveal(selector = '[data-reveal]') {
   useEffect(() => {
-    const reduceMotion = window.matchMedia(
-      '(prefers-reduced-motion: reduce)'
-    ).matches;
-
-    const revealAll = () =>
-      document
-        .querySelectorAll(selector)
-        .forEach((el) => el.classList.add('is-visible'));
-
-    if (reduceMotion || !('IntersectionObserver' in window)) {
-      revealAll();
-      return;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce || !('IntersectionObserver' in window)) {
+      document.querySelectorAll(selector).forEach((el) => el.classList.add('is-visible'));
+      return undefined;
     }
-
     const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('is-visible');
-            io.unobserve(entry.target);
-          }
-        });
-      },
+      (entries) => entries.forEach((e) => {
+        if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); }
+      }),
       { threshold: 0.12, rootMargin: '0px 0px -8% 0px' }
     );
-
-    const observed = new WeakSet();
-    const observeAll = () => {
-      document.querySelectorAll(selector).forEach((el) => {
-        if (!observed.has(el)) {
-          observed.add(el);
-          io.observe(el);
-        }
-      });
-    };
-
-    observeAll();
-
-    // Réobserve quand de nouveaux éléments apparaissent (ex. cartes async).
-    const mo = new MutationObserver(observeAll);
+    const seen = new WeakSet();
+    const observe = () => document.querySelectorAll(selector).forEach((el) => {
+      if (!seen.has(el)) { seen.add(el); io.observe(el); }
+    });
+    observe();
+    const mo = new MutationObserver(observe);
     mo.observe(document.body, { childList: true, subtree: true });
-
-    return () => {
-      io.disconnect();
-      mo.disconnect();
-    };
+    return () => { io.disconnect(); mo.disconnect(); };
   }, [selector]);
 }

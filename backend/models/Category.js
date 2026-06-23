@@ -1,22 +1,24 @@
 const mongoose = require('mongoose');
-const { getNextId } = require('../utils/idGenerator');
 
-// Schéma Mongoose pour les catégories de plats
-const categorySchema = new mongoose.Schema({
-  categoryId:  { type: String, unique: true, index: true },
-  name:        { type: String, required: true, trim: true, unique: true },
-  slug:        { type: String, required: true, unique: true, lowercase: true, trim: true },
-  description: { type: String, default: '' },
-  isPublic:    { type: Boolean, default: false }, 
-  isActive:    { type: Boolean, default: true } 
-}, { timestamps: true });
+const slugify = (s) =>
+  String(s || '')
+    .toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
 
-// Génère automatiquement un categoryId si absent à la création
-categorySchema.pre('save', async function(next) {
-  if (!this.isNew || this.categoryId) return next();
-  this.categoryId = await getNextId('CAT', 'category');
+const CategorySchema = new mongoose.Schema(
+  {
+    name: { type: String, required: true, trim: true },
+    slug: { type: String, unique: true, index: true },
+    parent: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', default: null }, // arborescence
+  },
+  { timestamps: true }
+);
+
+CategorySchema.pre('save', function (next) {
+  if (!this.slug) this.slug = slugify(this.name);
   next();
 });
 
-// Exporte le modèle lié à la collection "categories"
-module.exports = mongoose.model('Category', categorySchema, 'categories');
+module.exports = mongoose.model('Category', CategorySchema, 'categories');

@@ -1,20 +1,8 @@
-// backend/routes/meRoutes.js
-const express = require('express');
-const router = express.Router();
-
-// Middleware d'auth client
+const router = require('express').Router();
 const { clientProtect } = require('../middleware/clientAuth');
+const c = require('../controllers/clientAuthController');
 
-// Contrôleur "me"
-const meController = require('../controllers/meController');
-
-// GET /api/me → profil du client connecté
-router.get('/', clientProtect, meController.getMe);
-
-// PUT /api/me → mise à jour du profil
-router.put('/', clientProtect, meController.updateMe);
-
-// DELETE /api/me → suppression du compte
-router.delete('/', clientProtect, meController.deleteMe);
+router.get('/', clientProtect, c.me);
+router.patch('/', clientProtect, c.updateMe);
 
 module.exports = router;

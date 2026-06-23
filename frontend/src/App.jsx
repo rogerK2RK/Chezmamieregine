@@ -1,6 +1,6 @@
-import AppRouter from './routes/AppRouter';
-import { ClientAuthProvider } from './context/ClientAuthContext';
-import { AdminAuthProvider } from './context/AdminAuthContext';
+import AppRouter from './routes/AppRouter.jsx';
+import { ClientAuthProvider } from './context/ClientAuthContext.jsx';
+import { AdminAuthProvider } from './context/AdminAuthContext.jsx';
 
 export default function App() {
   return (

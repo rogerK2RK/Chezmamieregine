@@ -1,32 +1,49 @@
-// backend/routes/adminRoutes.js
-const express = require("express");
-const router = express.Router();
+const router = require('express').Router();
+const multer = require('multer');
+const { adminProtect, requireRole } = require('../middleware/adminAuth');
+const adminAuth = require('../controllers/adminAuthController');
+const plat = require('../controllers/platController');
+const category = require('../controllers/categoryController');
+const comment = require('../controllers/commentController');
+const contact = require('../controllers/contactController');
+const uploadCtrl = require('../controllers/uploadController');
 
-const { adminProtect }   = require("../middleware/adminAuthMiddleware"); // Vérifie le token admin
-const { authorizeRoles } = require("../middleware/roleMiddleware"); // Contrôle d’accès par rôle
-const adminAuthController = require("../controllers/adminAuthController"); // Contrôleurs admin
+const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 5 * 1024 * 1024 } });
 
-// Répond aux requêtes OPTIONS pour /login (préflight CORS)
-router.options("/login", (req, res) => res.sendStatus(204));
+// --- Auth admin (public) ---
+router.post('/login', adminAuth.loginAdmin);
 
-// Route publique — connexion admin
-router.post("/login", adminAuthController.loginAdmin);
+// --- Tout le reste est protégé ---
+router.use(adminProtect);
 
-// Route protégée — création d’un nouvel utilisateur admin
-router.post(
-  "/create-user",
-  adminProtect, // Vérifie le token admin
-  authorizeRoles("admin", "superAdmin"), // Autorise seulement certains rôles
-  adminAuthController.createUserByAdmin
-);
+// Profil courant
+router.get('/me', (req, res) => res.json(req.admin));
 
-// Route protégée — liste des utilisateurs admin
-router.get(
-  "/users",
-  adminProtect,
-  authorizeRoles("admin", "superAdmin", "owner"),
-  adminAuthController.listAdmins
-);
+// Upload d'image (GridFS)
+router.post('/uploads', upload.single('image'), uploadCtrl.upload);
 
-// Exporte le routeur pour utilisation dans server.js
+// Admins (gestion réservée owner/superAdmin)
+router.get('/users', requireRole('owner', 'superAdmin'), adminAuth.listAdmins);
+router.post('/users', requireRole('owner', 'superAdmin'), adminAuth.createAdmin);
+
+// Plats
+router.post('/plats', plat.create);
+router.put('/plats/:id', plat.update);
+router.delete('/plats/:id', plat.remove);
+
+// Catégories
+router.post('/categories', category.create);
+router.put('/categories/:id', category.update);
+router.delete('/categories/:id', category.remove);
+
+// Commentaires
+router.get('/comments', comment.listAll);
+router.patch('/comments/:id/hide', comment.setHidden(true));
+router.patch('/comments/:id/unhide', comment.setHidden(false));
+router.delete('/comments/:id', comment.remove);
+
+// Contacts
+router.get('/contacts', contact.list);
+router.delete('/contacts/:id', contact.remove);
+
 module.exports = router;

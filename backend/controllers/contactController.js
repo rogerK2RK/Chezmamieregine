@@ -1,34 +1,29 @@
-const ContactMessage = require('../models/ContactMessage');
+const Contact = require('../models/Contact');
+const { asyncHandler, emailRegex } = require('../utils/helpers');
 
-exports.createContact = async (req, res) => {
-  try {
-    const { lastName, firstName, email, phone, message } = req.body || {};
+// ---- Public : envoi d'un message ----
+exports.create = asyncHandler(async (req, res) => {
+  const firstName = String(req.body.firstName || '').trim();
+  const lastName = String(req.body.lastName || '').trim();
+  const email = String(req.body.email || '').trim().toLowerCase();
+  const phone = String(req.body.phone || '').trim();
+  const message = String(req.body.message || '').trim();
 
-    if (!lastName || !firstName || !email || !phone || !message) {
-      return res.status(400).json({ message: 'Tous les champs sont requis.' });
-    }
+  if (!message) return res.status(400).json({ message: 'Message requis.' });
+  if (email && !emailRegex.test(email))
+    return res.status(400).json({ message: 'Email invalide.' });
 
-    // petite vérif email basique
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(String(email).toLowerCase())) {
-      return res.status(400).json({ message: "Adresse email invalide." });
-    }
+  await Contact.create({ firstName, lastName, email, phone, message });
+  res.status(201).json({ message: 'Message envoyé. Nous vous répondrons rapidement.' });
+});
 
-    // tu peux faire une petite vérif de phone si tu veux :
-    // const phoneClean = String(phone).replace(/\s+/g, '');
-    // etc.
+// ---- Admin ----
+exports.list = asyncHandler(async (_req, res) => {
+  const items = await Contact.find().sort('-createdAt').lean();
+  res.json(items);
+});
 
-    await ContactMessage.create({
-      lastName:  String(lastName).trim(),
-      firstName: String(firstName).trim(),
-      email:     String(email).toLowerCase().trim(),
-      phone:     String(phone).trim(),
-      message:   String(message).trim(),
-    });
-
-    return res.status(201).json({ ok: true, message: 'Message envoyé.' });
-  } catch (e) {
-    console.error('POST /public/contact ERROR:', e);
-    return res.status(500).json({ message: "Erreur serveur lors de l'envoi du message." });
-  }
-};
+exports.remove = asyncHandler(async (req, res) => {
+  await Contact.findByIdAndDelete(req.params.id);
+  res.json({ message: 'Message supprimé.' });
+});
