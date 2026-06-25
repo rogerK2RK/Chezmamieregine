@@ -45,7 +45,7 @@ export default function Hero() {
           </p>
           <div className="hero-actions">
             <a className="btn-primary" href={WA_ORDER} target="_blank" rel="noopener noreferrer">Commander sur WhatsApp</a>
-            <Link className="btn-outline" to="/produits">Voir le menu</Link>
+            <Link className="btn-outline" to="/categories">Voir le menu</Link>
           </div>
           <p className="hero-phone">Ou par téléphone <a href={TEL_LINK}>{PHONE_DISPLAY}</a></p>
         </div>

@@ -1,12 +1,21 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import { WA_ORDER } from '../config/contact.js';
+import { useCart } from '../context/CartContext.jsx';
 import logo from '../assets/img/logo-blanc.svg';
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
+  const { count, setOpen: setCartOpen } = useCart();
+
+  const CartButton = ({ className = '' }) => (
+    <button className={`cart-trigger ${className}`} onClick={() => setCartOpen(true)} aria-label="Ouvrir le panier">
+      <span className="cart-trigger-icon" aria-hidden="true">🛒</span>
+      <span>Panier</span>
+      {count > 0 && <span className="cart-count">{count}</span>}
+    </button>
+  );
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -25,11 +34,11 @@ export default function Header() {
         <Link to="/"><img className="header-logo" src={logo} alt="Chez Mamie Régine" /></Link>
 
         <nav className="header-nav">
-          <NavLink to="/produits">Nos plats</NavLink>
+          <NavLink to="/categories">Nos plats</NavLink>
           <a href="/#traiteur">Traiteur</a>
           <NavLink to="/contact">Contact</NavLink>
           <NavLink to="/connexion">Connexion</NavLink>
-          <a className="header-cta" href={WA_ORDER} target="_blank" rel="noopener noreferrer">Commander</a>
+          <CartButton className="header-cta" />
         </nav>
 
         <div ref={ref} style={{ position: 'relative' }}>
@@ -37,11 +46,13 @@ export default function Header() {
             <span></span><span></span><span></span>
           </button>
           <div className={`header-mobile ${open ? 'open' : ''}`}>
-            <Link to="/produits" onClick={() => setOpen(false)}>Nos plats</Link>
+            <Link to="/categories" onClick={() => setOpen(false)}>Nos plats</Link>
             <a href="/#traiteur" onClick={() => setOpen(false)}>Traiteur</a>
             <Link to="/contact" onClick={() => setOpen(false)}>Contact</Link>
             <Link to="/connexion" onClick={() => setOpen(false)}>Connexion</Link>
-            <a href={WA_ORDER} target="_blank" rel="noopener noreferrer" onClick={() => setOpen(false)}>Commander</a>
+            <button className="cart-trigger-mobile" onClick={() => { setOpen(false); setCartOpen(true); }}>
+              🛒 Panier{count > 0 ? ` (${count})` : ''}
+            </button>
           </div>
         </div>
       </div>

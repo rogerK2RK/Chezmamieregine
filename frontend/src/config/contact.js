@@ -1,7 +1,7 @@
 // Coordonnées — source unique pour tous les CTA (placeholders à remplacer).
-export const PHONE_DISPLAY = '06 68 34 77 55';
-export const PHONE_TEL = '+33668347755';
-export const WHATSAPP_NUMBER = '33668347755';
+export const PHONE_DISPLAY = '07 61 13 73 11';
+export const PHONE_TEL = '+33761137311';
+export const WHATSAPP_NUMBER = '33761137311';
 export const EMAIL = 'contact@exemple.fr';
 export const CITY = 'Chasse-sur-Rhône';
 

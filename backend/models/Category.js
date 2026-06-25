@@ -9,8 +9,12 @@ const slugify = (s) =>
 
 const CategorySchema = new mongoose.Schema(
   {
-    name: { type: String, required: true, trim: true },
+    name: { type: String, required: true, trim: true },          // nom FR (ex. « Plats »)
+    nameMg: { type: String, trim: true, default: '' },           // nom malgache (ex. « Sakafo »)
     slug: { type: String, unique: true, index: true },
+    description: { type: String, default: '' },                  // texte SEO / présentation de la catégorie
+    image: { type: String, default: '' },                        // image représentative (bloc SEO)
+    order: { type: Number, default: 0 },                         // ordre d'affichage
     parent: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', default: null }, // arborescence
   },
   { timestamps: true }

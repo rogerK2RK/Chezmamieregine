@@ -3,14 +3,17 @@ import { useNavigate, useParams, Link } from 'react-router-dom';
 import api from '../services/api.js';
 import SafeImage from '../components/SafeImage.jsx';
 import { getMockPlatById } from '../data/mockPlats.js';
-import { whatsappLink, TEL_LINK } from '../config/contact.js';
+import { TEL_LINK } from '../config/contact.js';
+import { useCart } from '../context/CartContext.jsx';
 
 export default function ProductDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { addItem, setOpen } = useCart();
   const [plat, setPlat] = useState(null);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState('');
+  const [qty, setQty] = useState(1);
 
   useEffect(() => {
     let off = false;
@@ -29,11 +32,11 @@ export default function ProductDetailPage() {
   useEffect(() => { if (plat) document.title = `${plat.name} — Chez Mamie Régine`; }, [plat]);
 
   if (loading) return <main className="pd"><p className="loading">Chargement…</p></main>;
-  if (err || !plat) return <main className="pd"><p className="empty">{err || 'Plat introuvable.'}</p><Link className="btn-primary" to="/produits">Retour au menu</Link></main>;
+  if (err || !plat) return <main className="pd"><p className="empty">{err || 'Plat introuvable.'}</p><Link className="btn-primary" to="/categories">Retour au menu</Link></main>;
 
   const img = plat.images?.[0];
   const badges = plat.badges?.length ? plat.badges : ['Fait maison'];
-  const order = whatsappLink(`Bonjour, je souhaite commander : ${plat.name}${plat.price ? ` (${plat.price} €)` : ''}.`);
+  const addToCart = () => { addItem(plat, qty); setOpen(true); };
 
   return (
     <main className="pd">
@@ -52,8 +55,13 @@ export default function ProductDetailPage() {
           {plat.sideDishes?.length > 0 && (
             <p style={{ color: 'var(--color-text-muted)' }}><strong>Accompagnements : </strong>{plat.sideDishes.map((s) => s.name).join(', ')}</p>
           )}
+          <div className="pd-qty">
+            <button onClick={() => setQty((q) => Math.max(1, q - 1))} aria-label="Diminuer">−</button>
+            <span>{qty}</span>
+            <button onClick={() => setQty((q) => q + 1)} aria-label="Augmenter">+</button>
+          </div>
           <div className="pd-cta">
-            <a className="btn-primary" href={order} target="_blank" rel="noreferrer">Commander sur WhatsApp</a>
+            <button className="btn-primary" onClick={addToCart}>Ajouter au panier</button>
             <a className="btn-outline" href={TEL_LINK}>Commander par téléphone</a>
           </div>
         </div>

@@ -22,7 +22,7 @@ export default function About() {
             des produits frais et des épices choisies avec soin.
           </p>
           <div data-reveal style={{ '--reveal-delay': '.32s' }}>
-            <Link to="/produits" className="btn-primary">Découvrir le menu</Link>
+            <Link to="/categories" className="btn-primary">Découvrir le menu</Link>
           </div>
         </div>
       </div>

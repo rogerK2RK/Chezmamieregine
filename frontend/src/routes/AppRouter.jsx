@@ -1,10 +1,11 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate, useParams } from 'react-router-dom';
 import ClientLayout from '../layouts/ClientLayout.jsx';
 import AdminLayout from '../layouts/AdminLayout.jsx';
 import PrivateRoute from './PrivateRoute.jsx';
 
 import HomePage from '../pages/HomePage.jsx';
-import ProductsPage from '../pages/ProductsPage.jsx';
+import CategoriesPage from '../pages/CategoriesPage.jsx';
+import CategoryPage from '../pages/CategoryPage.jsx';
 import ProductDetailPage from '../pages/ProductDetailPage.jsx';
 import ContactPage from '../pages/ContactPage.jsx';
 import LoginPage from '../pages/LoginPage.jsx';
@@ -22,14 +23,22 @@ import AdminContacts from '../pages/admin/AdminContacts.jsx';
 
 const ROLES = ['admin', 'owner', 'superAdmin'];
 
+// Redirige les anciens liens /produits/:slug vers la page catégorie.
+function ProduitsSlugRedirect() {
+  const { slug } = useParams();
+  return <Navigate to={`/categorie/${slug}`} replace />;
+}
+
 export default function AppRouter() {
   return (
     <Routes>
       {/* Public */}
       <Route element={<ClientLayout />}>
         <Route path="/" element={<HomePage />} />
-        <Route path="/produits" element={<ProductsPage />} />
-        <Route path="/produits/:slug" element={<ProductsPage />} />
+        <Route path="/produits" element={<Navigate to="/categories" replace />} />
+        <Route path="/produits/:slug" element={<ProduitsSlugRedirect />} />
+        <Route path="/categories" element={<CategoriesPage />} />
+        <Route path="/categorie/:slug" element={<CategoryPage />} />
         <Route path="/produit/:id" element={<ProductDetailPage />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/connexion" element={<LoginPage />} />
