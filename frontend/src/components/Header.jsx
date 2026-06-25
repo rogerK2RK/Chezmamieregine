@@ -9,14 +9,6 @@ export default function Header() {
   const ref = useRef(null);
   const { count, setOpen: setCartOpen } = useCart();
 
-  const CartButton = ({ className = '' }) => (
-    <button className={`cart-trigger ${className}`} onClick={() => setCartOpen(true)} aria-label="Ouvrir le panier">
-      <span className="cart-trigger-icon" aria-hidden="true">🛒</span>
-      <span>Panier</span>
-      {count > 0 && <span className="cart-count">{count}</span>}
-    </button>
-  );
-
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener('scroll', onScroll);
@@ -31,28 +23,40 @@ export default function Header() {
   return (
     <header className={`header ${scrolled ? 'scrolled' : ''}`}>
       <div className="header-inner">
-        <Link to="/"><img className="header-logo" src={logo} alt="Chez Mamie Régine" /></Link>
-
+        {/* Gauche : navigation */}
         <nav className="header-nav">
+          <NavLink to="/">Accueil</NavLink>
           <NavLink to="/categories">Nos plats</NavLink>
-          <a href="/#traiteur">Traiteur</a>
           <NavLink to="/contact">Contact</NavLink>
-          <NavLink to="/connexion">Connexion</NavLink>
-          <CartButton className="header-cta" />
         </nav>
 
-        <div ref={ref} style={{ position: 'relative' }}>
-          <button className="burger" aria-label="Menu" onClick={() => setOpen((v) => !v)}>
-            <span></span><span></span><span></span>
+        {/* Centre : logo */}
+        <Link to="/" className="header-logo-link">
+          <img className="header-logo" src={logo} alt="Chez Mamie Régine" />
+        </Link>
+
+        {/* Droite : panier + menu */}
+        <div className="header-actions" ref={ref}>
+          <button className="cart-trigger" onClick={() => setCartOpen(true)} aria-label="Ouvrir le panier">
+            <span className="cart-trigger-icon" aria-hidden="true">🛒</span>
+            {count > 0 && <span className="cart-count">{count}</span>}
           </button>
+
+          <button
+            className={`header-menu-btn ${open ? 'is-open' : ''}`}
+            aria-label="Menu"
+            aria-expanded={open}
+            onClick={() => setOpen((v) => !v)}
+          >
+            <span className="header-menu-label">Menu</span>
+            <span className="burger"><span></span><span></span><span></span></span>
+          </button>
+
           <div className={`header-mobile ${open ? 'open' : ''}`}>
+            <Link to="/" onClick={() => setOpen(false)}>Accueil</Link>
             <Link to="/categories" onClick={() => setOpen(false)}>Nos plats</Link>
-            <a href="/#traiteur" onClick={() => setOpen(false)}>Traiteur</a>
             <Link to="/contact" onClick={() => setOpen(false)}>Contact</Link>
             <Link to="/connexion" onClick={() => setOpen(false)}>Connexion</Link>
-            <button className="cart-trigger-mobile" onClick={() => { setOpen(false); setCartOpen(true); }}>
-              🛒 Panier{count > 0 ? ` (${count})` : ''}
-            </button>
           </div>
         </div>
       </div>
