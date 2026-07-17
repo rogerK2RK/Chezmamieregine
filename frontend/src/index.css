@@ -1,13 +1,13 @@
 /* =========================================================
    CHEZ MAMIE RÉGINE — Design system "Atelier" (mode clair)
    ========================================================= */
-@import url('https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,500;1,9..144,500;1,9..144,600&family=Pacifico&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,500;1,9..144,500;1,9..144,600&family=Kaushan+Script&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap');
 
 :root {
   --font-display: 'Anton', sans-serif;
   --font-serif: 'Fraunces', serif;
   --font-body: 'Manrope', sans-serif;
-  --font-script: 'Pacifico', cursive;   /* police du logo (H1 hero) */
+  --font-script: 'Kaushan Script', cursive;   /* script incliné à droite (H1 hero) */
 
   --color-primary: #EF5007;
   --color-primary-dark: #C53D00;
