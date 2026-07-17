@@ -1,4 +1,4 @@
-import { WA_ORDER, TEL_LINK, PHONE_DISPLAY } from '../config/contact.js';
+import { WA_ORDER } from '../config/contact.js';
 
 const STEPS = [
   {
@@ -33,8 +33,6 @@ export default function CommentCaMarche() {
       </div>
       <div className="cta-stack">
         <a className="btn-primary" href={WA_ORDER} target="_blank" rel="noopener noreferrer">Commander sur WhatsApp</a>
-        <span className="cta-or">ou</span>
-        <a className="phone" href={TEL_LINK}>{PHONE_DISPLAY}</a>
       </div>
     </section>
   );

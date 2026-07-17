@@ -1,4 +1,4 @@
-import { WA_CATERING, TEL_LINK, PHONE_DISPLAY } from '../config/contact.js';
+import { WA_CATERING } from '../config/contact.js';
 import visuel from '../assets/img/cta.png';
 
 const EV = [
@@ -33,8 +33,6 @@ export default function Traiteur() {
           </ul>
           <div className="cta-stack cta-stack--start" data-reveal style={{ '--reveal-delay': '.5s' }}>
             <a className="btn-primary" href={WA_CATERING} target="_blank" rel="noopener noreferrer">Demander un devis</a>
-            <span className="cta-or">ou</span>
-            <a className="phone" href={TEL_LINK}>{PHONE_DISPLAY}</a>
           </div>
         </div>
       </div>
