@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import Lenis from 'lenis';
 import Hero from '../components/Hero.jsx';
 import Reassurance from '../components/Reassurance.jsx';
-import Marquee from '../components/Marquee.jsx';
 import About from '../components/About.jsx';
 import NosPlats from '../components/NosPlats.jsx';
 import CommentCaMarche from '../components/CommentCaMarche.jsx';
@@ -23,7 +22,6 @@ export default function HomePage() {
     <main>
       <Hero />
       <Reassurance />
-      <Marquee />
       <About />
       <NosPlats />
       <CommentCaMarche />

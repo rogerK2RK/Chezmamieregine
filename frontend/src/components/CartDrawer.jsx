@@ -8,7 +8,8 @@ export default function CartDrawer() {
     <>
       {count > 0 && !open && (
         <button className="cart-fab" onClick={() => setOpen(true)} aria-label="Voir le panier">
-          🛒<span className="cart-fab-count">{count}</span>
+          <span className="material-symbols-outlined" aria-hidden="true">shopping_cart</span>
+          <span className="cart-fab-count">{count}</span>
         </button>
       )}
       <div className={`cart-backdrop ${open ? 'open' : ''}`} onClick={() => setOpen(false)} />

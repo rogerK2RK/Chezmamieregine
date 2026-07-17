@@ -103,7 +103,6 @@ export default function CategoryPage() {
                 >
                   <div className="card-media">
                     {p.images?.[0] ? <img src={p.images[0]} alt={p.name} /> : null}
-                    <span className="card-badge">{p.badges?.[0] || 'Fait maison'}</span>
                   </div>
                   <div className="card-body">
                     <h3 className="card-title">

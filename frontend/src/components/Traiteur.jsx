@@ -2,10 +2,10 @@ import { WA_CATERING, TEL_LINK, PHONE_DISPLAY } from '../config/contact.js';
 import visuel from '../assets/img/cta.png';
 
 const EV = [
-  { t: 'Mariages', d: 'Un buffet malgache généreux pour le grand jour.' },
-  { t: 'Anniversaires', d: 'Petits comités ou grandes tablées, on s’adapte.' },
-  { t: 'Baptêmes & familles', d: 'Des plats à partager pour réunir tout le monde.' },
-  { t: 'Entreprises', d: 'Séminaires et repas d’équipe livrés clé en main.' },
+  { t: 'Mariages', d: 'Un buffet malgache généreux pour le grand jour.', ic: 'favorite' },
+  { t: 'Anniversaires', d: 'Petits comités ou grandes tablées, on s’adapte.', ic: 'cake' },
+  { t: 'Baptêmes & familles', d: 'Des plats à partager pour réunir tout le monde.', ic: 'groups' },
+  { t: 'Entreprises', d: 'Séminaires et repas d’équipe livrés clé en main.', ic: 'business_center' },
 ];
 
 export default function Traiteur() {
@@ -26,14 +26,15 @@ export default function Traiteur() {
           <ul className="traiteur-list">
             {EV.map((e, i) => (
               <li className="traiteur-card" key={e.t} data-reveal style={{ '--reveal-delay': `${0.2 + i * 0.08}s` }}>
-                <span className="ic" aria-hidden="true">✦</span>
+                <span className="material-symbols-outlined ic" aria-hidden="true">{e.ic}</span>
                 <div><h3>{e.t}</h3><p>{e.d}</p></div>
               </li>
             ))}
           </ul>
-          <div className="traiteur-actions" data-reveal style={{ '--reveal-delay': '.5s' }}>
+          <div className="cta-stack cta-stack--start" data-reveal style={{ '--reveal-delay': '.5s' }}>
             <a className="btn-primary" href={WA_CATERING} target="_blank" rel="noopener noreferrer">Demander un devis</a>
-            <a className="phone" href={TEL_LINK}>ou {PHONE_DISPLAY}</a>
+            <span className="cta-or">ou</span>
+            <a className="phone" href={TEL_LINK}>{PHONE_DISPLAY}</a>
           </div>
         </div>
       </div>

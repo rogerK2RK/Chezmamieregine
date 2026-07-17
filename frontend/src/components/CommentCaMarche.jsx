@@ -1,9 +1,18 @@
 import { WA_ORDER, TEL_LINK, PHONE_DISPLAY } from '../config/contact.js';
 
 const STEPS = [
-  { n: '01', t: 'Choisis tes plats', d: 'Découvre nos recettes et sélectionne ce qui te fait envie.' },
-  { n: '02', t: 'Commande appel / WhatsApp', d: 'Écris-nous ou appelle-nous, choisis la date et le paiement.' },
-  { n: '03', t: 'Reçois ta commande', d: 'On prépare avec soin et on livre à la date convenue.' },
+  {
+    n: '01', t: 'Choisis tes plats',
+    d: 'Parcours notre carte de spécialités malgaches faites maison : plats mijotés, encas salés, douceurs et boissons. Ajoute au panier ce qui te fait envie, seul ou pour toute la famille.',
+  },
+  {
+    n: '02', t: 'Commande par appel ou WhatsApp',
+    d: 'Envoie ton panier en un message WhatsApp ou appelle-nous directement. On confirme ensemble les quantités, la date, l’adresse de livraison et le mode de paiement. Aucun paiement en ligne.',
+  },
+  {
+    n: '03', t: 'Reçois ta commande',
+    d: 'On cuisine tout maison, avec des produits frais, et on te livre à la date convenue sur Lyon et alentours. Il ne te reste plus qu’à te régaler comme à Madagascar.',
+  },
 ];
 
 export default function CommentCaMarche() {
@@ -22,9 +31,10 @@ export default function CommentCaMarche() {
           </div>
         ))}
       </div>
-      <div className="steps-cta">
+      <div className="cta-stack">
         <a className="btn-primary" href={WA_ORDER} target="_blank" rel="noopener noreferrer">Commander sur WhatsApp</a>
-        <a className="phone" href={TEL_LINK}>ou {PHONE_DISPLAY}</a>
+        <span className="cta-or">ou</span>
+        <a className="phone" href={TEL_LINK}>{PHONE_DISPLAY}</a>
       </div>
     </section>
   );

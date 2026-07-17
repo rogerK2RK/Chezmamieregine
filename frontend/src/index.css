@@ -1,12 +1,13 @@
 /* =========================================================
    CHEZ MAMIE RÉGINE — Design system "Atelier" (mode clair)
    ========================================================= */
-@import url('https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,500;1,9..144,500;1,9..144,600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,500;1,9..144,500;1,9..144,600&family=Pacifico&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap');
 
 :root {
   --font-display: 'Anton', sans-serif;
   --font-serif: 'Fraunces', serif;
   --font-body: 'Manrope', sans-serif;
+  --font-script: 'Pacifico', cursive;   /* police du logo (H1 hero) */
 
   --color-primary: #EF5007;
   --color-primary-dark: #C53D00;
@@ -59,6 +60,16 @@ img { max-width: 100%; display: block; }
 a { color: inherit; }
 ::selection { background: var(--color-primary); color: #fff; }
 
+/* Icônes Google Material Symbols */
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal; font-style: normal;
+  font-size: 24px; line-height: 1; letter-spacing: normal;
+  text-transform: none; display: inline-block; white-space: nowrap;
+  direction: ltr; -webkit-font-feature-settings: 'liga'; -webkit-font-smoothing: antialiased;
+}
+.ic.material-symbols-outlined { font-size: 24px; }
+
 h1, h2, h3 {
   font-family: var(--font-display);
   font-weight: 400; text-transform: uppercase;
@@ -90,7 +101,7 @@ p { margin: 0; line-height: 1.6; }
   color: var(--color-primary); font-size: var(--fs-xs); font-weight: 800;
   letter-spacing: .22em; text-transform: uppercase;
 }
-.eyebrow::before { content: ""; width: 34px; height: 2px; background: var(--color-primary); }
+.eyebrow::before { display: none; }
 .section-title {
   font-family: var(--font-display); text-transform: uppercase;
   font-size: clamp(2.2rem, 6vw, 4rem); line-height: .95; margin: .6rem 0 1rem;
@@ -121,21 +132,21 @@ p { margin: 0; line-height: 1.6; }
    ========================================================= */
 .header { position: fixed; top: 0; left: 0; width: 100%; z-index: 999; background: var(--color-ink); }
 .header.scrolled { box-shadow: 0 6px 24px rgba(0,0,0,.25); }
-.header-inner { max-width: 1320px; margin: 0 auto; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: .7rem 5%; gap: 1rem; }
+.header-inner { max-width: 1320px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: .7rem 5%; gap: 1rem; }
 
-/* Nav (gauche) */
-.header-nav { display: none; align-items: center; gap: .3rem; justify-self: start; }
+/* Logo (gauche) */
+.header-logo-link { display:inline-flex; flex-shrink:0; }
+.header-logo { width: 12rem; }
+
+/* Nav (centre/droite, desktop) */
+.header-nav { display: none; align-items: center; gap: .3rem; }
 .header-nav a { color: rgba(255,253,248,.82); text-decoration: none; font-weight: 700; font-size: var(--fs-base); text-transform: uppercase; letter-spacing: .06em; padding: .5rem .95rem; position: relative; }
 .header-nav a::after { content:""; position:absolute; left:.9rem; right:.9rem; bottom:.3rem; height:2px; background: var(--color-primary); transform: scaleX(0); transform-origin: left; transition: transform .28s var(--ease); }
 .header-nav a:hover, .header-nav a.active { color:#fff; }
 .header-nav a:hover::after, .header-nav a.active::after { transform: scaleX(1); }
 
-/* Logo (centre) */
-.header-logo-link { justify-self: center; display:inline-flex; }
-.header-logo { width: 12rem; }
-
 /* Actions (droite) */
-.header-actions { justify-self: end; position: relative; display:flex; align-items:center; gap: var(--space-md); }
+.header-actions { position: relative; display:flex; align-items:center; gap: var(--space-md); flex-shrink:0; }
 .header-actions .cart-trigger { color: var(--color-paper); }
 .header-menu-btn { display:inline-flex; align-items:center; gap:.55rem; background:none; border:none; cursor:pointer; color: var(--color-paper); font-family: var(--font-body); font-weight:800; font-size: var(--fs-base); text-transform:uppercase; letter-spacing:.06em; padding:.3rem .2rem; }
 .header-menu-label { display:none; }
@@ -151,7 +162,7 @@ p { margin: 0; line-height: 1.6; }
 .header-mobile a { padding:.7rem .8rem; text-decoration:none; color: var(--color-ink); font-weight:700; text-transform:uppercase; font-size: var(--fs-sm); border-radius: var(--radius-sm); }
 .header-mobile a:hover { background: var(--color-paper-2); }
 
-@media (min-width: 920px) { .header-nav { display:flex; } .header-logo { width: 13.5rem; } .header-menu-label { display:inline; } }
+@media (min-width: 920px) { .header-nav { display:flex; } .header-logo { width: 13.5rem; } .header-menu-btn { display:none; } }
 
 /* =========================================================
    HERO — vitrine sombre (titre + recherche + photo + cartes)
@@ -169,8 +180,8 @@ p { margin: 0; line-height: 1.6; }
 .hero-inner { position:relative; z-index:1; flex:1; align-content:center; width:100%; max-width: var(--container); margin:0 auto; display:grid; grid-template-columns:1fr; gap: var(--space-2xl); align-items:center; }
 
 .hero-content { max-width: 620px; }
-.hero-title { font-family: var(--font-display); text-transform:uppercase; font-size: clamp(3.4rem, 10vw, 6.5rem); line-height:.92; margin:0 0 var(--space-xl); color:#EFE7DA; }
-.hero-title .accent-serif { display:block; font-size:.62em; }
+.hero-title { font-family: var(--font-script); font-weight:400; text-transform:none; letter-spacing:0; font-size: clamp(2.8rem, 8vw, 5.2rem); line-height:1.15; margin:0 0 var(--space-xl); color:#EFE7DA; }
+.hero-title .accent-serif { display:block; font-family: var(--font-script); font-style:normal; font-size:.82em; color: var(--color-primary); }
 
 /* Barre localisation + recherche */
 .hero-search { display:flex; align-items:center; gap:.5rem; background: var(--color-surface-2); border-radius: var(--radius-full); padding:.4rem; max-width: 480px; box-shadow: 0 10px 30px rgba(0,0,0,.3); }
@@ -514,6 +525,15 @@ a.phone { color: var(--color-text-muted); font-weight:700; text-decoration:none;
 a.phone:hover { color: var(--color-primary); border-color: var(--color-primary); }
 .traiteur a.phone, .section--dark a.phone { color: rgba(255,255,255,.85); border-color: rgba(255,255,255,.35); }
 .traiteur a.phone:hover, .section--dark a.phone:hover { color:#fff; border-color:#fff; }
+
+/* CTA vertical : bouton, puis "ou", puis le numéro en dessous */
+.cta-stack { display:flex; flex-direction:column; align-items:center; gap:.55rem; margin-top: var(--space-2xl); text-align:center; }
+.cta-stack--start { align-items:flex-start; text-align:left; margin-top: var(--space-lg); }
+.cta-or { font-size: var(--fs-sm); font-weight:800; text-transform:uppercase; letter-spacing:.12em; color: var(--color-text-muted); }
+.traiteur .cta-or { color: rgba(255,255,255,.7); }
+.cta .cta-or { color: rgba(255,255,255,.9); }
+.cta a.phone { color:#fff; border-color: rgba(255,255,255,.5); }
+.cta a.phone:hover { color:#fff; border-color:#fff; }
 
 /* =========================================================
    BACK-OFFICE — THÈME SOMBRE + champs avancés

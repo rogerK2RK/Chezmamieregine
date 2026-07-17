@@ -40,7 +40,6 @@ export default function NosPlats() {
           <article className="card card--clickable" key={p._id} data-reveal style={{ '--reveal-delay': `${idx * 0.08}s` }} onClick={() => navigate(`/produit/${p._id}`)}>
             <div className="card-media">
               {p.images?.[0] ? <img src={p.images[0]} alt={p.name} /> : null}
-              <span className="card-badge">Fait maison</span>
             </div>
             <div className="card-body">
               <h3 className="card-title">{p.name}</h3>
