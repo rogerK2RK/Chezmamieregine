@@ -593,7 +593,7 @@ a.phone:hover { color: var(--color-primary); border-color: var(--color-primary);
 .card--clickable .card-title { cursor: pointer; }
 
 /* Bouton panier dans le header (desktop) */
-.cart-trigger { display:inline-flex; align-items:center; gap:.45rem; border:none; cursor:pointer; font-family: var(--font-body); position:relative; }
+.cart-trigger { display:inline-flex; align-items:center; gap:.45rem; background:transparent; border:none; cursor:pointer; font-family: var(--font-body); position:relative; padding:0; }
 .cart-trigger.header-cta { color:#fff; }
 .cart-trigger-icon { font-size:1.05em; }
 .cart-count { background:#fff; color: var(--color-primary); font-weight:900; font-size:.72rem; min-width:1.25rem; height:1.25rem; padding:0 .35rem; border-radius:999px; display:inline-flex; align-items:center; justify-content:center; }
