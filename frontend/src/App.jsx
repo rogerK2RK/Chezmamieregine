@@ -1,3 +1,4 @@
+import { Analytics } from '@vercel/analytics/react';
 import AppRouter from './routes/AppRouter.jsx';
 import { ClientAuthProvider } from './context/ClientAuthContext.jsx';
 import { AdminAuthProvider } from './context/AdminAuthContext.jsx';
@@ -9,6 +10,7 @@ export default function App() {
       <AdminAuthProvider>
         <CartProvider>
           <AppRouter />
+          <Analytics />
         </CartProvider>
       </AdminAuthProvider>
     </ClientAuthProvider>
