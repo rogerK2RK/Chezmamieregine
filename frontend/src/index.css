@@ -389,7 +389,7 @@ p { margin: 0; line-height: 1.6; }
    ========================================================= */
 .cat-hero {
   position: relative;
-  padding: calc(110px + var(--space-2xl)) var(--space-lg) var(--space-2xl);
+  padding: calc(80px + var(--space-md)) var(--space-lg) var(--space-lg);
   background: var(--color-ink) center/cover no-repeat;
   color: var(--color-paper);
   text-align: center;
@@ -399,9 +399,13 @@ p { margin: 0; line-height: 1.6; }
   background: linear-gradient(180deg, rgba(23,18,14,.7), rgba(23,18,14,.88));
 }
 .cat-hero-overlay { position: relative; z-index: 1; max-width: 760px; margin: 0 auto; }
-.cat-hero h1 { color: var(--color-paper); font-size: clamp(2.5rem,8vw,5rem); }
+.cat-hero h1 { color: var(--color-paper); font-size: clamp(1.9rem,5vw,3.2rem); }
 .cat-hero h1 .accent-serif { color: var(--color-primary); font-size: .8em; }
-.cat-hero-desc { color: rgba(244,236,221,.85); max-width: 60ch; margin: var(--space-md) auto 0; line-height: 1.6; }
+.cat-hero-desc { color: rgba(244,236,221,.85); max-width: 62ch; margin: var(--space-sm) auto 0; line-height: 1.55; font-size: var(--fs-sm); }
+
+/* Liste des produits : espace réduit au-dessus des filtres */
+.cat-listing { padding-top: var(--space-lg); }
+.cat-listing .chips { margin-bottom: var(--space-md); }
 
 .cat-grid { max-width: var(--container); margin: 0 auto; display: grid; grid-template-columns: 1fr; gap: var(--space-lg); }
 @media (min-width:680px){ .cat-grid { grid-template-columns: repeat(2,1fr); } }

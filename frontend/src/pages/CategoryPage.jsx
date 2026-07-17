@@ -67,7 +67,7 @@ export default function CategoryPage() {
       </header>
 
       {/* Navigation entre catégories */}
-      <section className="section">
+      <section className="section cat-listing">
         <div className="chips">
           {cats.map((c) => (
             <button
